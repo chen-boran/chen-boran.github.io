@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-04-07T06:30:14.052Z</updated>
+  <updated>2021-04-22T15:38:51.941Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>First of my blog</title>
+    <link href="http://example.com/2021/04/07/11/"/>
+    <id>http://example.com/2021/04/07/11/</id>
+    <published>2021-04-07T06:29:30.000Z</published>
+    <updated>2021-04-22T15:38:51.941Z</updated>
+    
+    <content type="html"><![CDATA[<p>CWR：拥塞窗口减少标志（显示拥塞通知 加在tcp首部保留位）<br>ECE:ECN-Echo（显示拥塞通知 加在tcp首部保留位）</p><h2 id="第六章"><a href="#第六章" class="headerlink" title="第六章"></a>第六章</h2><p>TCP:可靠传输通信<br>UDP：尽力而为传输协议，（细节控制交给应用层）<br>1<br>6.2端口号<br>识别同一台计算机中进行通信的不同应用程序（程序地址）<br>根据端口号识别应用<br>tcp/ip或UDP/IP通信中通常都用五个信息来识别一个通信：<br>源IP地址，源IP地址，协议号，源端口号，目的端口号<br>路由协议通过在路由器之间共享路由信息来支持可路由协议。路由信息在相邻路由器之间传递，确保所有路由器知道到其它路由器的路径。总之，路由协议创建了路由表，描述了网络拓扑结构；路由协议与路由器协同工作，执行路由选择和数据包转发功能。</p><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>路由协议主要运行于路由器上，路由协议是用来确定到达路径的起到一个地图导航，负责找路的作用。它工作在网络层。它包括RIP，IGRP（Cisco私有协议），EIGRP（Cisco私有协议），OSPF，IS-IS，BGP。<br>路由协议作为TCP/IP协议族中重要成员之一，其选路过程实现的好坏会影响整个Internet网络的效率。按应用范围的不同，路由协议可分为两类：<br>1、在一个AS内的路由协议称为内部网关协议（interior gateway protocol）。<br>备注：Autonomous System，自治系统，指一个互连网络，就是把整个Internet划分为许多较小的网络单位，这些小的网络有权自主地决定在本系统中应采用何种路由协议。一般由一个ISP运营的网络如移动/联通的网络位于一个AS（自治系统）内，有统一的AS number（自治系统号）。<br>2、AS之间的路由协议称为外部网关协议（exterior gateway protocol）。这里网关是路由器的旧称。<br><strong>常见的路由协议*</strong><br>有RIP、IGRP（Cisco私有协议）、EIGRP（Cisco私有协议）、OSPF、IS-IS、[BGP](<a href="https://baike.baidu.com/item/BGP">https://baike.baidu.com/item/BGP</a><br><strong>OSPF****<br>OSPF协议是“开放式最短路径优先(Open Shortest Path First)”的缩写，属于链路状态路由协议。OSPF提出了“区域（area）”的概念，每个区域中所有路由器维护着一个相同的链路状态数据库 （LSDB）。OSPF利用所维护的链路状态数据 库，通过最短生成树算法（SPF算法）计算得到路由表。OSPF的收敛速度较快。由于其特有的开放性以及良好的扩展性，目前OSPF协议在各种网络中广泛部署。<br>BGP</strong>****<br>为了维护各个ISP的独立利益，标准化组织制定了ISP间的路由协议BGP。BGP是“边界网关协议（Border Gateway Protocol）”的缩写，处理各ISP之间的路由传递。但是BGP运行在相对核心的地位，需要用户对网络的结构有相当的了解，否则可能会造成较大损失</p>]]></content>
+    
+    
+    <summary type="html">some of my thinks</summary>
+    
+    
+    
+    <category term="thinks" scheme="http://example.com/categories/thinks/"/>
+    
+    
+    <category term="thinks" scheme="http://example.com/tags/thinks/"/>
+    
+  </entry>
   
   <entry>
     <title>First of my blog</title>
