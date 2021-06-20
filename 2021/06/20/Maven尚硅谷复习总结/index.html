@@ -1,0 +1,526 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Maven尚硅谷复习总结 | boranの小さな巣</title><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Maven尚硅谷复习总结导言：生产环境下开发不再是一个项目一个工程，而是每一个模块创建一个工程，而多个模块整合在一起就需要使用到像 Maven 这样的构建工具。  1 Why?  1.1 真的需要吗？  Maven 是干什么用的？这是很多同学在刚开始接触 Maven 时最大的问题。之所以会提出这个问题，是因为即使不使用 Maven 我们仍然可以进行 B&#x2F;S 结构项目的开发。从表述层、业务逻辑层到持">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven尚硅谷复习总结">
+<meta property="og:url" content="http://example.com/2021/06/20/Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="Maven尚硅谷复习总结导言：生产环境下开发不再是一个项目一个工程，而是每一个模块创建一个工程，而多个模块整合在一起就需要使用到像 Maven 这样的构建工具。  1 Why?  1.1 真的需要吗？  Maven 是干什么用的？这是很多同学在刚开始接触 Maven 时最大的问题。之所以会提出这个问题，是因为即使不使用 Maven 我们仍然可以进行 B&#x2F;S 结构项目的开发。从表述层、业务逻辑层到持">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg">
+<meta property="article:published_time" content="2021-06-20T12:04:56.000Z">
+<meta property="article:modified_time" content="2021-06-20T12:09:01.654Z">
+<meta property="article:author" content="chen-boran">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2021/06/20/Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-06-20 20:09:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fa fa-book"></i><span> books</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> about</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-list"></i><span> comments</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fa fa-book"></i><span> books</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> about</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-list"></i><span> comments</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Maven尚硅谷复习总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-06-20T12:04:56.000Z" title="Created 2021-06-20 20:04:56">2021-06-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-06-20T12:09:01.654Z" title="Updated 2021-06-20 20:09:01">2021-06-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Maven尚硅谷复习总结"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Maven尚硅谷复习总结"><a href="#Maven尚硅谷复习总结" class="headerlink" title="Maven尚硅谷复习总结"></a>Maven尚硅谷复习总结</h1><p>导言：生产环境下开发不再是一个项目一个工程，而是每一个模块创建一个工程，而多个模块整合在一起就需要使用到像 Maven 这样的构建工具。 </p>
+<p>1 Why? </p>
+<p>1.1 真的需要吗？ </p>
+<p>Maven 是干什么用的？这是很多同学在刚开始接触 Maven 时最大的问题。之所以会提出这个问题，是因为即使不使用 Maven 我们仍然可以进行 B/S 结构项目的开发。从表述层、业务逻辑层到持久化层再到数据库都有成熟的解决方案——不使用 Maven 我们一样可以开发项目啊？ </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps1.jpg" alt="img"> </p>
+<p>这里给大家纠正一个误区，Maven 并不是直接用来辅助编码的，它战斗的岗位并不是以上各层。所以我们有必要通过企业开发中的实际需求来看一看哪些方面是我们现有技术的不足。 </p>
+<p>1.2 究竟为什么？ </p>
+<p>为什么要使用 Maven？它能帮助我们解决什么问题？ </p>
+<p>①添加第三方 jar 包 </p>
+<p>在今天的 JavaEE 开发领域，有大量的第三方框架和工具可以供我们使用。要使用这些 jar 包最简单的方法就是复制粘贴到 WEB-INF/lib 目录下。但是这会导致每次创建一个新的工程就需要将 jar 包重复复制到 lib 目录下，从而造成工作区中存在大量重复的文件，让我们的工程显得很臃肿。 </p>
+<p>而使用 Maven 后每个 jar 包本身只在本地仓库中保存一份，需要 jar 包的工程只需要以坐标的方式简单的引用一下就可以了。不仅极大的节约了存储空间，让项目更轻巧，更避免了重复文件太多而造成的混乱。 </p>
+<p>  ②jar 包之间的依赖关系 </p>
+<p>jar 包往往不是孤立存在的，很多 jar 包都需要在其他 jar 包的支持下才能够正常工作，我们称之为 jar 包之间的依赖关系。最典型的例子是：commons-fileupload-1.3.jar 依赖于 commons-io-2.0.1.jar，如果没有 IO 包，FileUpload 包就不能正常工作。 </p>
+<p>那么问题来了，你知道你所使用的所有 jar 包的依赖关系吗？当你拿到一个新的从未使用过的 jar 包，你如何得知他需要哪些 jar 包的支持呢？如果不了解这个情况，导入的 jar 包不够，那么现有的程序将不能正常工作。再进一步，当你的项目中需要用到上百个 jar 包时，你还会人为的，手工的逐一确认它们依赖的其他 jar 包吗？这简直是不可想象的。 </p>
+<p>而引入 Maven 后，Maven 就可以替我们自动的将当前 jar 包所依赖的其他所有 jar 包全部导入进来，无需人工参与，节约了我们大量的时间和精力。用实际例子来说明就是：通过 Maven 导入 commons-fileupload-1.3.jar 后，commons-io-2.0.1.jar 会被自动导入，程序员不必了解这个依赖关系。 </p>
+<p>下图是 Spring 所需 jar 包的部分依赖关系 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps2.png" alt="img"> </p>
+<p>③获取第三方 jar 包 </p>
+<p>JavaEE 开发中需要使用到的 jar 包种类繁多，几乎每个 jar 包在其本身的官网上的获取方式都不尽相同。为了查找一个 jar 包找遍互联网，身心俱疲，没有经历过的人或许体会不到这种折磨。不仅如此，费劲心血找的 jar 包里有的时候并没有你需要的那个类，又或者又同名的类没有你要的方法——以不规范的方式获取的 jar 包也往往是不规范的。 </p>
+<p>使用 Maven 我们可以享受到一个完全统一规范的 jar 包管理体系。你只需要在你的项目中以坐标的方式依赖一个 jar 包，Maven 就会自动从中央仓库进行下载，并同时下载这个 jar 包所依赖的其他 jar 包 ——规范、完整、准确！一次性解决所有问题！ </p>
+<p>Tips：在这里我们顺便说一下，统一的规范几乎可以说成是程序员的最高信仰。如果没有统一的规范，就意味着每个具体的技术都各自为政，需要以诸多不同的特殊的方式加入到项目中；好不容易加入进来还会和其他技术格格不入，最终受苦的是我们。而任何一个领域的统一规范都能够极大的降低程序员的工作难度，减少工作量。例如：USB 接口可以外接各种设备，如果每个设备都有自己独特的接口，那么不仅制造商需要维护各个接口的设计方案，使用者也需要详细了解每个设备对应的接口，无疑是非常繁琐的。 </p>
+<p>④将项目拆分成多个工程模块 </p>
+<p>随着 JavaEE 项目的规模越来越庞大，开发团队的规模也与日俱增。一个项目上千人的团队持续开发很多年对于 JavaEE 项目来说再正常不过。那么我们想象一下：几百上千的人开发的项目是同一个 Web 工程。那么架构师、项目经理该如何划分项目的模块、如何分工呢？这么大的项目已经不可能通过 package 结构来划分模块，必须将项目拆分成多个工程协同开发。多个模块工程中有的是 Java 工程，有的是 Web 工程。 </p>
+<p>那么工程拆分后又如何进行互相调用和访问呢？这就需要用到 Maven 的依赖管理机制。大家请看我们的 Survey 调查项目拆分的情况： </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps3.png" alt="img"> 上层模块依赖下层，所以下层模块中定义的 API 都可以为上层所调用和访问。 </p>
+<p>2 What? </p>
+<p>2.1 Maven 简介 </p>
+<p>Maven 是 Apache 软件基金会组织维护的一款自动化构建工具，专注服务于 Java 平台的项目构建和依赖管理。Maven 这个单词的本意是：专家，内行。读音是[‘meɪv(ə)n]或[‘mevn]。 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps4.jpg" alt="img"> </p>
+<p>2.2 什么是构建 </p>
+<p>构建并不是创建，创建一个工程并不等于构建一个项目。要了解构建的含义我们应该由浅入深的从以下三个层面来看： </p>
+<p>①纯 Java 代码 </p>
+<p>大家都知道，我们 Java 是一门编译型语言，.java 扩展名的源文件需要编译成.class 扩展名的字节码文件才能够执行。所以编写任何 Java 代码想要执行的话就必须经过编译得到对应的.class 文件。 </p>
+<p>②Web 工程 </p>
+<p>当我们需要通过浏览器访问 Java 程序时就必须将包含 Java 程序的 Web 工程编译的结果“拿”到服务器上的指定目录下，并启动服务器才行。这个“拿”的过程我们叫部署。 </p>
+<p>我们可以将未编译的 Web 工程比喻为一只生的鸡，编译好的 Web 工程是一只煮熟的鸡，编译部署的过程就是将鸡炖熟。 </p>
+<p>Web 工程和其编译结果的目录结构对比见下图： </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps5.png" alt="img"> </p>
+<p>③实际项目 </p>
+<p>在实际项目中整合第三方框架，Web 工程中除了 Java 程序和 JSP 页面、图片等静态资源之外，还包括第三方框架的 jar 包以及各种各样的配置文件。所有这些资源都必须按照正确的目录结构部署到服务器上，项目才可以运行。 </p>
+<p>所以综上所述：构建就是以我们编写的 Java 代码、框架配置文件、国际化等其他资源文件、JSP 页面和图片等静态资源作为“原材料”，去“生产”出一个可以运行的项目的过程。 </p>
+<p>那么项目构建的全过程中都包含哪些环节呢？ </p>
+<p>2.3 构建过程的几个主要环节 </p>
+<p>①清理：删除以前的编译结果，为重新编译做好准备。 </p>
+<p>②编译：将 Java 源程序编译为字节码文件。 </p>
+<p>③测试：针对项目中的关键点进行测试，确保项目在迭代开发过程中关键点的正确性。 </p>
+<p>④报告：在每一次测试后以标准的格式记录和展示测试结果。 </p>
+<p>⑤打包：将一个包含诸多文件的工程封装为一个压缩文件用于安装或部署。Java 工程对应 jar 包，Web 工程对应 war 包。 </p>
+<p>⑥安装：在 Maven 环境下特指将打包的结果——jar 包或 war 包安装到本地仓库中。 </p>
+<p>⑦部署：将打包的结果部署到远程仓库或将 war 包部署到服务器上运行。 </p>
+<p>2.4 自动化构建 </p>
+<p>其实上述环节我们在 Eclipse 中都可以找到对应的操作，只是不太标准。那么既然 IDE 已经可以进行构建了我们为什么还要使用 Maven 这样的构建工具呢？我们来看一个小故事：这是阳光明媚的一天。托马斯向往常一样早早的来到了公司，冲好一杯咖啡，进入了自己的邮箱——很不幸，QA 小组发来了一封邮件，报告了他昨天提交的模块的测试结果——有 BUG。“好吧，反正也不是第一次”，托马斯摇摇头，进入 IDE，运行自己的程序，编译、打包、部署到服务器上，然后按照邮件中的操作路径进行测试。“嗯，没错，这个地方确实有问题”，托马斯说道。于是托马斯开始尝试修复这个 BUG，当他差不多有眉目的时候已经到了午饭时间。 </p>
+<p>下午继续工作。BUG 很快被修正了，接着托马斯对模块重新进行了编译、打包、部署，测试之后确认没有问题了，回复了 QA 小组的邮件。 </p>
+<p>一天就这样过去了，明媚的阳光化作了美丽的晚霞，托马斯却觉得生活并不像晚霞那样美好啊。 </p>
+<p>让我们来梳理一下托马斯这一天中的工作内容 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps6.jpg" alt="img"> </p>
+<p>从中我们发现，托马斯的很大一部分时间花在了“编译、打包、部署、测试”这些程式化的工作上面，而真正需要由“人”的智慧实现的分析问题和编码却只占了很少一部分。 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps7.jpg" alt="img"> 能否将这些程式化的工作交给机器自动完成呢？——当然可以！这就是自动化构建。 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps8.jpg" alt="img"> </p>
+<p>此时 Maven 的意义就体现出来了，它可以自动的从构建过程的起点一直执行到终点： </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps9.png" alt="img"> </p>
+<p>2.5 Maven 核心概念 </p>
+<p>Maven 能够实现自动化构建是和它的内部原理分不开的，这里我们从 Maven 的九个核心概念入手，看看 Maven 是如何实现自动化构建的 </p>
+<p>①POM </p>
+<p>②约定的目录结构 </p>
+<p>③坐标 </p>
+<p>④依赖管理 </p>
+<p>⑤仓库管理 </p>
+<p>⑥生命周期 </p>
+<p>⑦插件和目标 </p>
+<p>⑧继承 </p>
+<p>⑨聚合 </p>
+<p>3 How? </p>
+<p>Maven 的核心程序中仅仅定义了抽象的生命周期，而具体的操作则是由 Maven 的插件来完成的。可是</p>
+<p>Maven 的插件并不包含在 Maven 的核心程序中，在首次使用时需要联网下载。 </p>
+<p>下载得到的插件会被保存到本地仓库中。本地仓库默认的位置是：~.m2\repository。 </p>
+<p>如果不能联网可以使用我们提供的 RepMaven.zip 解压得到。具体操作参见“Maven 操作指南.txt”。 </p>
+<p>4 约定的目录结构 </p>
+<p>约定的目录结构对于 Maven 实现自动化构建而言是必不可少的一环，就拿自动编译来说，Maven 必须能找到 Java 源文件，下一步才能编译，而编译之后也必须有一个准确的位置保持编译得到的字节码文件。 </p>
+<p>我们在开发中如果需要让第三方工具或框架知道我们自己创建的资源在哪，那么基本上就是两种方式： </p>
+<p>①通过配置的形式明确告诉它 </p>
+<p>②基于第三方工具或框架的约定 </p>
+<p>Maven 对工程目录结构的要求就属于后面的一种。 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps10.jpg" alt="img"> </p>
+<p>现在 JavaEE 开发领域普遍认同一个观点：约定&gt;配置&gt;编码。意思就是能用配置解决的问题就不编码，能基于约定的就不进行配置。而 Maven 正是因为指定了特定文件保存的目录才能够对我们的 Java 工程进行自动化构建。 </p>
+<p>5 POM </p>
+<p>Project Object Model：项目对象模型。将 Java 工程的相关信息封装为对象作为便于操作和管理的模型。 Maven 工程的核心配置。可以说学习 Maven 就是学习 pom.xml 文件中的配置。 </p>
+<p>6 坐标 </p>
+<p>6.1 几何中的坐标 </p>
+<p>[1]在一个平面中使用 x、y 两个向量可以唯一的确定平面中的一个点。 </p>
+<p>[2]在空间中使用 x、y、z 三个向量可以唯一的确定空间中的一个点。 </p>
+<p>6.2 Maven 的坐标 </p>
+<p>使用如下三个向量在 Maven 的仓库中唯一的确定一个 Maven 工程。 </p>
+<p>[1]groupid：公司或组织的域名倒序+当前项目名称 </p>
+<p>[2]artifactId：当前项目的模块名称 </p>
+<p>[3]version：当前模块的版本 </p>
+<p> &lt;****g****roupId&gt;com.atguigu.maven</groupId> </p>
+<p> &lt;****a****rtifactId&gt;Hello</artifactId> </p>
+<p> &lt;****v****ersion&gt;0.0.1-SNAPSHOT</version> </p>
+<p>6.3 如何通过坐标到仓库中查找 jar 包？ </p>
+<p>[1]将 gav 三个向量连起来 </p>
+<p>com.atguigu.maven+Hello+0.0.1-SNAPSHOT </p>
+<p>[2]以连起来的字符串作为目录结构到仓库中查找 </p>
+<p>com/atguigu/maven/Hello/0.0.1-SNAPSHOT/Hello-0.0.1-SNAPSHOT.jar </p>
+<p>※注意：我们自己的 Maven 工程必须执行安装操作才会进入仓库。安装的命令是：mvn install </p>
+<p>7 依赖 </p>
+<p>Maven 中最关键的部分，我们使用 Maven 最主要的就是使用它的依赖管理功能。要理解和掌握 Maven 的依赖管理，我们只需要解决一下几个问题： </p>
+<p>①依赖的目的是什么 </p>
+<p>当A jar包用到了B jar包中的某些类时，A就对B产生了依赖，这是概念上的描述。那么如何在项目</p>
+<p>中以依赖的方式引入一个我们需要的jar包呢？答案非常简单，就是使用dependency标签指定被依赖jar包的坐标就可以了。 </p>
+<dependency> 
+
+<p> <groupId>com.atguigu.maven</groupId> </p>
+<p> <artifactId>Hello</artifactId> </p>
+<p> <version>0.0.1-SNAPSHOT</version> </p>
+<p> <scope>compile</scope> </dependency> </p>
+<p>②依赖的范围大家注意到上面的依赖信息中除了目标jar包的坐标还有一个scope设置，这是依赖的范围。依赖的范围有几个可选值，我们用得到的是：compile、test、provided三个。 </p>
+<p>[1]从项目结构角度理解compile和test的区别 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps11.jpg" alt="img"> </p>
+<p>结合具体例子：对于HelloFriend来说，Hello就是服务于主程序的，junit是服务于测试程序的。 </p>
+<p>HelloFriend 主程序需要 Hello 是非常明显的，测试程序由于要调用主程序所以也需要 Hello，所以 compile范围依赖对主程序和测试程序都应该有效。 </p>
+<p>HelloFriend的测试程序部分需要junit也是非常明显的，而主程序是不需要的，所以test范围依赖仅仅对于主程序有效。 </p>
+<p>[2]从开发和运行这两个不同阶段理解compile和provided的区别 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps12.jpg" alt="img"> </p>
+<p>[3]有效性总结 </p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>compile</th>
+<th>test</th>
+<th>provided</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主程序</td>
+<td>√</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>测试程序</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>参与部署</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<p>③依赖的传递性 </p>
+<p>A依赖B，B依赖C，A能否使用C呢？那要看B依赖C的范围是不是compile，如果是则可用，否则不可用。 </p>
+<table>
+<thead>
+<tr>
+<th>Maven 工程</th>
+<th></th>
+<th>依赖范围</th>
+<th>对 A 的可见性</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>compile</td>
+<td>√</td>
+</tr>
+<tr>
+<td>D</td>
+<td>test</td>
+<td>×</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>E</td>
+<td>provided</td>
+<td>×</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>④依赖的排除 </p>
+<p>如果我们在当前工程中引入了一个依赖是A，而A又依赖了B，那么Maven会自动将A依赖的B引入当前工程，但是个别情况下B有可能是一个不稳定版，或对当前工程有不良影响。这时我们可以在引入A的时候将B排除。 </p>
+<p>[1]情景举例 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps13.png" alt="img"> </p>
+<p>[2]配置方式 </p>
+<dependency> 
+
+<p>   <groupId>com.atguigu.maven</groupId> </p>
+<p>   <artifactId>HelloFriend</artifactId> </p>
+<p>   <version>0.0.1-SNAPSHOT</version> </p>
+<p>   <type>jar</type> </p>
+<p>   <scope>compile</scope> </p>
+   <exclusions> 
+
+<p>​     <exclusion> </p>
+<p>​       <groupId>commons-logging</groupId> </p>
+<p>​       <artifactId>commons-logging</artifactId> </p>
+<p>​     </exclusion> </p>
+   </exclusions> 
+
+</dependency> 
+
+<p>[3]排除后的效果 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps14.png" alt="img"> </p>
+<p>⑤统一管理所依赖jar包的版本 </p>
+<p>对同一个框架的一组jar包最好使用相同的版本。为了方便升级框架，可以将jar包的版本信息统一提</p>
+<p>取出来 </p>
+<p>[1]统一声明版本号 </p>
+<properties> 
+
+<p>   &lt;atguigu.spring.version&gt;4.1.1.RELEASE&lt;/atguigu.spring.version&gt; </p>
+</properties> 
+
+<p>其中atguigu.spring.version部分是自定义标签。 </p>
+<p>[2]引用前面声明的版本号 </p>
+<dependencies> 
+
+   <dependency> 
+
+<p>​     <groupId>org.springframework</groupId> </p>
+<p>​     <artifactId>spring-core</artifactId> </p>
+<p>​     <version>${atguigu.spring.version}</version> </p>
+   </dependency> 
+
+<p>…… </p>
+</dependencies> 
+
+<p>[3]其他用法 </p>
+<properties> 
+
+<p>   &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt; </p>
+</properties> 
+
+<p>⑥依赖的原则：解决 jar 包冲突 </p>
+<p>[1]路径最短者优先 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps15.png" alt="img"> </p>
+<p>[2]路径相同时先声明者优先 </p>
+<p>  <img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps16.png" alt="img"> 这里“声明”的先后顺序指的是 dependency 标签配置的先后顺序。 </p>
+<p>8 仓库 </p>
+<p>8.1 分类 </p>
+<p>[1]本地仓库：为当前本机电脑上的所有 Maven 工程服务。 </p>
+<p>[2]远程仓库 </p>
+<p>(1)私服：架设在当前局域网环境下，为当前局域网范围内的所有 Maven 工程服务。 </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml10360\wps17.png" alt="img"> </p>
+<p>(2)中央仓库：架设在 Internet 上，为全世界所有 Maven 工程服务。 </p>
+<p>(3)中央仓库的镜像：架设在各个大洲，为中央仓库分担流量。减轻中央仓库的压力，同时更快的响应用户请求。 </p>
+<p>8.2 仓库中的文件 </p>
+<p>[1]Maven 的插件 </p>
+<p>[2]我们自己开发的项目的模块 </p>
+<p>[3]第三方框架或工具的 jar 包 </p>
+<p>※不管是什么样的 jar 包，在仓库中都是按照坐标生成目录结构，所以可以通过统一的方式查询或依赖。 </p>
+<p>9 生命周期 </p>
+<p>9.1 什么是 Maven 的生命周期？ </p>
+<p>●Maven 生命周期定义了各个构建环节的执行顺序，有了这个清单，Maven 就可以自动化的执行构建命令了。 </p>
+<p>●Maven 有三套相互独立的生命周期，分别是： </p>
+<p>①Clean Lifecycle 在进行真正的构建之前进行一些清理工作。 </p>
+<p>②Default Lifecycle 构建的核心部分，编译，测试，打包，安装，部署等等。 </p>
+<p>③Site Lifecycle 生成项目报告，站点，发布站点。 </p>
+<p>它们是相互独立的，你可以仅仅调用 clean 来清理工作目录，仅仅调用 site 来生成站点。当然你也可以直接运行 mvn clean install site 运行所有这三套生命周期。 </p>
+<p>每套生命周期都由一组阶段(Phase)组成，我们平时在命令行输入的命令总会对应于一个特定的阶段。比如，运行 mvn clean，这个 clean 是 Clean 生命周期的一个阶段。有 Clean 生命周期，也有 clean 阶段。 </p>
+<p>9.2 Clean 生命周期 </p>
+<p>Clean 生命周期一共包含了三个阶段： </p>
+<p>①pre-clean 执行一些需要在 clean 之前完成的工作 </p>
+<p>②clean 移除所有上一次构建生成的文件 </p>
+<p>③post-clean 执行一些需要在 clean 之后立刻完成的工作 </p>
+<p>9.3 Site 生命周期 </p>
+<p>①pre-site 执行一些需要在生成站点文档之前完成的工作 </p>
+<p>②site 生成项目的站点文档 </p>
+<p>③post-site 执行一些需要在生成站点文档之后完成的工作，并且为部署做准备 </p>
+<p>④site-deploy 将生成的站点文档部署到特定的服务器上 </p>
+<p>这里经常用到的是 site 阶段和 site-deploy 阶段，用以生成和发布 Maven 站点，这可是 Maven 相当强大的功能，Manager 比较喜欢，文档及统计数据自动生成，很好看。 </p>
+<p>9.4 Default 生命周期 </p>
+<p>Default 生命周期是 Maven 生命周期中最重要的一个，绝大部分工作都发生在这个生命周期中。这里，只解释一些比较重要和常用的阶段： validate generate-sources process-sources </p>
+<p>generate-resources </p>
+<p>process-resources 复制并处理资源文件，至目标目录，准备打包。 </p>
+<p>compile 编译项目的源代码。 </p>
+<p>process-classes generate-test-sources process-test-sources </p>
+<p>generate-test-resources </p>
+<p>process-test-resources 复制并处理资源文件，至目标测试目录。 </p>
+<p>test-compile 编译测试源代码。 </p>
+<p>process-test-classes </p>
+<p>test 使用合适的单元测试框架运行测试。这些测试代码不会被打包或部署。 </p>
+<p>prepare-package </p>
+<p>package 接受编译好的代码，打包成可发布的格式，如 JAR。 </p>
+<p>pre-integration-test integration-test post-integration-test verify </p>
+<p>install 将包安装至本地仓库，以让其它项目依赖。 </p>
+<p>deploy 将最终的包复制到远程的仓库，以让其它开发人员与项目共享或部署到服务器上运行。 </p>
+<p>9.5 生命周期与自动化构建 </p>
+<p>运行任何一个阶段的时候，它前面的所有阶段都会被运行，例如我们运行 mvn install 的时候，代码会被编译，测试，打包。这就是 Maven 为什么能够自动执行构建过程的各个环节的原因。此外，Maven 的插件机制是完全依赖 Maven 的生命周期的，因此理解生命周期至关重要。 </p>
+<p>10 插件和目标 </p>
+<p>●Maven 的核心仅仅定义了抽象的生命周期，具体的任务都是交由插件完成的。 </p>
+<p>●每个插件都能实现多个功能，每个功能就是一个插件目标。 </p>
+<p>●Maven 的生命周期与插件目标相互绑定，以完成某个具体的构建任务。 </p>
+<p>例如：compile 就是插件 maven-compiler-plugin 的一个目标；pre-clean 是插件 maven-clean-plugin 的一个目标。 </p>
+<p>11 继承 </p>
+<p>11.1 为什么需要继承机制？由于非 compile 范围的依赖信息是不能在“依赖链”中传递的，所以有需要的工程只能单独配置。例如： </p>
+<table>
+<thead>
+<tr>
+<th>Hello</th>
+<th><dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> <version>4.0</version> <scope>test</scope> </dependency></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HelloFriend</td>
+<td><dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> <version>4.0</version></td>
+</tr>
+<tr>
+<td></td>
+<td><scope>test</scope> </dependency></td>
+</tr>
+<tr>
+<td>MakeFriend</td>
+<td><dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> <version>4.0</version> <scope>test</scope> </dependency></td>
+</tr>
+</tbody></table>
+<p>此时如果项目需要将各个模块的junit版本统一为 4.9，那么到各个工程中手动修改无疑是非常不可取的。</p>
+<p>使用继承机制就可以将这样的依赖信息统一提取到父工程模块中进行统一管理。 </p>
+<p>11.2 创建父工程创建父工程和创建一般的 Java 工程操作一致，唯一需要注意的是：打包方式处要设置为 pom。 </p>
+<p>11.3 在子工程中引用父工程 </p>
+<parent> 
+
+<p>​     <!-- 父工程坐标 --> </p>
+<p><groupId>…</groupId> </p>
+<p>​     <artifactId>…</artifactId> </p>
+<p>​     <version>…</version> </p>
+<p>​     <relativePath>从当前目录到父项目的 pom.xml 文件的相对路径</relativePath> </p>
+</parent> 
+
+<parent> 
+
+<p> <groupId>com.atguigu.maven</groupId> </p>
+<p> <artifactId>Parent</artifactId> </p>
+<h1 id="0-0-1-SNAPSHOT"><a href="#0-0-1-SNAPSHOT" class="headerlink" title="0.0.1-SNAPSHOT"></a><version>0.0.1-SNAPSHOT</version></h1> <!-- 指定从当前子工程的pom.xml文件出发，查找父工程的pom.xml的路径 --> 
+
+<p> <relativePath>../Parent/pom.xml</relativePath> </p>
+</parent> 
+
+<p> 此时如果子工程的 groupId 和 version 如果和父工程重复则可以删除。 </p>
+<p>11.4 在父工程中管理依赖将 Parent 项目中的 dependencies 标签，用 dependencyManagement 标签括起来 </p>
+<dependencyManagement> 
+
+ <dependencies> 
+
+ <dependency> 
+
+<p>  <groupId>junit</groupId> </p>
+<p>  <artifactId>junit</artifactId> </p>
+<p>  <version>4.9</version> </p>
+<p>  <scope>test</scope> </p>
+ </dependency> 
+
+ </dependencies> 
+
+</dependencyManagement> 
+
+<p>在子项目中重新指定需要的依赖，删除范围和版本号 </p>
+<dependencies> 
+
+ <dependency> 
+
+<p> <groupId>junit</groupId> </p>
+<p> <artifactId>junit</artifactId> </p>
+ </dependency> 
+
+</dependencies> 
+
+<p>12 聚合 </p>
+<p>12.1 为什么要使用聚合？ </p>
+<p>将多个工程拆分为模块后，需要手动逐个安装到仓库后依赖才能够生效。修改源码后也需要逐个手动进行 clean 操作。而使用了聚合之后就可以批量进行 Maven 工程的安装、清理工作。 </p>
+<p>12.2 如何配置聚合？在总的聚合工程中使用 modules/module 标签组合，指定模块工程的相对路径即可 </p>
+<modules> 
+
+<p> <module>../Hello</module> </p>
+<h1 id="HelloFriend-MakeFriends"><a href="#HelloFriend-MakeFriends" class="headerlink" title="../HelloFriend ../MakeFriends"></a><module>../HelloFriend</module> <module>../MakeFriends</module></h1></modules> 
+
+<p>13 Maven 酷站我们可以到 <a target="_blank" rel="noopener" href="http://mvnrepository.com/%E6%90%9C%E7%B4%A2%E9%9C%80%E8%A6%81%E7%9A%84">http://mvnrepository.com/搜索需要的</a> jar 包的依赖信息。 </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/06/20/Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/">http://example.com/2021/06/20/Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/06/20/Markdown%E6%A0%BC%E5%BC%8F%E8%A7%A3%E6%9E%90/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Markdown格式解析</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/20/%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7-JDBC/"><img class="next-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">尚硅谷_宋红康_JDBC</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">Maven尚硅谷复习总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0-0-1-SNAPSHOT"><span class="toc-number">2.</span> <span class="toc-text">0.0.1-SNAPSHOT</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HelloFriend-MakeFriends"><span class="toc-number">3.</span> <span class="toc-text">..&#x2F;HelloFriend ..&#x2F;MakeFriends</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/06/20/%E5%88%9D%E6%AD%A5%E7%90%86%E8%A7%A3JAVA-%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88%E9%BB%91%E9%A9%AC%EF%BC%89/" title="初步理解JAVA 虚拟机（黑马）"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="初步理解JAVA 虚拟机（黑马）"/></a><div class="content"><a class="title" href="/2021/06/20/%E5%88%9D%E6%AD%A5%E7%90%86%E8%A7%A3JAVA-%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88%E9%BB%91%E9%A9%AC%EF%BC%89/" title="初步理解JAVA 虚拟机（黑马）">初步理解JAVA 虚拟机（黑马）</a><time datetime="2021-06-20T12:12:56.000Z" title="Created 2021-06-20 20:12:56">2021-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/20/keymap-win-mac/" title="No title"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="No title"/></a><div class="content"><a class="title" href="/2021/06/20/keymap-win-mac/" title="No title">No title</a><time datetime="2021-06-20T12:11:53.555Z" title="Created 2021-06-20 20:11:53">2021-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/20/Markdown%E6%A0%BC%E5%BC%8F%E8%A7%A3%E6%9E%90/" title="Markdown格式解析"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Markdown格式解析"/></a><div class="content"><a class="title" href="/2021/06/20/Markdown%E6%A0%BC%E5%BC%8F%E8%A7%A3%E6%9E%90/" title="Markdown格式解析">Markdown格式解析</a><time datetime="2021-06-20T12:05:48.000Z" title="Created 2021-06-20 20:05:48">2021-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/20/Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/" title="Maven尚硅谷复习总结"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Maven尚硅谷复习总结"/></a><div class="content"><a class="title" href="/2021/06/20/Maven%E5%B0%9A%E7%A1%85%E8%B0%B7%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/" title="Maven尚硅谷复习总结">Maven尚硅谷复习总结</a><time datetime="2021-06-20T12:04:56.000Z" title="Created 2021-06-20 20:04:56">2021-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/20/%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7-JDBC/" title="尚硅谷_宋红康_JDBC"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="尚硅谷_宋红康_JDBC"/></a><div class="content"><a class="title" href="/2021/06/20/%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7-JDBC/" title="尚硅谷_宋红康_JDBC">尚硅谷_宋红康_JDBC</a><time datetime="2021-06-20T12:04:28.000Z" title="Created 2021-06-20 20:04:28">2021-06-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
