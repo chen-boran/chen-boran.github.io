@@ -2,6 +2,69 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/04/07/First-of-my-blog/</loc>
+    
+    <lastmod>2021-10-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/04/22/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/</loc>
+    
+    <lastmod>2021-10-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/04/28/wrong/Knolege-Point-SQL/</loc>
+    
+    <lastmod>2021-10-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/07/17/Java%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2021-07-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/07/11/Wireshark-%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/</loc>
+    
+    <lastmod>2021-07-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/04/28/Summery-of-SQL-Basic/</loc>
+    
+    <lastmod>2021-07-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/06/20/Computer-Network-summery%EF%BC%9A%E8%BF%90%E8%BE%93%E5%B1%82/</loc>
+    
+    <lastmod>2021-07-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/06/20/Computer-Network-summery-%E7%BD%91%E7%BB%9C%E5%B1%82/</loc>
+    
+    <lastmod>2021-07-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/06/26/Computer%20network%20Summery%20of%20%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/</loc>
+    
+    <lastmod>2021-06-26</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/06/20/%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7-JDBC/</loc>
     
     <lastmod>2021-06-20</lastmod>
@@ -9,7 +72,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2021/06/20/%E5%B0%9A%E7%A1%85%E8%B0%B7-Git%E3%80%81GitHub%E6%80%BB%E7%BB%93/</loc>
+    <loc>http://example.com/2021/06/20/wrong/%E5%B0%9A%E7%A1%85%E8%B0%B7-Git%E3%80%81GitHub%E6%80%BB%E7%BB%93/</loc>
     
     <lastmod>2021-06-20</lastmod>
     
@@ -37,7 +100,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2021/06/20/javaweb-Summery/</loc>
+    <loc>http://example.com/2021/06/20/wrong/javaweb-Summery/</loc>
     
     <lastmod>2021-06-20</lastmod>
     
@@ -45,20 +108,6 @@
   
   <url>
     <loc>http://example.com/2021/06/20/Computer-Network-summery-%E5%BA%94%E7%94%A8%E5%B1%82/</loc>
-    
-    <lastmod>2021-06-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/06/20/Computer-Network-summery-%E7%BD%91%E7%BB%9C%E5%B1%82/</loc>
-    
-    <lastmod>2021-06-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/06/20/Computer-Network-summery%EF%BC%9A%E8%BF%90%E8%BE%93%E5%B1%82/</loc>
     
     <lastmod>2021-06-20</lastmod>
     
@@ -79,37 +128,9 @@
   </url>
   
   <url>
-    <loc>http://example.com/2021/04/22/2021-04-22-second-of-my-blog/</loc>
+    <loc>http://example.com/2021/04/22/wrong/2021-04-22-second-of-my-blog/</loc>
     
     <lastmod>2021-04-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/04/30/%E7%9B%AE%E6%A0%87/</loc>
-    
-    <lastmod>2021-04-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/04/28/Knolege-Point-SQL/</loc>
-    
-    <lastmod>2021-04-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/04/22/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/</loc>
-    
-    <lastmod>2021-04-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/04/28/Summery-of-SQL-Basic/</loc>
-    
-    <lastmod>2021-04-28</lastmod>
     
   </url>
   
@@ -117,13 +138,6 @@
     <loc>http://example.com/2021/04/28/SQL%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2021-04-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/04/07/First-of-my-blog/</loc>
-    
-    <lastmod>2021-04-24</lastmod>
     
   </url>
   
@@ -170,7 +184,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2021/06/20/keymap-win-mac/</loc>
+    <loc>http://example.com/2021/06/20/wrong/keymap-win-mac/</loc>
     
     <lastmod>2017-08-05</lastmod>
     
@@ -179,7 +193,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-06-20</lastmod>
+    <lastmod>2021-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -187,7 +201,7 @@
   
   <url>
     <loc>http://example.com/tags/thinks/</loc>
-    <lastmod>2021-06-20</lastmod>
+    <lastmod>2021-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -196,7 +210,7 @@
   
   <url>
     <loc>http://example.com/categories/thinks/</loc>
-    <lastmod>2021-06-20</lastmod>
+    <lastmod>2021-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
