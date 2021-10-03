@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>linux 文件权限和目录配置 | boranの小さな巣</title><meta name="keywords" content="essay"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="some of my essay">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 文件权限和目录配置">
+<meta property="og:url" content="http://example.com/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="some of my essay">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg">
+<meta property="article:published_time" content="2021-10-03T01:33:25.000Z">
+<meta property="article:modified_time" content="2021-10-03T01:37:35.891Z">
+<meta property="article:author" content="chen-boran">
+<meta property="article:tag" content="essay">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-10-03 09:37:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">18</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fa fa-book"></i><span> books</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> about</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-list"></i><span> comments</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fa fa-book"></i><span> books</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> about</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-list"></i><span> comments</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">linux 文件权限和目录配置</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-10-03T01:33:25.000Z" title="Created 2021-10-03 09:33:25">2021-10-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-10-03T01:37:35.891Z" title="Updated 2021-10-03 09:37:35">2021-10-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux 文件权限和目录配置"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="linux-文件权限和目录配置"><a href="#linux-文件权限和目录配置" class="headerlink" title="linux 文件权限和目录配置"></a>linux 文件权限和目录配置</h2><p>涉及命令：</p>
+<ul>
+<li>切换用户：su -用户名      exit退出</li>
+<li>显示文件的所有属性权限：ls - al</li>
+</ul>
+<h3 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h3><ul>
+<li><p>Linux的每个文件中,可可分别给予使用者，群组，与其他人三种方式的rwx的权限。</p>
+</li>
+<li><p>root，一般用户的用户相关信息记录在/etc/passwd;个人密码记录在 /etc/shadow/;组名记录在 /etc/group</p>
+</li>
+<li><p>访问文件需要相关的权限，</p>
+</li>
+<li><p>群组最有用的功能之一，就是当你的团队开发资源的时候，每个账户都可以有多个群组支持。</p>
+</li>
+<li><p>利用ls -l显示的文件属性中，第一个字段是文件的权限，共有十位，</p>
+<p>第一位是文件类型，：d:目录，-:文件,I:连接档，b：接口设备。c:串行端口设备。</p>
+<p>接下来三个为一组，分为使用者，群组，其他人权限，权限有rwx三种，：可读 可写 可执行</p>
+</li>
+</ul>
+<p><strong>linux文件权限重要性：</strong> </p>
+<ul>
+<li>系统保护</li>
+<li>文件开发、数据共享</li>
+<li>权限设置避免安全问题</li>
+</ul>
+<p>修改文件属性和群组</p>
+<p><strong>更改文件的群组支持chgrp</strong></p>
+<p>要被改变的组名必须要在/etc/group 文件内存在才 行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chgrp [-R] dirname&#x2F;filename</span><br><span class="line">注：[-R] 是递归修改，更改文件目录下的所有文件或者目录的权限</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改文件的拥有者为chown</strong>，更改一个文件的拥有者与群组，使用什么指令。chown chgrp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">将目录中所有文件或目录更改文件拥有者</span><br><span class="line">chown [-R] 帐号名称 文件或目录</span><br><span class="line">chown [-R] 帐号名称：用户组名称 文件或目录</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改文件的权限用chmod</strong></p>
+<ul>
+<li><p>chmod修改权限的方式：</p>
+<ul>
+<li><p>符号法：u 、g、o、分别代表 user、group、others三种身份</p>
+<p>​        +、-、=分别代表加入、移除、设置三种操作</p>
+<p>例如：增加某个文件的让所有人可写入的权限 ：chmod a+w  文件名</p>
+</li>
+<li><p>数字法：rwx分数 分别为421；各种身份的权限数字进行累加</p>
+<p>例如：当一个文件的修改权限为 -rwx-xr–指令：chmod 754  文件名  或者chmod u=rwx，g=rx，o=r 文件名 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="权限的意义"><a href="#权限的意义" class="headerlink" title="权限的意义"></a>权限的意义</h3><p>权限对于目录和文件的作用略有不同，下面我们分开概述：</p>
+<ul>
+<li><p>文件</p>
+<ul>
+<li>r，可读此文件的实际内容，如读取文本文件的文字内容等。</li>
+<li>w，可以编辑，新增或者修改该文件的内容（不能删除）</li>
+<li>x，该文件具有可以被系统执行的权利。</li>
+</ul>
+</li>
+<li><p>目录：</p>
+<ul>
+<li>r：read contents in directory    可以查询文件名数据</li>
+<li>w：modify contents directory  可以对文件进行改动，包括 移动、新建、删除、重命名等。</li>
+<li>x：accessdirectory    能够进入该目录作为当前工作目录</li>
+</ul>
+</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ul>
+<li>要开放目录给任何人浏览，应该至少也要给予r及x的权限，但w的权限不可随便给。</li>
+<li>能否读取到某个文件内容，跟该文件所在的目录权限有关系，目录至少需要x的权限</li>
+</ul>
+<h3 id="linux文件种类："><a href="#linux文件种类：" class="headerlink" title="linux文件种类："></a>linux文件种类：</h3><p>常规文件：包括文本文件、二进制文件、数据文件  第一个字符为 -</p>
+<p>目录   director</p>
+<p>链接文件   类似windows的快捷方式</p>
+<p>设备与设备文件 device  包括 区块blocks和字符文件character </p>
+<p>数据接口文件  sockets</p>
+<p>数据接送文件   FIFO pipe</p>
+<ul>
+<li><p>Linux档名的限制，单一文件或目录最大容许的文件名为255个英文字符或者128 个汉字字符。</p>
+</li>
+<li><p>linux一个文件能否执行和文件扩展名没有关系，文件扩展名是用来便于用户是别文件功能，能否执行与 文件权限中的  权限的是个属性有关</p>
+</li>
+<li><p>文件能否执行成功最终要看件的内容</p>
+</li>
+</ul>
+<h3 id="linux目录配置："><a href="#linux目录配置：" class="headerlink" title="linux目录配置："></a>linux目录配置：</h3><ul>
+<li><p>绝对路径文件名为从根目录/开始写起，否则都为相对路径。</p>
+</li>
+<li><p>.  表示当前目录          ..  表示上级目录</p>
+</li>
+</ul>
+<p>常见目录功能:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;：根目录 ，最重要的目录</span><br><span class="line">&#x2F;etc&#x2F;:几乎系统所有的配置文件案都在这里，尤其是passwd和shaow</span><br><span class="line">&#x2F;boot&#x2F;:开机配置文件。也是预设摆放核心vmlinuz的地方。</span><br><span class="line">&#x2F;usr&#x2F;bin,&#x2F;bin:一般执行档摆放的地方。</span><br><span class="line">&#x2F;var&#x2F;log:摆放系统注册表文件的地方法</span><br><span class="line">&#x2F;dev:摆放所有系统装置文件的目录</span><br><span class="line">&#x2F;use&#x2F;sbin,&#x2F;sbin：系统管理员常用的指令集</span><br><span class="line">&#x2F;run:将经常变动的项目移动到内存暂存</span><br></pre></td></tr></table></figure>
+
+<p>根目录：</p>
+<p><img src="https://www.hualigs.cn/image/615904e2ddc91.jpg"></p>
+<p><img src="https://www.hualigs.cn/image/615904e3495de.jpg"></p>
+<p>/usr</p>
+<p><img src="https://www.hualigs.cn/image/615904e341b8c.jpg"></p>
+<p>/var</p>
+<p> <img src="https://www.hualigs.cn/image/615904e33db17.jpg"></p>
+<ul>
+<li>文档名有【.】开头表示为隐藏文档，需要使用ls-a这个-a选项才可以显示出隐藏文档的内容，而使用ls -al才能显示出属性。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/">http://example.com/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/essay/">essay</a></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/10/02/%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC/"><img class="next-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info"></div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">18</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE"><span class="toc-text">linux 文件权限和目录配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-text">文件权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-text">权限的意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E7%A7%8D%E7%B1%BB%EF%BC%9A"><span class="toc-text">linux文件种类：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="toc-text">linux目录配置：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/" title="linux 文件权限和目录配置"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux 文件权限和目录配置"/></a><div class="content"><a class="title" href="/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/" title="linux 文件权限和目录配置">linux 文件权限和目录配置</a><time datetime="2021-10-03T01:33:25.000Z" title="Created 2021-10-03 09:33:25">2021-10-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/02/%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC/" title="No title"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="No title"/></a><div class="content"><a class="title" href="/2021/10/02/%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC/" title="No title">No title</a><time datetime="2021-10-02T03:18:13.040Z" title="Created 2021-10-02 11:18:13">2021-10-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/02/summery-of-advanced-SQL/" title="summery-of -advanced-SQL"><img src="https://www.hualigs.cn/image/60892a8f64b7f.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="summery-of -advanced-SQL"/></a><div class="content"><a class="title" href="/2021/10/02/summery-of-advanced-SQL/" title="summery-of -advanced-SQL">summery-of -advanced-SQL</a><time datetime="2021-10-02T02:27:50.000Z" title="Created 2021-10-02 10:27:50">2021-10-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/02/%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7-JDBC-1/" title="尚硅谷_宋红康_JDBC"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="尚硅谷_宋红康_JDBC"/></a><div class="content"><a class="title" href="/2021/08/02/%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7-JDBC-1/" title="尚硅谷_宋红康_JDBC">尚硅谷_宋红康_JDBC</a><time datetime="2021-08-02T02:17:49.000Z" title="Created 2021-08-02 10:17:49">2021-08-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/17/Java%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" title="No title"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="No title"/></a><div class="content"><a class="title" href="/2021/07/17/Java%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" title="No title">No title</a><time datetime="2021-07-17T15:49:31.952Z" title="Created 2021-07-17 23:49:31">2021-07-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

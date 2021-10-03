@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/10/03/linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%92%8C%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2021-10-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/10/02/%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC/</loc>
+    
+    <lastmod>2021-10-02</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/06/02/Computer-network-Summery-of-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/</loc>
     
     <lastmod>2021-10-02</lastmod>
@@ -158,7 +172,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-10-02</lastmod>
+    <lastmod>2021-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -166,14 +180,21 @@
   
   <url>
     <loc>http://example.com/tags/thinks/</loc>
-    <lastmod>2021-10-02</lastmod>
+    <lastmod>2021-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/java/</loc>
-    <lastmod>2021-10-02</lastmod>
+    <lastmod>2021-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/essay/</loc>
+    <lastmod>2021-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -182,21 +203,28 @@
   
   <url>
     <loc>http://example.com/categories/thinks/</loc>
-    <lastmod>2021-10-02</lastmod>
+    <lastmod>2021-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/mysql/</loc>
-    <lastmod>2021-10-02</lastmod>
+    <lastmod>2021-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/network/</loc>
-    <lastmod>2021-10-02</lastmod>
+    <lastmod>2021-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/linux/</loc>
+    <lastmod>2021-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
