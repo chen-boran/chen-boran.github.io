@@ -1,0 +1,768 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Zookeeper | boranの小さな巣</title><meta name="keywords" content="thinks"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="some of my thinks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper">
+<meta property="og:url" content="http://example.com/2021/10/31/Zookeeper/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="some of my thinks">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg">
+<meta property="article:published_time" content="2021-10-31T13:16:49.000Z">
+<meta property="article:modified_time" content="2021-10-31T13:21:17.458Z">
+<meta property="article:author" content="chen-boran">
+<meta property="article:tag" content="thinks">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2021/10/31/Zookeeper/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-10-31 21:21:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">25</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">2</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fa fa-book"></i><span> books</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> about</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-list"></i><span> comments</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fa fa-book"></i><span> books</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> about</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-list"></i><span> comments</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Zookeeper</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-10-31T13:16:49.000Z" title="Created 2021-10-31 21:16:49">2021-10-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-10-31T13:21:17.458Z" title="Updated 2021-10-31 21:21:17">2021-10-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/thinks/">thinks</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Zookeeper"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p>ZooKeeper 是分布式应用程序的高性能协调服务。它在一个简单的界面中公开了公共服务——例如命名、配置管理、同步和组服务，因此您不必从头开始编写它们。您可以使用现成的它来实现共识、组管理、领导者选举和出席协议。您可以根据自己的特定需求在此基础上进行构建。</p>
+<p>zookeeper主要是文件系统和通知机制</p>
+<p>文件系统主要是用来存储数据<br>通知机制主要是服务器或者客户端进行通知，并且监督<br>基于观察者模式设计的分布式服务管理框架，开源的分布式框架</p>
+<p><strong>特点</strong></p>
+<p>一个leader，多个follower的集群<br>集群只要有半数以上包括半数就可正常服务，一般安装奇数台服务器<br>全局数据一致，每个服务器都保存同样的数据，实时更新<br>更新的请求顺序保持顺序（来自同一个服务器）<br>数据更新的原子性，数据要么成功要么失败<br>数据实时更新性很快<br>主要的集群步骤为</p>
+<p>服务端启动时去注册信息（创建都是临时节点）<br>获取到当前在线服务器列表，并且注册监听<br>服务器节点下线<br>服务器节点上下线事件通知<br>process(){重新再去获取服务器列表，并注册监听}<br>数据结构<br>与 Unix 文件系统很类似，可看成树形结构，每个节点称做一个 ZNode。每一个 ZNode 默认能够存储 1MB 的数据。也就是只能存储小数据</p>
+<p>应用场景</p>
+<p>统一命名服务（域名服务）<br>统一配置管理（一个集群中的所有配置都一致，且也要实时更新同步）<br>将配置信息写入ZooKeeper上的一个Znode，各个客户端服务器监听这个Znode。一旦Znode中的数据被修改，ZooKeeper将通知各个客户端服务器<br>统一集群管理（掌握实时状态）<br>将节点信息写入ZooKeeper上的一个ZNode。监听ZNode获取实时状态变化<br>服务器节点动态上下线<br>软负载均衡（根据每个节点的访问数，让访问数最少的服务器处理最新的数据需求）</p>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p><strong>目录介绍：</strong></p>
+<p>bin目录 框架启动停止，客户端和服务端的<br>conf 配置文件信息<br>docs文档<br>lib 配置文档的依赖</p>
+<h3 id="2-2-本地安装过程"><a href="#2-2-本地安装过程" class="headerlink" title="2.2 本地安装过程"></a>2.2 本地安装过程</h3><p>安装运行在Linux系统</p>
+<p>官网首页： </p>
+<p><a target="_blank" rel="noopener" href="https://zookeeper.apache.org/">https://zookeeper.apache.org/</a></p>
+<p><strong>1）</strong> 安装前准备</p>
+<p>（1）安装 JDK </p>
+<p>（2） 拷贝 apache-zookeeper-3.5.7-bin.tar.gz 安装包到 Linux 系统中</p>
+<p>（3） 解压到指定目录 </p>
+<pre><code>      tar -zxvf apache-zookeeper-3.5.7bin.tar.gz -C /opt/module/ 
+</code></pre>
+<p>（4） 修改名称 </p>
+<pre><code>     mv apache-zookeeper-3.5.7 -bin/ zookeeper-3.5.7 
+</code></pre>
+<p><strong>2）</strong> 配置修改 </p>
+<p>（1） 将/opt/module/zookeeper-3.5.7/conf 这个路径下的 zoo_sample.cfg 修改为 zoo.cfg； </p>
+<pre><code>      mv zoo_sample.cfg zoo.cfg 
+</code></pre>
+<p>（2） 打开 zoo.cfg 文件，修改 dataDir 路径： </p>
+<p>​         vim zoo.cfg </p>
+<p>​        修改如下内容： </p>
+<p>​        dataDir=/opt/module/zookeeper-3.5.7/zkData </p>
+<p>（3） 在/opt/module/zookeeper-3.5.7/这个目录上创建 zkData 文件夹 </p>
+<pre><code> mkdir zkData 
+</code></pre>
+<p><strong>3）</strong> 操作 <strong>Zookeeper</strong> </p>
+<p>（1） 启动 Zookeeper </p>
+<p>​     bin/zkServer.sh start </p>
+<p>（2） 查看进程是否启动 </p>
+<p> jps </p>
+<p>（3） 查看状态 </p>
+<p>  bin/zkServer.sh status </p>
+<p>（4） 启动客户端 </p>
+<p>  bin/zkCli.sh </p>
+<p>（5） 退出客户端： </p>
+<pre><code>     quit 
+</code></pre>
+<p>（6） 停止 Zookeeper </p>
+<h3 id="2-2-配置文件conf"><a href="#2-2-配置文件conf" class="headerlink" title="2.2 配置文件conf"></a>2.2 配置文件conf</h3><p><strong>5大参数</strong></p>
+<ol>
+<li>tickTime = 2000发送时间</li>
+<li>initLimit = 10 第一次建立通信的时间（本例：10 x tickTime =2 s），最长容忍时间 ，超过，则建立通信失败</li>
+<li>syncLimit = 5建立好连接后，下次的通信时间如果超过设定值，通信将会失败</li>
+<li>dataDir保存zookeeper的数据，默认是temp会被系统定期清除（因此修改成我们自定义的路径）</li>
+<li>clientPort = 2181客户端的连接端口 </li>
+</ol>
+<h2 id="3-zookeeper集群操作"><a href="#3-zookeeper集群操作" class="headerlink" title="3.zookeeper集群操作"></a>3.zookeeper集群操作</h2><h3 id="3-1-集群安装"><a href="#3-1-集群安装" class="headerlink" title="3.1 集群安装"></a><strong>3.1</strong> 集群安装</h3><p>假设三个节点部署zookeeper<br>那么需要3台服务器</p>
+<p><strong>1）</strong> 集群规划 </p>
+<p>在 hadoop102、hadoop103 和 hadoop104 三个节点上都部署 Zookeeper。 </p>
+<p>思考：如果是<em>10</em> 台服务器，需要部署多少台<em>Zookeeper</em>？ </p>
+<p><strong>2）</strong> 解压安装 </p>
+<p>（1） 在 hadoop102 解压 Zookeeper 安装包到/opt/module/目录下 </p>
+<p>[atguigu@hadoop102 software]$ tar -zxvf apache-zookeeper-3.5.7bin.tar.gz -C /opt/module/ </p>
+<p>（2） 修改 apache-zookeeper-3.5.7-bin 名称为 zookeeper-3.5.7 </p>
+<p>[atguigu@hadoop102 module]$ mv apache-zookeeper-3.5.7-bin/ zookeeper-3.5.7 </p>
+<p><strong>3）</strong> 配置服务器编号 </p>
+<p>（1） 在/opt/module/zookeeper-3.5.7/这个目录下创建 zkData </p>
+<p>[atguigu@hadoop102 zookeeper-3.5.7]$ mkdir zkData </p>
+<p>（2） 在/opt/module/zookeeper-3.5.7/zkData 目录下创建一个 myid 的文件 </p>
+<p>[atguigu@hadoop102 zkData]$ vi myid </p>
+<p>在文件中添加与 server 对应的编号（注意：上下不要有空行，左右不要有空格） </p>
+<p>2 </p>
+<p>注意：添加 myid 文件，一定要在 Linux 里面创建，在 notepad++里面很可能乱码 </p>
+<p>（3） 拷贝配置好的 zookeeper 到其他机器上 </p>
+<p>[atguigu@hadoop102 module ]$ xsync  zookeeper-3.5.7 </p>
+<p>并分别在 hadoop103、hadoop104 上修改 myid 文件中内容为 3、4 </p>
+<p><strong>4）</strong> 配置<strong>zoo.cfg</strong>文件 </p>
+<p>（1） 重命名/opt/module/zookeeper-3.5.7/conf 这个目录下的 zoo_sample.cfg 为 zoo.cfg </p>
+<p>[atguigu@hadoop102 conf]$ mv zoo_sample.cfg zoo.cfg </p>
+<p>（2） 打开 zoo.cfg 文件 </p>
+<p>[atguigu@hadoop102 conf]$ vim zoo.cfg </p>
+<p>#修改数据存储路径配置 </p>
+<p>dataDir=/opt/module/zookeeper-3.5.7/zkData </p>
+<p>#增加如下配置 </p>
+<p>#######################cluster########################## server.2=hadoop102:2888:3888 </p>
+<p>server.3=hadoop103:2888:3888 </p>
+<p>server.4=hadoop104:2888:3888 </p>
+<p>（3） 配置参数解读 </p>
+<p>server.A=B:C:D。 </p>
+<p><strong>A</strong> 是一个数字，表示这个是第几号服务器；集群模式下配置一个文件 myid，这个文件在 dataDir 目录下，这个文件里面有一个数据就是 A 的值，Zookeeper 启动时读取此文件，拿到里面的数据与 zoo.cfg 里面的配置信息比较从而判断到底是哪个 server。 </p>
+<p><strong>B</strong> 是这个服务器的地址； </p>
+<p><strong>C</strong> 是这个服务器 Follower 与集群中的 Leader 服务器交换信息的端口； </p>
+<p><strong>D</strong> 是万一集群中的 Leader 服务器挂了，需要一个端口来重新进行选举，选出一个新的</p>
+<p>Leader，而这个端口就是用来执行选举时服务器相互通信的端口。 </p>
+<p>（4） 同步 zoo.cfg 配置文件 </p>
+<p>[atguigu@hadoop102 conf]$ xsync zoo.cfg </p>
+<p><strong>选举机制</strong><br>面试的重点<br> 第一次启动时</p>
+<p>非第一次启动，注意选举的规则 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031211854524.png" alt="image-20211031211854524"></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031211930380.png" alt="image-20211031211930380"></p>
+<p><strong>集群启动停止脚本</strong><br>当涉及的服务器很多，就需要逐个服务器去启动和关闭</p>
+<p>可以创建开启和关闭脚本文件</p>
+<p>大致如下：<br>在文件目录下建立一个后缀名为sh的文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">case $1 in</span><br><span class="line">&quot;start&quot;)&#123;</span><br><span class="line">for i in hadoop102 hadoop103 hadoop104</span><br><span class="line">do</span><br><span class="line">echo ---------- zookeeper $i 启动 ------------</span><br><span class="line">ssh $i &quot;&#x2F;opt&#x2F;module&#x2F;zookeeper-3.5.7&#x2F;bin&#x2F;zkServer.sh </span><br><span class="line">start&quot;</span><br><span class="line">done</span><br><span class="line">&#125;;;</span><br><span class="line">&quot;stop&quot;)&#123;</span><br><span class="line">for i in hadoop102 hadoop103 hadoop104</span><br><span class="line">do</span><br><span class="line">echo ---------- zookeeper $i 停止 ------------ </span><br><span class="line">ssh $i &quot;&#x2F;opt&#x2F;module&#x2F;zookeeper-3.5.7&#x2F;bin&#x2F;zkServer.sh </span><br><span class="line">stop&quot;</span><br><span class="line">done</span><br><span class="line">&#125;;;</span><br><span class="line">&quot;status&quot;)&#123;</span><br><span class="line">for i in hadoop102 hadoop103 hadoop104</span><br><span class="line">do</span><br><span class="line">echo ---------- zookeeper $i 状态 ------------ </span><br><span class="line">ssh $i &quot;&#x2F;opt&#x2F;module&#x2F;zookeeper-3.5.7&#x2F;bin&#x2F;zkServer.sh </span><br><span class="line">status&quot;</span><br><span class="line">done</span><br><span class="line">&#125;;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+
+<p>修改该文件的权限</p>
+<p>chmod 777 zk.sh<br>之后在一个服务器中执行./zk.sh start就可启动脚本文件，其他命令也如此</p>
+<p>查看其进程号<br>可以通过jpsall 就可查看所有服务器的进程</p>
+<h3 id="3-2-客户端命令"><a href="#3-2-客户端命令" class="headerlink" title="3.2 客户端命令"></a>3.2 客户端命令</h3><p> <strong>常用命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>help</td>
+<td>显示所有操作命令</td>
+</tr>
+<tr>
+<td>Ls path</td>
+<td>使用 ls 命令来查看当前 znode 的子节点 [可监听] ，-w 监听子节点变化，-s 附加次级信息</td>
+</tr>
+<tr>
+<td>create</td>
+<td>普通创建</td>
+</tr>
+<tr>
+<td>create -s</td>
+<td>创建含有序列的节点</td>
+</tr>
+<tr>
+<td>create -e</td>
+<td>临时创建节点（重启或者超时消失）</td>
+</tr>
+<tr>
+<td>get path</td>
+<td>获得节点的值 [可监听] ，-w 监听节点内容变化</td>
+</tr>
+<tr>
+<td>get path -s</td>
+<td>附加次级信息</td>
+</tr>
+<tr>
+<td>set</td>
+<td>设置节点的具体值</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>删除节点</td>
+</tr>
+<tr>
+<td>deleteall</td>
+<td>递归删除节点</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>查看结点状态</td>
+</tr>
+</tbody></table>
+<p><strong>客户端显示命令</strong></p>
+<p>查看当前znode包含的信息</p>
+<p>[zk: localhost:2181(CONNECTED) 0] ls /<br>[zookeeper]</p>
+<p>查看当前数据节点详细信息</p>
+<p>ls -s /</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031202949441.png" alt="image-20211031202949441"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">注意：</span><br><span class="line">启动客户端的时候默认是本地的localhost</span><br><span class="line">如果要启动专门的服务器</span><br><span class="line">开启客户端服务时使用以下格式：</span><br><span class="line">	bin&#x2F;zkCli.sh -server 服务器名:2181</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p> <strong>节点类型</strong><br> 持久/短暂<br>有序号/无序号</p>
+<p>创建节点不带序号的 ：  create </p>
+<p>创建节点带序号的 ： create  -s</p>
+<p>创建同名节点也会区分不同</p>
+<p>退出客户端之后，这些节点并没有被清除</p>
+<p>创建临时节点 ：create -e<br>临时节点不带序号-e<br>临时节点带序号：create  -e -s<br>如果退出客户端，这些短暂节点将会被清除</p>
+<p>修改节点的值 ：set key value</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031211955891.png" alt="image-20211031211955891"></p>
+<p> <strong>监听器原理</strong></p>
+<p>客户端注册监听它关心的目录节点，当目录节点发生变化（数据改变、节点删除、子目录节点增加删除）时，ZooKeeper 会通知客户端。监听机制保证 ZooKeeper 保存的任何的数</p>
+<p>据的任何改变都能快速的响应到监听了该节点的应用程序。</p>
+<p>1）节点的值变化监听 </p>
+<p>（1） 在 hadoop104 主机上注册监听/sanguo 节点数据变化 </p>
+<pre><code> get -w /sanguo  
+</code></pre>
+<p>（2） 在 hadoop103 主机上修改/sanguo 节点的数据 </p>
+<pre><code>  set /sanguo &quot;xisi&quot; 
+</code></pre>
+<p>（3） 观察 hadoop104 主机收到数据变化的监听  </p>
+<p> 注意：在hadoop103再多次修改/sanguo的值，hadoop104上不会再收到监听。因为注册</p>
+<p>一次，只能监听一次。想再次监听，需要再次注册。 </p>
+<p>2 ）节点的子节点变化监听（路径变化） </p>
+<p>（1） 在 hadoop104 主机上注册监听/sanguo 节点的子节点变化 </p>
+<p> ls -w /sanguo  </p>
+<p>（2） 在 hadoop103 主机/sanguo 节点上创建子节点 </p>
+<p>  create /sanguo/jin “simayi” Created /sanguo/jin </p>
+<p>（3） 观察 hadoop104 主机收到子节点变化的监听 </p>
+<p>注意：节点的路径变化，也是注册一次，生效一次。想多次生效，就需要多次注册。 </p>
+<p>3）节点删除与查看 </p>
+<p><strong>（1）</strong> 删除节点 </p>
+<p>  delete /sanguo/jin </p>
+<p><strong>（2）</strong> 递归删除节点 </p>
+<p>  deleteall /sanguo/shuguo </p>
+<p><strong>(3）</strong> 查看节点状态 </p>
+<p>  stat /sanguo  </p>
+<h3 id="3-3-客户端代码操作"><a href="#3-3-客户端代码操作" class="headerlink" title="3.3 客户端代码操作"></a>3.3 客户端代码操作</h3><p>创建一个工程<br>在pom文件中配好依赖文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;junit&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;junit&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.logging.log4j&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;log4j-core&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.8.2&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.zookeeper&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;zookeeper&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.5.7&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;&#x2F;dependencies&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>资源配置文件中配置日志文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger&#x3D;INFO, stdout </span><br><span class="line">log4j.appender.stdout&#x3D;org.apache.log4j.ConsoleAppender </span><br><span class="line">log4j.appender.stdout.layout&#x3D;org.apache.log4j.PatternLayout </span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern&#x3D;%d %p [%c] </span><br><span class="line"></span><br><span class="line">- %m%n </span><br><span class="line">  log4j.appender.logfile&#x3D;org.apache.log4j.FileAppender </span><br><span class="line">  log4j.appender.logfile.File&#x3D;target&#x2F;spring.log </span><br><span class="line">  log4j.appender.logfile.layout&#x3D;org.apache.log4j.PatternLayout </span><br><span class="line">  log4j.appender.logfile.layout.ConversionPattern&#x3D;%d %p [%c] </span><br><span class="line">- %m%n</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+
+<p>在客户端中生成具体代码<br>初始化并且负责监听节点<br>主要通过设置连接的服务器，以及超时参数，监听匿名函数new Watcher() {}</p>
+<pre><code> // 注意：逗号左右不能有空格
+ private String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;
+    private int sessionTimeout = 2000;
+    private ZooKeeper zkClient;@Before
+public void init() throws IOException &#123;
+
+    zkClient = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;
+        @Override
+        public void process(WatchedEvent watchedEvent) &#123;
+    &#125;);
+&#125;
+
+&#125;
+</code></pre>
+<p>创建一个新的节点<br>创建的节点必须在初始化节点这些之后，通过注解，在之前中加入before</p>
+<p>第一个参数是路径<br>第二个参数是数据，要求是字节类型，需要用getBytes()<br>第三个参数是权限，Ids.OPEN_ACL_UNSAFE允许所有人进行访问<br>第四个参数是创建节点的类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">   public void create() throws KeeperException, InterruptedException &#123;</span><br><span class="line">       String nodeCreated &#x3D; zkClient.create(&quot;&#x2F;manongyanjiuseng &quot;, &quot;123&quot;.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>获取子节点并且监听其变化<br>获取子节点通过getChildren()<br>关于获取子节点一共有两种</p>
+<p>获取子节点第一个是路径，第二个是监听函数，如果使用true，则会使用初始化函数中重写的监听函数</p>
+<pre><code>@Test
+public void getChildren() throws KeeperException, InterruptedException &#123;
+    List&lt;String&gt; children = zkClient.getChildren(&quot;/&quot;, true);
+for (String child : children) &#123;
+    System.out.println(child);
+&#125;
+
+// 延时
+Thread.sleep(Long.MAX_VALUE);
+</code></pre>
+<p>注册一次生效一次，还需要在进行注册<br>希望通过延迟函数延迟程序的结束，继续监听Thread.sleep(Long.MAX_VALUE);<br>放在监听函数中就可以注册一次生效一次，之后在注册</p>
+<pre><code>   zkClient = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;
+    @Override
+    public void process(WatchedEvent watchedEvent) &#123;
+   System.out.println(&quot;-------------------------------&quot;);
+    List&lt;String&gt; children = null;
+    try &#123;
+        children = zkClient.getChildren(&quot;/&quot;, true);
+
+        for (String child : children) &#123;
+            System.out.println(child);
+        &#125;
+
+        System.out.println(&quot;-------------------------------&quot;);
+    &#125; catch (KeeperException e) &#123;
+        e.printStackTrace();
+    &#125; catch (InterruptedException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+&#125;);
+</code></pre>
+<p>判断节点是否存在<br>exits函数，返回的是状态信息，通过状态信息判断是否还在<br>第一个参数是路径<br>第二个参数是是否监听</p>
+<pre><code>@Test
+public void exist() throws KeeperException, InterruptedException &#123;
+Stat stat = zkClient.exists(&quot;/manongyanjiuseng&quot;, false);
+
+System.out.println(stat==null? &quot;not exist &quot; : &quot;exist&quot;);
+</code></pre>
+<h3 id="3-4-写数据流程"><a href="#3-4-写数据流程" class="headerlink" title="3.4  写数据流程"></a>3.4  写数据流程</h3><p>(客户端向服务端)</p>
+<p>发送给leader的时候<br>通俗解释：客户端给服务器的leader发送写请求，写完数据后给手下发送写请求，手下写完发送给leader，超过半票以上都写了则发回给客户端。之后leader在给其他手下让他们写，写完在发数据给leader</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031212021671.png" alt="image-20211031212021671"></p>
+<p>发送给follower的时候<br>通俗解释：客户端给手下发送写的请求，手下给leader发送写的请求，写完后，给手下发送写的请求，手下写完后给leader发送确认，超过半票，leader确认后，发给刻划断，之后leader在发送写请求给其他手下</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031212037192.png" alt="image-20211031212037192"></p>
+<h2 id="4-案例：服务器动态上下线监听"><a href="#4-案例：服务器动态上下线监听" class="headerlink" title="4. 案例：服务器动态上下线监听"></a>4. 案例：服务器动态上下线监听</h2><p>图示：</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031212052454.png" alt="image-20211031212052454"></p>
+<p>服务器上线的时候其实就是服务器启动时去注册信息（创建的都是临时节点）<br>客户端获取到当前在线的服务器列表后<br>服务器节点下线后给集群管理<br>集群管理服务器节点的下件时间通知给客户端<br>客户端通过获取服务器列表重选选择服务器<br>服务器代码</p>
+<p>获取zookeeper集群的连接，通过zookeeper的构造函数ZooKeeper(connectString, sessionTimeout, new Watcher(){})<br>将其服务注册到zookeeper集群中，具体通过create的函数，通过获取每个服务器名字、其值、权限、节点类型<br>执行该函数通过延迟函数<br>public class DistributeServer {</p>
+<pre><code>private String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;
+private int sessionTimeout = 2000;
+private ZooKeeper zk;
+
+public static void main(String[] args) throws IOException, KeeperException, InterruptedException &#123;
+
+    DistributeServer server = new DistributeServer();
+    // 1 获取zk连接
+    server.getConnect();
+
+    // 2 注册服务器到zk集群
+    server.regist(args[0]);
+
+
+    // 3 启动业务逻辑（睡觉）
+    server.business();
+
+&#125;
+
+private void business() throws InterruptedException &#123;
+    Thread.sleep(Long.MAX_VALUE);
+&#125;
+
+private void regist(String hostname) throws KeeperException, InterruptedException &#123;
+    String create = zk.create(&quot;/servers/&quot;+hostname, hostname.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+
+    System.out.println(hostname +&quot; is online&quot;) ;
+&#125;
+
+private void getConnect() throws IOException &#123;
+
+    zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;
+        @Override
+        public void process(WatchedEvent watchedEvent) &#123;
+
+        &#125;
+    &#125;);
+&#125;
+</code></pre>
+<p>客户端代码</p>
+<p>获取zookeeper集群的连接，通过zookeeper的构造函数ZooKeeper(connectString, sessionTimeout, new Watcher(){})<br>客户端通过监听每个节点，具体监听通过getChildren函数，获取其节点位置，以及是否使用初始化的监听函数，true为使用。获取到的都是以列表存在，输出的时候通过遍历实现，输出的还是一些数组格式。将这些数组都封装到一个列表中，最后统一输出列表即可<br>执行该函数通过延迟函数<br>因为注册的时候记录一次<br>所以在初始化的时候，将其注册放在初始化内部getServerList();</p>
+<pre><code>public class DistributeClient &#123;
+private String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;
+private int sessionTimeout = 2000;
+private ZooKeeper zk;
+
+public static void main(String[] args) throws IOException, KeeperException, InterruptedException &#123;
+    DistributeClient client = new DistributeClient();
+
+    // 1 获取zk连接
+    client.getConnect();
+
+    // 2 监听/servers下面子节点的增加和删除
+    client.getServerList();
+
+    // 3 业务逻辑（睡觉）
+    client.business();
+
+&#125;
+
+private void business() throws InterruptedException &#123;
+    Thread.sleep(Long.MAX_VALUE);
+&#125;
+
+private void getServerList() throws KeeperException, InterruptedException &#123;
+    List&lt;String&gt; children = zk.getChildren(&quot;/servers&quot;, true);
+
+    ArrayList&lt;String&gt; servers = new ArrayList&lt;&gt;();
+
+    for (String child : children) &#123;
+
+        byte[] data = zk.getData(&quot;/servers/&quot; + child, false, null);
+
+        servers.add(new String(data));
+    &#125;
+
+    // 打印
+    System.out.println(servers);
+&#125;
+
+private void getConnect() throws IOException &#123;
+    zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;
+        @Override
+        public void process(WatchedEvent watchedEvent) &#123;
+
+            try &#123;
+                getServerList();
+            &#125; catch (KeeperException e) &#123;
+                e.printStackTrace();
+            &#125; catch (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;);
+&#125;
+</code></pre>
+<h2 id="5-案例：分布式锁"><a href="#5-案例：分布式锁" class="headerlink" title="5. 案例：分布式锁"></a>5. 案例：分布式锁</h2><h3 id="5-1-原生zookeeper分布式锁"><a href="#5-1-原生zookeeper分布式锁" class="headerlink" title="5.1 原生zookeeper分布式锁"></a>5.1 原生zookeeper分布式锁</h3><p>图示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20211031212109623.png" alt="image-20211031212109623"></p>
+<p>创建节点，判断是否是最小的节点<br>如果不是最小的节点，需要监听前一个的节点</p>
+<p>健壮性可以通过CountDownLatch类</p>
+<p>内部的代码中具体参数设置<br>可参考这些文章<br>java中substring用法详细分析（全）</p>
+<p>监听函数<br>如果集群状态是连接，则释放connectlatch<br>如果集群类型是删除，且前一个节点的位置等于该节点的文职，则释放该节点</p>
+<p>判断节点是否存在不用一直监听<br>获取节点信息要一直监听getData</p>
+<pre><code>public class DistributedLock &#123;
+private final String connectString = &quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;;
+private final int sessionTimeout = 2000;
+private final ZooKeeper zk;
+
+private CountDownLatch connectLatch = new CountDownLatch(1);
+private CountDownLatch waitLatch = new CountDownLatch(1);
+
+private String waitPath;
+private String currentMode;
+
+public DistributedLock() throws IOException, InterruptedException, KeeperException &#123;
+
+    // 获取连接
+    zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;
+        @Override
+        public void process(WatchedEvent watchedEvent) &#123;
+            // connectLatch  如果连接上zk  可以释放
+            if (watchedEvent.getState() == Event.KeeperState.SyncConnected)&#123;
+                connectLatch.countDown();
+            &#125;
+
+            // waitLatch  需要释放
+            if (watchedEvent.getType()== Event.EventType.NodeDeleted &amp;&amp; watchedEvent.getPath().equals(waitPath))&#123;
+                waitLatch.countDown();
+            &#125;
+        &#125;
+    &#125;);
+
+    // 等待zk正常连接后，往下走程序
+    connectLatch.await();
+
+    // 判断根节点/locks是否存在
+    Stat stat = zk.exists(&quot;/locks&quot;, false);
+
+    if (stat == null) &#123;
+        // 创建一下根节点
+        zk.create(&quot;/locks&quot;, &quot;locks&quot;.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+    &#125;
+&#125;
+
+// 对zk加锁
+public void zklock() &#123;
+    // 创建对应的临时带序号节点
+    try &#123;
+        currentMode = zk.create(&quot;/locks/&quot; + &quot;seq-&quot;, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+
+        // wait一小会, 让结果更清晰一些
+        Thread.sleep(10);
+
+        // 判断创建的节点是否是最小的序号节点，如果是获取到锁；如果不是，监听他序号前一个节点
+
+        List&lt;String&gt; children = zk.getChildren(&quot;/locks&quot;, false);
+
+        // 如果children 只有一个值，那就直接获取锁； 如果有多个节点，需要判断，谁最小
+        if (children.size() == 1) &#123;
+            return;
+        &#125; else &#123;
+            Collections.sort(children);
+
+            // 获取节点名称 seq-00000000
+            String thisNode = currentMode.substring(&quot;/locks/&quot;.length());
+            // 通过seq-00000000获取该节点在children集合的位置
+            int index = children.indexOf(thisNode);
+
+            // 判断
+            if (index == -1) &#123;
+                System.out.println(&quot;数据异常&quot;);
+            &#125; else if (index == 0) &#123;
+                // 就一个节点，可以获取锁了
+                return;
+            &#125; else &#123;
+                // 需要监听  他前一个节点变化
+                waitPath = &quot;/locks/&quot; + children.get(index - 1);
+                zk.getData(waitPath,true,new Stat());
+
+                // 等待监听
+                waitLatch.await();
+
+                return;
+            &#125;
+        &#125;
+
+
+    &#125; catch (KeeperException e) &#123;
+        e.printStackTrace();
+    &#125; catch (InterruptedException e) &#123;
+        e.printStackTrace();
+    &#125;
+
+
+&#125;
+
+// 解锁
+public void unZkLock() &#123;
+
+    // 删除节点
+    try &#123;
+        zk.delete(this.currentMode,-1);
+    &#125; catch (InterruptedException e) &#123;
+        e.printStackTrace();
+    &#125; catch (KeeperException e) &#123;
+        e.printStackTrace();
+    &#125;
+
+&#125;
+</code></pre>
+<p>测试代码： </p>
+<pre><code>public class DistributedLockTest &#123; 
+public static void main(String[] args) throws InterruptedException, IOException, KeeperException &#123;
+
+   final  DistributedLock lock1 = new DistributedLock();
+
+    final  DistributedLock lock2 = new DistributedLock();
+
+   new Thread(new Runnable() &#123;
+       @Override
+       public void run() &#123;
+           try &#123;
+               lock1.zklock();
+               System.out.println(&quot;线程1 启动，获取到锁&quot;);
+               Thread.sleep(5 * 1000);
+
+               lock1.unZkLock();
+               System.out.println(&quot;线程1 释放锁&quot;);
+           &#125; catch (InterruptedException e) &#123;
+               e.printStackTrace();
+           &#125;
+       &#125;
+   &#125;).start();
+
+    new Thread(new Runnable() &#123;
+        @Override
+        public void run() &#123;
+
+            try &#123;
+                lock2.zklock();
+                System.out.println(&quot;线程2 启动，获取到锁&quot;);
+                Thread.sleep(5 * 1000);
+
+                lock2.unZkLock();
+                System.out.println(&quot;线程2 释放锁&quot;);
+            &#125; catch (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;).start();
+
+&#125;
+</code></pre>
+<h3 id="5-2-curator分布式锁"><a href="#5-2-curator分布式锁" class="headerlink" title="5.2 curator分布式锁"></a>5.2 curator分布式锁</h3><p>原生的 Java API 开发存在的问题<br>（1）会话连接是异步的，需要自己去处理。比如使用CountDownLatch<br>（2）Watch 需要重复注册，不然就不能生效<br>（3）开发的复杂性还是比较高的<br>（4）不支持多节点删除和创建。需要自己去递归</p>
+<p>curator可以解决上面的问题</p>
+<p>添加相关的依赖文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.curator&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;curator-framework&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.3.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.curator&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;curator-recipes&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.3.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.curator&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;curator-client&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.3.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>主要是通过工程类的定义</p>
+<p>编写实现代码如下</p>
+<pre><code>public class CuratorLockTest &#123;
+public static void main(String[] args) &#123;
+
+    // 创建分布式锁1
+    InterProcessMutex lock1 = new InterProcessMutex(getCuratorFramework(), &quot;/locks&quot;);
+
+    // 创建分布式锁2
+    InterProcessMutex lock2 = new InterProcessMutex(getCuratorFramework(), &quot;/locks&quot;);
+
+    new Thread(new Runnable() &#123;
+        @Override
+        public void run() &#123;
+            try &#123;
+                lock1.acquire();
+                System.out.println(&quot;线程1 获取到锁&quot;);
+
+                lock1.acquire();
+                System.out.println(&quot;线程1 再次获取到锁&quot;);
+
+                Thread.sleep(5 * 1000);
+
+                lock1.release();
+                System.out.println(&quot;线程1 释放锁&quot;);
+
+                lock1.release();
+                System.out.println(&quot;线程1  再次释放锁&quot;);
+
+            &#125; catch (Exception e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;).start();
+
+    new Thread(new Runnable() &#123;
+        @Override
+        public void run() &#123;
+            try &#123;
+                lock2.acquire();
+                System.out.println(&quot;线程2 获取到锁&quot;);
+
+                lock2.acquire();
+                System.out.println(&quot;线程2 再次获取到锁&quot;);
+
+                Thread.sleep(5 * 1000);
+
+                lock2.release();
+                System.out.println(&quot;线程2 释放锁&quot;);
+
+                lock2.release();
+                System.out.println(&quot;线程2  再次释放锁&quot;);
+
+            &#125; catch (Exception e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;).start();
+&#125;
+
+private static CuratorFramework getCuratorFramework() &#123;
+
+    ExponentialBackoffRetry policy = new ExponentialBackoffRetry(3000, 3);
+
+    CuratorFramework client = CuratorFrameworkFactory.builder().connectString(&quot;hadoop102:2181,hadoop103:2181,hadoop104:2181&quot;)
+            .connectionTimeoutMs(2000)
+            .sessionTimeoutMs(2000)
+            .retryPolicy(policy).build();
+
+    // 启动客户端
+    client.start();
+
+    System.out.println(&quot;zookeeper 启动成功&quot;);
+    return client;
+&#125;
+</code></pre>
+<h2 id="6-总结企业面试"><a href="#6-总结企业面试" class="headerlink" title="6.总结企业面试"></a>6.总结企业面试</h2><p>企业中常考的面试有选举机制、集群安装以及常用命令</p>
+<p>1.选举机制<br>半数机制，超过半数的投票通过，即通过。<br>（1）第一次启动选举规则：<br>投票过半数时，服务器 id 大的胜出<br>（2）第二次启动选举规则：<br>        ①EPOCH 大的直接胜出<br>        ②EPOCH 相同，事务 id 大的胜出<br>        ③事务 id 相同，服务器 id 大的胜出</p>
+<p>2.集群安装</p>
+<p>安装奇数台<br>服务器台数多：好处，提高可靠性；坏处：提高通信延时</p>
+<p>3.ZK 集群中有几种不同的角色 ，以及区别？</p>
+<p>  Leader、Follower、Observer 三种角色。</p>
+<p> 区别：</p>
+<p> 集群中有且只能有一个 Leader，Leader 负责对整个集群的写请求事务进行提交，在一个集群选出 Leader 之前是无法对外提供服务的。Follower 和 Observer 都只能处理读请求，区别是 Follower 有投票权可以参与 Leader 的竞选，Observer 无法参与 Leader 的竞选</p>
+<p>4.常用命令<br>ls、get、create、delete</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/">Zookeeper常见面试题</a></p>
+<p>本文来源于尚硅谷2021 Zookeeper课程，仅供个人学习。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/10/31/Zookeeper/">http://example.com/2021/10/31/Zookeeper/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/thinks/">thinks</a></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/10/28/Mybatis/"><img class="next-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Mybatis</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/06/20/Computer-Network-summery-应用层/" title="Computer Network summery  应用层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Computer Network summery  应用层</div></div></a></div><div><a href="/2021/06/20/Computer-Network-summery-网络层/" title="Computer Network summery  网络层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Computer Network summery  网络层</div></div></a></div><div><a href="/2021/06/20/Computer-Network-summery：运输层/" title="Computer Network  summery：运输层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Computer Network  summery：运输层</div></div></a></div><div><a href="/2021/06/02/Computer-network-Summery-of-数据链路层/" title="Computer network Summery 数据链路层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">Computer network Summery 数据链路层</div></div></a></div><div><a href="/2021/04/07/First-of-my-blog/" title="First of my blog"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-07</div><div class="title">First of my blog</div></div></a></div><div><a href="/2021/06/20/Markdown格式解析/" title="Markdown格式解析"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Markdown格式解析</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">25</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">2</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85"><span class="toc-text">2. 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%9C%AC%E5%9C%B0%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-text">2.2 本地安装过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6conf"><span class="toc-text">2.2 配置文件conf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-zookeeper%E9%9B%86%E7%BE%A4%E6%93%8D%E4%BD%9C"><span class="toc-text">3.zookeeper集群操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="toc-text">3.1 集群安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%91%BD%E4%BB%A4"><span class="toc-text">3.2 客户端命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%93%8D%E4%BD%9C"><span class="toc-text">3.3 客户端代码操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%86%99%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B"><span class="toc-text">3.4  写数据流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%A1%88%E4%BE%8B%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A8%E6%80%81%E4%B8%8A%E4%B8%8B%E7%BA%BF%E7%9B%91%E5%90%AC"><span class="toc-text">4. 案例：服务器动态上下线监听</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%A1%88%E4%BE%8B%EF%BC%9A%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-text">5. 案例：分布式锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%8E%9F%E7%94%9Fzookeeper%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-text">5.1 原生zookeeper分布式锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-curator%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-text">5.2 curator分布式锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%80%BB%E7%BB%93%E4%BC%81%E4%B8%9A%E9%9D%A2%E8%AF%95"><span class="toc-text">6.总结企业面试</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/10/31/Zookeeper/" title="Zookeeper"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Zookeeper"/></a><div class="content"><a class="title" href="/2021/10/31/Zookeeper/" title="Zookeeper">Zookeeper</a><time datetime="2021-10-31T13:16:49.000Z" title="Created 2021-10-31 21:16:49">2021-10-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/28/Mybatis/" title="Mybatis"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Mybatis"/></a><div class="content"><a class="title" href="/2021/10/28/Mybatis/" title="Mybatis">Mybatis</a><time datetime="2021-10-28T13:47:32.000Z" title="Created 2021-10-28 21:47:32">2021-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/28/picGo-github%E5%9B%BE%E5%BA%8A%E5%88%9B%E5%BB%BA%E8%B8%A9%E5%9D%91/" title="picGo+github图床创建踩坑"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="picGo+github图床创建踩坑"/></a><div class="content"><a class="title" href="/2021/10/28/picGo-github%E5%9B%BE%E5%BA%8A%E5%88%9B%E5%BB%BA%E8%B8%A9%E5%9D%91/" title="picGo+github图床创建踩坑">picGo+github图床创建踩坑</a><time datetime="2021-10-28T13:22:41.000Z" title="Created 2021-10-28 21:22:41">2021-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/28/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="多线程"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="多线程"/></a><div class="content"><a class="title" href="/2021/10/28/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="多线程">多线程</a><time datetime="2021-10-28T13:21:13.000Z" title="Created 2021-10-28 21:21:13">2021-10-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/28/SpringMVC/" title="SpringMVC"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SpringMVC"/></a><div class="content"><a class="title" href="/2021/10/28/SpringMVC/" title="SpringMVC">SpringMVC</a><time datetime="2021-10-28T13:18:52.000Z" title="Created 2021-10-28 21:18:52">2021-10-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
