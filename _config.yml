@@ -104,5 +104,5 @@ theme: Butterfly
 
 deploy:
   type: git
-  repo: https://github.com/chen-boran/chen-boran.github.io.git
+  repo: git@github.com:chen-boran/chen-boran.github.io.git
   branch: master
