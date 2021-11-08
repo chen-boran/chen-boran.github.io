@@ -1,0 +1,8 @@
+- class_name: 友情链接
+  class_desc: 
+  link_list:
+    - name: fujang
+      link: https://fujang.github.io/
+      avatar: https://ae01.alicdn.com/kf/U8f9d0956c4054e30851815dbe95fafc50.jpg
+      descr: 又一个追逐梦想的平凡人
+
