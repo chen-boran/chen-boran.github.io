@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    
+    <lastmod>2021-11-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</loc>
+    
+    <lastmod>2021-11-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    
+    <lastmod>2021-11-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/</loc>
+    
+    <lastmod>2021-11-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/11/14/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    
+    <lastmod>2021-11-14</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/11/11/Redis-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E6%A8%A1%E5%9E%8B/</loc>
     
     <lastmod>2021-11-11</lastmod>
@@ -39,7 +74,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-11-11</lastmod>
+    <lastmod>2021-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -47,21 +82,21 @@
   
   <url>
     <loc>http://example.com/tags/Redis/</loc>
-    <lastmod>2021-11-11</lastmod>
+    <lastmod>2021-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-11</lastmod>
+    <lastmod>2021-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/SpringMVC/</loc>
-    <lastmod>2021-11-11</lastmod>
+    <lastmod>2021-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -70,14 +105,14 @@
   
   <url>
     <loc>http://example.com/categories/%E6%8A%80%E6%9C%AF%E8%BD%AC%E8%BD%BD%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2021-11-11</lastmod>
+    <lastmod>2021-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/Java/</loc>
-    <lastmod>2021-11-11</lastmod>
+    <lastmod>2021-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

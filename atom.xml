@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-11-11T13:08:17.027Z</updated>
+  <updated>2021-11-14T12:15:20.460Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,113 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis 客户端与服务器</title>
+    <link href="http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    <id>http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
+    <published>2021-11-14T12:14:31.000Z</published>
+    <updated>2021-11-14T12:15:20.460Z</updated>
+    
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis 持久化</title>
+    <link href="http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+    <id>http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</id>
+    <published>2021-11-14T12:14:13.000Z</published>
+    <updated>2021-11-14T12:15:28.563Z</updated>
+    
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis 数据库</title>
+    <link href="http://example.com/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <id>http://example.com/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/</id>
+    <published>2021-11-14T12:12:56.000Z</published>
+    <updated>2021-11-14T13:18:16.449Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Redis数据库"><a href="#Redis数据库" class="headerlink" title="Redis数据库"></a>Redis数据库</h1><p>重点掌握：服务器保存数据库方法</p><p>​                    客户端切换数据库的方法</p><p>​                    数据库保存键值对方法</p><p>​                    数据库增删改查更新等操作的实现</p><h2 id="1-服务器中的数据库"><a href="#1-服务器中的数据库" class="headerlink" title="1. 服务器中的数据库"></a>1. 服务器中的数据库</h2><p>Redis服务器将所有数据库都保存在服务器状态redis.h/redisServer结构的db数组中，</p><p>数组的每个项都是一个redis.h/redisDb结构</p><p>每个redisDb结构代表一个数据库</p><p>要构建多少个数据库由服务器状态的dbnum决定，默认是16个（db0~db15）</p><h2 id="2-切换数据库"><a href="#2-切换数据库" class="headerlink" title="2.切换数据库"></a>2.切换数据库</h2><p>默认情况适用0号数据库即：db0</p><p>可以使用SELECT命令切换 目标数据库</p><p>服务器中，客户端状态redisClient结构的db属性记录了客户端当前的目标数据库</p><p>是一个指向redisDb的指针，通过更改指针实现数据库的切换。</p><p>图示：客户端使用一号数据库</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111142025992.png" alt="image-20211114202527753"></p><h2 id="3-数据库键空间"><a href="#3-数据库键空间" class="headerlink" title="3. 数据库键空间"></a>3. 数据库键空间</h2><p>Redis是一个键值对（key-value pair）数据库服务器</p><p> 数据库都对应一个redis.h/redisDb结构</p><p>redisDb结构的dict字典保存了数据库中的所有键值对，我们将这个字典称为键空间（key space）</p><p>说明：</p><ul><li><p>键空间的键也就是数据库的键，每个键都是一个字符串对象。</p></li><li><p>键空间的值也就是数据库的值，每个值可以是 Redis五种基本对象类型任意一种。</p></li></ul><p>键空间举例：</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111142030044.png" alt="image-20211114203011821"></p><p><strong>添加键</strong></p><p>即：添加新建到dict中</p><p>使用  SET</p><p><strong>删除键</strong></p><p>使用 DEL </p><p><strong>更新键</strong></p><p>使用 SET加想要更改的 键名 加更改的值</p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111142033634.png" alt="image-20211114203359483" style="zoom:80%;" /><p><strong>取值</strong> </p><p>GET 键名</p><p><strong>清空数据库</strong></p><p>FLUSHDB命令（清空键空间所有键值对）</p><h2 id="4-键的生存和过期时间"><a href="#4-键的生存和过期时间" class="headerlink" title="4.键的生存和过期时间"></a>4.键的生存和过期时间</h2><p><strong>设置生存时间</strong>（Time To Live，TTL）</p><p>使用EXPIRE命令或者PEXPIRE（毫秒）命令，客户端可以以秒或者毫秒精度为数据库中的某个键 </p><p><strong>设置过期时间</strong></p><p> 客户端可以通过EXPIREAT命令或PEXPIREAT命令，以秒或者毫秒精度给数据库中的某个键设置过期时间（expire time）</p><p> 实际上EXPIRE、PEXPIRE、EXPIREAT三个命令都是使用PEXPIREAT命令来实现的</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111142040344.png" alt="image-20211114204048256"></p><p><strong>保存过期时间</strong></p><p>redisDb的expires字典保存了数据库中所有键的过期时间 ，称为过期字典</p><p>❑过期字典的键是一个指针，这个指针指向键空间中的某个键对象（也即是某个数据库键）。</p><p>❑过期字典的值是一个long long类型的整数，这个整数保存了键所指向的数据库键的过期时间——一个毫秒精度的UNIX时间戳。</p><p>增加过期字典之后，RedisDb结构如下：</p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111142042813.png" alt="image-20211114204250575" style="zoom:80%;" /><p><strong>移除过期时间</strong> </p><p>PERSIST命令可以移除一个键的过期时间</p><p>对应的过期字典中的键值对被删除</p><p><strong>计算返回剩余生存时间</strong></p><p>通过以下两个命令实现：</p><p>TTL命令以秒为单位返回键的剩余生存时间，</p><p>PTTL命令则以毫秒为单位返回键的剩余生存时间：</p><p>他们都是通过计算键的过期时间和当前时间之间的差来实现的</p><h2 id="5-过期键的删除"><a href="#5-过期键的删除" class="headerlink" title="5.过期键的删除"></a>5.过期键的删除</h2><p>键过期之后的删除策略分为三种：定时删除、惰性删除、定期删除</p><p>在这三种策略中，第一种和第三种为主动删除策略，而第二种则为被动删除策略。</p><table><thead><tr><th>策略</th><th>特点</th><th>说明</th><th>常用</th></tr></thead><tbody><tr><td>定时删除</td><td>对内存友好，对CPU时间最不友好</td><td>在设置键的过期时间的同时，创建一个定时器（timer），让定时器在键的过期时间来临时，立即执行对键的删除操作。</td><td>不常用</td></tr><tr><td>对惰性删除</td><td>对CPU时间最不友好，对CPU 时间最友好</td><td>放任键过期不管，但是每次从键空间中获取键时，都检查取得的键是否过期，如果过期的话，就删除该键；如果没有过期，就返回该键</td><td>常用</td></tr><tr><td>定期删除</td><td>介于前两者之间</td><td>放任键过期不管，但是每次从键空间中获取键时，都检查取得的键是否过期，如果过期的话，就删除该键；如果没有过期，就返回该键</td><td>常用</td></tr></tbody></table><p>Redis服务器实际使用的是惰性删除和定期删除两种策略：配合使用这两种删除策略</p><ul><li><p>过期键的惰性删除策略由db.c/expireIfNeeded函数实现</p></li><li><p>过期键的定期删除策略由redis.c/activeExpireCycle函数实现</p></li></ul><h2 id="6-不同功能对过期键的处理"><a href="#6-不同功能对过期键的处理" class="headerlink" title="6. 不同功能对过期键的处理"></a>6. 不同功能对过期键的处理</h2><p><strong>RDB持久化</strong></p><p>在载入RDB文件时：</p><ul><li>主服务器运行：数据库只载入未过期的键值</li><li>从服务器模式运行：数据库载入所有的键值，无论是否过期，通过主从服务器的数据同步进行数据一致化</li></ul><p><strong>AOF持久化</strong></p><ol><li><p>在创建AOF 文件时，过期键如果还没有被删除，则不会有影响</p><p>当过期键被惰性删除或者定期删除之后，程序会向AOF文件追加（append）一条DEL命令，来显式地记录该键已被删除。</p></li><li><p>在载入AOF 文件时过期键不会被保存</p></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Redis数据库&quot;&gt;&lt;a href=&quot;#Redis数据库&quot; class=&quot;headerlink&quot; title=&quot;Redis数据库&quot;&gt;&lt;/a&gt;Redis数据库&lt;/h1&gt;&lt;p&gt;重点掌握：服务器保存数据库方法&lt;/p&gt;
+&lt;p&gt;​                    客户</summary>
+      
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis对象</title>
+    <link href="http://example.com/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/"/>
+    <id>http://example.com/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/</id>
+    <published>2021-11-14T10:09:11.000Z</published>
+    <updated>2021-11-14T12:10:41.022Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Redis对象"><a href="#Redis对象" class="headerlink" title="Redis对象"></a>Redis对象</h1><h2 id="1-对象的类型和编码"><a href="#1-对象的类型和编码" class="headerlink" title="1. 对象的类型和编码"></a>1. 对象的类型和编码</h2><p>redis没使用之前提到的数据结构来构建键值对数据库</p><p>而是基于基本数据结构构建了包括字符串对象，列表对象，哈希对象，集合对象，有序集合对象五种类型对象的对象系统</p><p>使用对象的好处：根据类型判断给定命令是否能够执行；针对不同场景，设置对象的数据结构实现，优化使用效率；可以实现基于引用计数计数的内存回收，对象共享（节约内存）；</p><p>Redis使用两个对象分别表示数据库中的键和值</p><p>Redis中的每个对象都由一个redisObject结构表示，</p><p>该结构中和保存数据有关的三个属性分别是type、encoding、ptr</p><p><strong>一、类型</strong></p><p>对象的类型由type记录</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141856669.png" alt="image-20211114185656361"></p><p>数据库中，键总是一个字符串对象，值则可以是五种对象中的一种。</p><p>称呼数据库键时一般都指的是键的值的类型：例如：列表键，指的是数据库键对应的值是列表对象</p><p>​    使用TYPE 返回 数据库键对应的值对象的类型</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141904420.png" alt="image-20211114190455258"></p><p><strong>二，编码与底层实现</strong></p><p> ptr指针指向对象的底层实现数据结构  </p><p>encoding属性记录了对象所使用的编码 </p><p>基本数据结构对应的编码</p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141908765.png" alt="image-20211114190813600" style="zoom:80%;" /><p>每种对象至少使用两种不同编码：</p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141909934.png" alt="image-20211114190904728" style="zoom:80%;" /><p>使用 <strong>OBJECT Encoding</strong>可以查看数据库键的值对象编码</p><p>下面逐个进行分析各个对象</p><h2 id="2-字符串对象"><a href="#2-字符串对象" class="headerlink" title="2. 字符串对象"></a>2. 字符串对象</h2><p>字符串对象的编码可以是int、raw或者embstr。</p><p>（int 编码是用来保存整数值，而embstr是用来保存短字符串，raw编码是用来保存长字符串）</p><p>最基本的数据结构；字符串的长度不能超过512M。</p><p> <strong>一，编码方式</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141922759.png" alt="image-20211114192207607"></p><p><strong>二、编码的转换</strong></p><p>当 int 编码保存的值不再是整数，或大小超过了long的范围时，自动转化为raw。</p><p>对于 embstr 编码，由于 Redis 没有对其编写任何的修改程序（embstr 是只读的），在对embstr对象进行修改时，都会先转化为raw再进行修改，因此，只要是修改embstr对象，修改后的对象一定是raw的，无论是否达到了44个字节</p><p><strong>三、命令的实现</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141920440.png" alt="image-20211114192013105"></p><h2 id="3-列表对象"><a href="#3-列表对象" class="headerlink" title="3.列表对象"></a>3.列表对象</h2><p>列表对象的编码可以是ziplist或者linkedlist。</p><p>列表对象的编码可以是ziplist或者linkedlist。</p><p>linkedlist编码的列表对象使用双端链表作为底层实现</p><p><strong>一、内存结构</strong>：</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141923098.png" alt="img"></p><p><strong>二、编码转换</strong></p><p>当列表对象同时满足以下两个条件，则使用ziplist编码（否则使用linkedlist）：</p><ul><li>列表对象保存的所有字符串元素的长度都小于64字节；</li><li>列表对象保存的元素数量小于512个； </li></ul><p><strong>三、列表命令的实现</strong></p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141926743.png" alt="image-20211114192617413" style="zoom: 80%;" /><h2 id="4-哈希对象"><a href="#4-哈希对象" class="headerlink" title="4.哈希对象"></a>4.哈希对象</h2><p>哈希对象的编码可以是ziplist或者hashtable。</p><p>ziplist编码的哈希对象使用压缩列表作为底层实现</p><p>hashtable编码的哈希对象使用字典作为底层实现</p><p><strong>一、内存结构</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141929955.png" alt="img"></p><p><strong>二、编码转换</strong></p><p>当哈希对象可以同时满足以下两个条件时，哈希对象使用ziplist编码（否则使用hashtable）：</p><ul><li>哈希对象保存的所有键值对的键和值的字符串长度都小于64字节；</li><li>哈希对象保存的键值对数量小于512个 </li></ul><p>注：第一个条件可以通过配置文件中的 <code>set-max-intset-entries</code> 进行修改。</p><p><strong>三、哈希命令的实现</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141928521.png" alt="image-20211114192848168"></p><h2 id="5-集合对象"><a href="#5-集合对象" class="headerlink" title="5. 集合对象"></a>5. 集合对象</h2><p>集合对象的编码可以是intset或者hashtable。</p><p>intset编码的集合对象使用整数集合作为底层实现</p><p>intset编码的集合对象使用整数集合作为底层实现</p><p><strong>一、存储结构</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141932020.png" alt="img"></p><p><strong>二、编码转换</strong></p><p>编码的转换当集合对象可以同时满足以下两个条件时，对象使用intset编码：</p><ul><li><p>集合对象保存的所有元素都是整数值</p></li><li><p>集合对象保存的元素数量不超过512个。</p><p>注：第二个条件可以通过配置文件的 <code>set-max-intset-entries</code> 进行配置</p></li></ul><p><strong>三、集合命令的实现</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141935439.png" alt="image-20211114193515168"></p><h2 id="6-有序集合对象"><a href="#6-有序集合对象" class="headerlink" title="6. 有序集合对象"></a>6. 有序集合对象</h2><p>有序集合的编码可以是ziplist或者skiplist</p><p>ziplist编码的压缩列表对象使用压缩列表作为底层实现</p><p><strong>一、存储结构</strong></p><p>首先是编码为ZIPLIST时, 有序集合的内存布局如下</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141940209.png" alt="img"></p><p> 编码为SKIPLIST时, 有序集合的内存布局如下</p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141940445.png" alt="img"></p><p> <strong>二、编码转换</strong></p><p>当有序集合对象同时满足以下两个条件时，对象使用 ziplist 编码：</p><p>1、保存的元素数量小于128；</p><p>2、保存的所有元素长度都小于64字节。</p><p> 以上两个条件也可以通过Redis配置文件<code>zset-max-ziplist-entries</code> 选项和 <code>zset-max-ziplist-value</code> 进行修改</p><p><strong>三、有序集合命令的实现</strong></p><p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141939509.png" alt="image-20211114193924211"></p><h2 id="7-类型检查和命令多态"><a href="#7-类型检查和命令多态" class="headerlink" title="7. 类型检查和命令多态"></a>7. 类型检查和命令多态</h2><p>Redis中用于操作键的命令可以分为两种类型。</p><p>其中一种命令可以对任何类型的键执行，</p><p>​    例如：DEL命令、EXPIRE命令、RENAME命令、TYPE命令、OBJECT命令等</p><p>另一种命令只能对特定类型的键执行 </p><ul><li><p>SET、GET、APPEND、STRLEN等命令只能对字符串键执行；</p></li><li><p>HDEL、HSET、HGET、HLEN等命令只能对哈希键执行；</p></li><li><p>RPUSH、LPOP、LINSERT、LLEN等命令只能对列表键执行；</p></li><li><p>SADD、SPOP、SINTER、SCARD等命令只能对集合键执行；</p></li><li><p>ZADD、ZCARD、ZRANK、ZSCORE等命令只能对有序集合键执行；</p><p>相应的键只能执行适合自身类型的键命令</p></li></ul><p>一、类型检查</p><p>执行命令之前需要检查目标键的类型是否符合要求，类型不符合要求则会拒绝命令。</p><p>通过RedisObject中的Type来实现</p><p>二、命令多态</p><p>由于数据库中键的值对象可以有多种类型的实现，相同的命令在确保类型正确的前提下，可以有多种键值对象的实现</p><p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111141953246.png" alt="image-20211114195334038"></p><h2 id="8-内存回收"><a href="#8-内存回收" class="headerlink" title="8. 内存回收"></a>8. 内存回收</h2><p>C语言并不具备自动内存回收功能</p><p> Redis 构建了基于引用计数技术实现的内存回收机制</p><p>每个对象的引用计数信息由redisObject结构的refcount属性记录</p><p>相关的基本规则：</p><ul><li><p>当新创建一个对象时，它的refcount属性被设置为1；</p></li><li><p>当对一个对象进行共享时，redis将这个对象的refcount加一；</p></li><li><p>当使用完一个对象后，或者消除对一个对象的引用之后，程序将对象的refcount减一</p></li></ul><h2 id="9-对象共享"><a href="#9-对象共享" class="headerlink" title="9. 对象共享"></a>9. 对象共享</h2><p>对象的引用计数属性还带有对象共享的作用</p><p>Redis中，多个键共享同一个值对象需要执行以下两个步骤：</p><p>​    1）将数据库键的<strong>值指针</strong>指向一个现有的值对象；</p><p>​    2）将被共享的值对象的引用计数增一。</p><p>共享对象是用来节约内存的。（数据库中保存的值对象越多，节省内存越显著）</p><p>注：创建共享字符串对象的数量可以通过修改redis.h/REDIS_SHARED_INTEGERS常量来修改</p><p>​        共享对象只能被字典和双向链表这类能带有指针的数据结构使用</p><p>通过上面介绍我们知道，对象共享可以共享字符串对象。 </p><p><strong>那么为什么Redis不共享包含字符串的对象</strong>？</p><ul><li>列表对象、哈希对象、集合对象、有序集合对象，本身可以包含字符串对象，复杂度较高。</li><li>如果共享对象是保存字符串对象，那么验证操作的复杂度为O(1)</li><li>如果共享对象是保存字符串值的字符串对象，那么验证操作的复杂度为O(N)</li><li>如果共享对象是包含多个值的对象，其中值本身又是字符串对象，即其它对象中嵌套了字符串对象，比如列表对象、哈希对象，那么验证操作的复杂度将会是O(N的平方)</li></ul><p>如果对复杂度较高的对象创建共享对象，需要消耗很大的CPU，用这种消耗去换取内存空间，是不合适的</p><hr><h2 id="10-空转时长"><a href="#10-空转时长" class="headerlink" title="10. 空转时长"></a>10. 空转时长</h2><p>RedisObject结构包含的另一个属性:lru</p><p>​    记录了对象最后一次被命令程序访问的时间</p><p>通常使用OBJECT IDLETIME命令打印出给定键的空转时长</p><p>即：空转时长=当前时间 - 键的值对象的lru时间</p><p> 这个命令在访问键的值对象时，不会修改值对象的lru属性。</p><h2 id="11-总结"><a href="#11-总结" class="headerlink" title="11.总结"></a>11.总结</h2><p>❑Redis数据库中的每个键值对的键和值都是一个对象。</p><p>❑Redis共有字符串、列表、哈希、集合、有序集合五种类型的对象，每种类型的对象至少都有两种或以上的编码方式，不同的编码可以在不同的使用场景上优化对象的使用效率。</p><p>❑服务器在执行某些命令之前，会先检查给定键的类型能否执行指定的命令，而检查一个键的类型就是检查键的值对象的类型。</p><p>❑Redis的对象系统带有引用计数实现的内存回收机制，当一个对象不再被使用时，该对象所占用的内存就会被自动释放。</p><p>❑Redis会共享值为0到9999的字符串对象。</p><p>❑对象会记录自己的最后一次被访问的时间，这个时间可以用于计算对象的空转时间。</p><p>参考：</p><p>《Redis 设计与实现》 黄健宏</p><p>​    <a href="https://www.pdai.tech/md/db/nosql-redis/db-redis-overview.html">https://www.pdai.tech/md/db/nosql-redis/db-redis-overview.html</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Redis对象&quot;&gt;&lt;a href=&quot;#Redis对象&quot; class=&quot;headerlink&quot; title=&quot;Redis对象&quot;&gt;&lt;/a&gt;Redis对象&lt;/h1&gt;&lt;h2 id=&quot;1-对象的类型和编码&quot;&gt;&lt;a href=&quot;#1-对象的类型和编码&quot; class=&quot;head</summary>
+      
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redis数据结构</title>
+    <link href="http://example.com/2021/11/14/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <id>http://example.com/2021/11/14/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</id>
+    <published>2021-11-14T09:47:22.000Z</published>
+    <updated>2021-11-14T09:59:29.857Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-简单动态字符串"><a href="#1-简单动态字符串" class="headerlink" title="1.简单动态字符串"></a>1.简单动态字符串</h2><h2 id="1-1-SDS"><a href="#1-1-SDS" class="headerlink" title="1.1 SDS"></a>1.1 SDS</h2><h2 id="1-2-SDS-与C字符串的区别"><a href="#1-2-SDS-与C字符串的区别" class="headerlink" title="1.2 SDS 与C字符串的区别"></a>1.2 SDS 与C字符串的区别</h2><h2 id="1-3-SDS-API"><a href="#1-3-SDS-API" class="headerlink" title="1.3 SDS API"></a>1.3 SDS API</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h2 id="2-链表"><a href="#2-链表" class="headerlink" title="2.链表"></a>2.链表</h2><h3 id="2-1-链表和链表节点"><a href="#2-1-链表和链表节点" class="headerlink" title="2.1 链表和链表节点"></a>2.1 链表和链表节点</h3><h3 id="2-2-API"><a href="#2-2-API" class="headerlink" title="2.2 API"></a>2.2 API</h3><h3 id="2-3-总结"><a href="#2-3-总结" class="headerlink" title="2.3 总结"></a>2.3 总结</h3><h2 id="3-字典"><a href="#3-字典" class="headerlink" title="3. 字典"></a>3. 字典</h2><h3 id="3-1字典"><a href="#3-1字典" class="headerlink" title="3.1字典"></a>3.1字典</h3><h3 id="3-2-哈希算法"><a href="#3-2-哈希算法" class="headerlink" title="3.2 哈希算法"></a>3.2 哈希算法</h3><h3 id="3-3-键冲突"><a href="#3-3-键冲突" class="headerlink" title="3.3 键冲突"></a>3.3 键冲突</h3><h3 id="3-4-rehash"><a href="#3-4-rehash" class="headerlink" title="3.4 rehash"></a>3.4 rehash</h3><h3 id="3-5-渐进式hash"><a href="#3-5-渐进式hash" class="headerlink" title="3.5 渐进式hash"></a>3.5 渐进式hash</h3><h3 id="3-6-字典API"><a href="#3-6-字典API" class="headerlink" title="3.6 字典API"></a>3.6 字典API</h3><h3 id="3-7-总结"><a href="#3-7-总结" class="headerlink" title="3.7 总结"></a>3.7 总结</h3><h2 id="4-跳跃表"><a href="#4-跳跃表" class="headerlink" title="4. 跳跃表"></a>4. 跳跃表</h2><h3 id="4-1-跳跃表"><a href="#4-1-跳跃表" class="headerlink" title="4.1 跳跃表"></a>4.1 跳跃表</h3><h3 id="4-2-API"><a href="#4-2-API" class="headerlink" title="4.2 API"></a>4.2 API</h3><h3 id="4-3-总结"><a href="#4-3-总结" class="headerlink" title="4.3 总结"></a>4.3 总结</h3><h2 id="5-整数集合"><a href="#5-整数集合" class="headerlink" title="5. 整数集合"></a>5. 整数集合</h2><h3 id="5-1-整数集合"><a href="#5-1-整数集合" class="headerlink" title="5.1 整数集合"></a>5.1 整数集合</h3><h3 id="5-2-升级"><a href="#5-2-升级" class="headerlink" title="5.2 升级"></a>5.2 升级</h3><h3 id="5-3-升级的好处"><a href="#5-3-升级的好处" class="headerlink" title="5.3 升级的好处"></a>5.3 升级的好处</h3><h3 id="5-4-降级"><a href="#5-4-降级" class="headerlink" title="5.4 降级"></a>5.4 降级</h3><h3 id="5-5-API"><a href="#5-5-API" class="headerlink" title="5.5 API"></a>5.5 API</h3><h3 id="5-6-总结"><a href="#5-6-总结" class="headerlink" title="5.6 总结"></a>5.6 总结</h3><h2 id="6-压缩列表"><a href="#6-压缩列表" class="headerlink" title="6.压缩列表"></a>6.压缩列表</h2><h3 id="6-1-压缩列表构成"><a href="#6-1-压缩列表构成" class="headerlink" title="6.1 压缩列表构成"></a>6.1 压缩列表构成</h3><h3 id="6-2-压缩列表节点的构成"><a href="#6-2-压缩列表节点的构成" class="headerlink" title="6.2 压缩列表节点的构成"></a>6.2 压缩列表节点的构成</h3><h3 id="6-3-连锁更新"><a href="#6-3-连锁更新" class="headerlink" title="6.3 连锁更新"></a>6.3 连锁更新</h3><h3 id="6-4-API"><a href="#6-4-API" class="headerlink" title="6.4 API"></a>6.4 API</h3><h3 id="6-5-总结"><a href="#6-5-总结" class="headerlink" title="6.5 总结"></a>6.5 总结</h3>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;1-简单动态字符串&quot;&gt;&lt;a href=&quot;#1-简单动态字符串&quot; class=&quot;headerlink&quot; title=&quot;1.简单动态字符串&quot;&gt;&lt;/a&gt;1.简单动态字符串&lt;/h2&gt;&lt;h2 id=&quot;1-1-SDS&quot;&gt;&lt;a href=&quot;#1-1-SDS&quot; class=&quot;he</summary>
+      
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>Redis 事件驱动模型</title>
