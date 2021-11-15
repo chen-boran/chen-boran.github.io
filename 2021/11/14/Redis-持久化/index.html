@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis 持久化 | boranの小さな巣</title><meta name="keywords" content="Redis,学习笔记"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="I want to roll the sky desperately!">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis 持久化 | boranの小さな巣</title><meta name="keywords" content="Redis,学习笔记"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="持久化：将Redis在内存中的数据库状态保存到磁盘里面，避免数据意外丢失。  Redis是一个键值对数据库服务器，服务器中通常包含着任意个非空数据库 一、RDB 持久化 RDB 持久化可以选择手动执行和 定期执行（根据服务器选项），意图将数据库某一时间的状态保存到一个二进制的RDB 文件中。 RDB文件保存在硬盘中，不受服务器开关机状态的影响 1.RDB文件 载入与创建创建：通常使用 SAVE 和">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis 持久化">
 <meta property="og:url" content="http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
 <meta property="og:site_name" content="boranの小さな巣">
-<meta property="og:description" content="I want to roll the sky desperately!">
+<meta property="og:description" content="持久化：将Redis在内存中的数据库状态保存到磁盘里面，避免数据意外丢失。  Redis是一个键值对数据库服务器，服务器中通常包含着任意个非空数据库 一、RDB 持久化 RDB 持久化可以选择手动执行和 定期执行（根据服务器选项），意图将数据库某一时间的状态保存到一个二进制的RDB 文件中。 RDB文件保存在硬盘中，不受服务器开关机状态的影响 1.RDB文件 载入与创建创建：通常使用 SAVE 和">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg">
 <meta property="article:published_time" content="2021-11-14T12:14:13.000Z">
-<meta property="article:modified_time" content="2021-11-14T12:15:28.563Z">
+<meta property="article:modified_time" content="2021-11-15T14:09:25.212Z">
 <meta property="article:author" content="chen-boran">
 <meta property="article:tag" content="Redis">
 <meta property="article:tag" content="学习笔记">
@@ -57,8 +57,8 @@
   isPost: true,
   isHome: false,
   isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2021-11-14 20:15:28'
+  isToc: true,
+  postUpdate: '2021-11-15 22:09:25'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -140,17 +140,177 @@
           document.documentElement.classList.remove('hide-aside')
         }
       }
-    })(window)</script><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-filter-gitcalendar/lib/gitcalendar.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
-</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis 持久化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-11-14T12:14:13.000Z" title="Created 2021-11-14 20:14:13">2021-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-11-14T12:15:28.563Z" title="Updated 2021-11-14 20:15:28">2021-11-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis 持久化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/">http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Redis 客户端与服务器</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/"><img class="next-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Redis 数据库</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/11/11/Redis-事件驱动模型/" title="Redis 事件驱动模型"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-11</div><div class="title">Redis 事件驱动模型</div></div></a></div><div><a href="/2021/11/14/Redis-客户端与服务器/" title="Redis 客户端与服务器"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 客户端与服务器</div></div></a></div><div><a href="/2021/11/14/Redis-数据库/" title="Redis 数据库"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 数据库</div></div></a></div><div><a href="/2021/11/14/redis数据结构/" title="redis数据结构"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">redis数据结构</div></div></a></div><div><a href="/2021/11/14/Redis对象/" title="Redis对象"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis对象</div></div></a></div><div><a href="/2021/11/09/SpringMVC/" title="SpringMVC学习笔记"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-09</div><div class="title">SpringMVC学习笔记</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Redis 客户端与服务器"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 客户端与服务器"/></a><div class="content"><a class="title" href="/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Redis 客户端与服务器">Redis 客户端与服务器</a><time datetime="2021-11-14T12:14:31.000Z" title="Created 2021-11-14 20:14:31">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis 持久化"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 持久化"/></a><div class="content"><a class="title" href="/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis 持久化">Redis 持久化</a><time datetime="2021-11-14T12:14:13.000Z" title="Created 2021-11-14 20:14:13">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Redis 数据库"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 数据库"/></a><div class="content"><a class="title" href="/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Redis 数据库">Redis 数据库</a><time datetime="2021-11-14T12:12:56.000Z" title="Created 2021-11-14 20:12:56">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/" title="Redis对象"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis对象"/></a><div class="content"><a class="title" href="/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/" title="Redis对象">Redis对象</a><time datetime="2021-11-14T10:09:11.000Z" title="Created 2021-11-14 18:09:11">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="redis数据结构"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="redis数据结构"/></a><div class="content"><a class="title" href="/2021/11/14/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="redis数据结构">redis数据结构</a><time datetime="2021-11-14T09:47:22.000Z" title="Created 2021-11-14 17:47:22">2021-11-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax src="https://cdn.jsdelivr.net/npm/hexo-filter-gitcalendar/lib/gitcalendar.js"></script><script data-pjax>
-                        function gitcalendar_injector_config(){
-                          var parent_div_git = document.getElementById('recent-posts');
-                          var item_html = '<container><style>#git_container{min-height: 280px}@media screen and (max-width:650px) {#git_container{min-height: 0px}}</style><div id="git_loading" style="width:10%;height:100%;margin:0 auto;display: block;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animatetransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animatetransform></path></svg><style>#git_container{display: none;}</style></div><div id="git_container"></div></container>';
-                          parent_div_git.insertAdjacentHTML("afterbegin",item_html)
-                          console.log('已挂载gitcalendar')
-                          }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis 持久化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-11-14T12:14:13.000Z" title="Created 2021-11-14 20:14:13">2021-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-11-15T14:09:25.212Z" title="Updated 2021-11-15 22:09:25">2021-11-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis 持久化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>持久化：将Redis在内存中的数据库状态保存到磁盘里面，避免数据意外丢失。</p>
+<p> Redis是一个键值对数据库服务器，服务器中通常包含着任意个非空数据库</p>
+<h2 id="一、RDB-持久化"><a href="#一、RDB-持久化" class="headerlink" title="一、RDB 持久化"></a>一、RDB 持久化</h2><p> RDB 持久化可以选择手动执行和 定期执行（根据服务器选项），意图将数据库某一时间的状态保存到一个二进制的RDB 文件中。</p>
+<p>RDB文件保存在硬盘中，不受服务器开关机状态的影响</p>
+<h3 id="1-RDB文件-载入与创建"><a href="#1-RDB文件-载入与创建" class="headerlink" title="1.RDB文件 载入与创建"></a>1.RDB文件 载入与创建</h3><p><strong>创建：</strong>通常使用 SAVE 和BGSAVE两个命令创建</p>
+<ul>
+<li>SAVE ：由服务器主进程创建文件，阻塞服务器其他进程</li>
+<li>BGSAVE ：由服务器派生子进程创建RDB文件，父进程急需处理其他请求</li>
+</ul>
+<p>实际工作由rdb.c/rdbSave函数</p>
+<p><strong>注：</strong></p>
+<p>AOF文件的更新频率通常比RDB文件的更新频率高，所以：</p>
+<ul>
+<li>服务器开启了AOF持久化功能，则会优先使用AOF文件来还原数据库状态。</li>
+<li>AOF持久化功能处于关闭状态时，服务器才会使用RDB文件来还原数据库状态。</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152042711.png" alt="image-20211115204243601" style="zoom:80%;" />
 
-                        if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
-                            gitcalendar_injector_config()
-                            GitCalendarInit("https://gitcalendar.akilar.top/api?chen-boran",['#e4dfd7', '#f9f4dc', '#f7e8aa', '#f7e8aa', '#f8df72', '#fcd217', '#fcc515', '#f28e16', '#fb8b05', '#d85916', '#f43e06'],'chen-boran')
-                        }
-                      </script><!-- hexo injector body_end end --></body></html>
+<p><strong>载入：</strong></p>
+<p>载入RDB文件的实际工作由rdb.c/rdbLoad函数完成</p>
+<p><strong>服务器状态</strong></p>
+<ul>
+<li>执行SAVE时：客户端所有命令被阻塞</li>
+<li>BGSAVE：服务器拒绝SAVE，BGSAVE命令，BGREWRITEAOF和BGSAVE两个命令不能同时执行（性能原因）</li>
+<li>RDB 文件载入时:服务器一直被阻塞</li>
+</ul>
+<h2 id="2-自动间隔性保存"><a href="#2-自动间隔性保存" class="headerlink" title="2.自动间隔性保存"></a>2.自动间隔性保存</h2><p> BGSAVE命令可以在不阻塞服务器进程的情况下执行， 用户通过设置服务器配置的save选项来设置多个保存条件，只要其中任意一个条件被满足，服务器就会执行BGSAVE命令。</p>
+<p>例如：save 900 1</p>
+<p>​    表示服务器在九百秒内至少进行了一次修改，则执行BGSAVE命令</p>
+<p><strong>设置保存条件</strong></p>
+<p>若用户没有主动设置save选项，服务器会为save选项设置默认条件：</p>
+<p> 服务器程序根据save选项所设置的保存条件，设置服务器状态redisServer结构的saveparams属性：（每个saveparam结构都保存了一个save选项设置的保存条件）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152107791.png" alt="image-20211115210704732"></p>
+<p><strong>dirty计数器和lastsave属性</strong></p>
+<ul>
+<li><p>dirty计数器：从上一次成功生成磁盘文件之后进行修改的次数（每次加一）</p>
+</li>
+<li><p>lastsave：UNIX时间戳，记录上一次生成RDB文件的时间点</p>
+</li>
+</ul>
+<p><strong>检查保存条件</strong></p>
+<p>Redis的服务器周期性操作函数serverCron默认每隔100毫秒就会执行一次，通过它检查save选项所设置的保存条件是否已经满足 </p>
+<p>流程如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152112273.png" alt="image-20211115211222220"></p>
+<h3 id="3-RDB文件结构"><a href="#3-RDB文件结构" class="headerlink" title="3.RDB文件结构"></a>3.RDB文件结构</h3><p>完整结构图：</p>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152113546.png" alt="image-20211115211307502" style="zoom:80%;" />
+
+<p> 简要说明：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>REDIS</td>
+<td>五字节</td>
+<td>‘R’、’E’、’D’、’I’、’S’五个字符</td>
+</tr>
+<tr>
+<td>db_version</td>
+<td>四字节</td>
+<td>这个整数记录了RDB文件的版本号</td>
+</tr>
+<tr>
+<td>databace</td>
+<td>··</td>
+<td>包含着零个或任意多个数据库，以及各个数据库中的键值对数据</td>
+</tr>
+<tr>
+<td>EOF</td>
+<td>一字节</td>
+<td>包含着零个或任意多个数据库，以及各个数据库中的键值对数据</td>
+</tr>
+<tr>
+<td>check_sum</td>
+<td></td>
+<td>和，这个校验和是程序通过对REDIS、db_version、databases、EOF四个部分的内容进行计算得出的校验和</td>
+</tr>
+</tbody></table>
+<p><strong>databace</strong></p>
+<p>每个非空数据库在RDB文件中都可以保存为SELECTDB、db_number、key_value_pairs三个部分</p>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152118809.png" alt="image-20211115211857775" style="zoom:80%;" />
+
+<ul>
+<li><p>SELECTDB常量 ，1字节 预示接下来读入的将是一个数据库号码。</p>
+</li>
+<li><p>db_number保存着一个数据库号码， 这个部分的长度可以是1字节、2字节或者5字节。 </p>
+</li>
+<li><p>key_value_pairs部分保存了数据库中的所有键值对数据，如果键值对带有过期时间，那么过期时间也会和键值对保存在一起。 </p>
+<p> key_value_pairs分成带过期时间和不带过期时间两种键值对：</p>
+<ul>
+<li><p>不带过期时间的键值对由TYPE、key、value三部分组成</p>
+<ul>
+<li>TYPE：记录VALUE的类型决定如何读入和解释value的数据</li>
+<li>key：键值对键对象</li>
+<li>value：键值对值对象</li>
+</ul>
+</li>
+<li><p>带过期时间的额外有EXPIRETIME_MS和ms两个部分：</p>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152127767.png" alt="image-20211115212704720" style="zoom:50%;" />
+
+<ul>
+<li>EXPIRETIME_MS常量的长度为1字节，它告知读入程序，接下来要读入的将是一个以毫秒为单位的过期时间。</li>
+<li>ms是一个8字节长的带符号整数，记录着一个以毫秒为单位的UNIX时间戳，这个时间戳就是键值对的过期时间。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>VALUE编码</strong></p>
+<p> 每个value部分都保存了一个值对象，每个值对象的类型都由与之对应的TYPE记录，根据类型的不同，value部分的结构、长度也会有所不同。</p>
+<p>value可以使五种基本对象中的任意一种。</p>
+<h3 id="4-分析RDB"><a href="#4-分析RDB" class="headerlink" title="4. 分析RDB"></a>4. 分析RDB</h3><p>通常使用od命令分析Redis服务器产生的RDB文件 </p>
+<p>例如：</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152132106.png" alt="image-20211115213211057"></p>
+<p>下面举例说明RDB文件中各个标识含义：</p>
+<p>  包含带有过期时间的字符串键的RDB文件</p>
+<p>打印RDB文件：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152134622.png" alt="image-20211115213450589"></p>
+<p>❑一个一字节长的EXPIRETIME_MS特殊值。</p>
+<p>❑一个八字节长的过期时间（ms）。</p>
+<p>❑一个一字节长的类型（TYPE）。</p>
+<p>❑一个键（key）和一个值（value）。根据这些特征，可以得出RDB文件各个部分的意义：❑REDIS0006：RDB文件标志和版本号。</p>
+<p>❑376\0：切换到0号数据库。</p>
+<p>❑374：代表特殊值EXPIRETIME_MS。</p>
+<p>❑\2 365 336@001\0\0：代表八字节长的过期时间。</p>
+<p>❑\0 003 M S G：\0表示这是一个字符串键，003是键的长度，MSG是键。</p>
+<p>❑005 H E L L O：005是值的长度，HELLO是值。</p>
+<p>❑377：代表EOF常量。</p>
+<p>❑212 231 x 247 252 } 021 306：代表八字节长的校验和。</p>
+<h2 id="二、AOF持久化"><a href="#二、AOF持久化" class="headerlink" title="二、AOF持久化"></a>二、AOF持久化</h2><p>与RDB 持久化不同AOF 持久化通过保存数据库写命令来记录状态</p>
+<p>写入AOF 文件的命令都会以redis命令请求协议格式保存</p>
+<h3 id="1-实现原理"><a href="#1-实现原理" class="headerlink" title="1.实现原理"></a>1.实现原理</h3><p><strong>命令追加</strong></p>
+<p>当AOF处于打开时，每次完成一个写命令，都会在服务器状态的aof_buf缓冲区追加相应的写命令</p>
+<p><strong>写入与同步</strong></p>
+<p> 服务器每次结束一个事件循环之前， 都会调用flushAppendOnlyFile函数，考虑是否需要将aof_buf缓冲区中的内容写入和保存到AOF文件中</p>
+<p>最后调用flushAppendOnlyFile函数，其行为由服务器配置的appendfsync选项的值决定</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152148921.png" alt="image-20211115214826867"></p>
+<p>默认是everysec</p>
+<p>注：为了提高文件写效率，通常将写数据加入内存缓冲区，到达一定条件之后再写入磁盘</p>
+<p>​        因此：系统提供了fsync和fdatasync两个同步函数， 可以强制让操作系统立即将缓冲区中的数据    写入到硬盘 确保写入数据的安全性。</p>
+<p><strong>AOF持久化的效率和安全性</strong></p>
+<p>appendfsync选项的值直接决定AOF持久化功能的效率和安全性。</p>
+<ul>
+<li>always：每一个事件都会将aof_buf缓冲区所有内容写入AOF 文件，并且进行同步。效率最慢</li>
+<li>everysec：每一个事件都会将所有内容写入AOF 文件， 每隔一秒 在子线程中对AOF文件进行一次同步</li>
+<li>no：每一个事件都会将所有内容写入AOF 文件，何时对AOF文件进行同步，则由操作系统控制</li>
+</ul>
+<h3 id="2-载入与还原"><a href="#2-载入与还原" class="headerlink" title="2.载入与还原"></a>2.载入与还原</h3><p><strong>载入还原</strong></p>
+<p> 读取AOF文件并还原数据库状态 ,步骤如下:</p>
+<p>1）创建一个不带网络连接的伪客户端（fake client）（ 服务器使用一个没有网络连接的伪客户端来执行AOF文件保存的写命令， 效果与实际使用客户端完全没有影响。）</p>
+<p>2）从AOF文件中分析并读取出一条写命令。</p>
+<p>3）使用伪客户端执行被读出的写命令。</p>
+<p>4）一直执行步骤2和步骤3，直到AOF文件中的所有写命令都被处理完毕为止。</p>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202111152157784.png" alt="image-20211115215741707" style="zoom:80%;" />
+
+<h3 id="3-AOF-重写"><a href="#3-AOF-重写" class="headerlink" title="3.AOF 重写"></a>3.AOF 重写</h3><p>重写：解决AOF文件体积膨胀的问题</p>
+<p>通过读取服务器当前状态实现，解决了之前对于同一个键的大量操作引起臃肿的问题。</p>
+<p>使用 aof_rewrite函数生成的新AOF文件，只包含还原当前数据库状态所必须的命令， 浪费任何硬盘空间。</p>
+<p><strong>后台重写</strong></p>
+<p>重写函数会占用大量的线程时间（Redis服务器使用单个线程来处理命令请求），无法处理客户端请求。</p>
+<p>因此将AOF重写程序放到子进程里执行</p>
+<p>好处：</p>
+<p>❑子进程进行AOF重写期间，服务器进程（父进程）可以继续处理命令请求。</p>
+<p>❑子进程带有服务器进程的数据副本，使用子进程而不是线程，可以在避免使用锁的情况下，保证数据的安全性。</p>
+<p><strong>重写缓冲区</strong></p>
+<p>同样，重写时主进程进行操作会影响数据库状态，避免这种情况，服务器设置了重写缓冲区，与重写子进程一同开启。</p>
+<p>——&gt;Redis服务器执行完一个写命令之后，它会同时将这个写命令发送给AOF缓冲区和AOF重写缓冲区</p>
+<p>——&gt;当子进程完成AOF重写后，向父进程发送信号，父进程把重写缓冲区内容写入到新的AOF文件中</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/">http://example.com/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Redis 客户端与服务器</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/"><img class="next-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Redis 数据库</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/11/11/Redis-事件驱动模型/" title="Redis 事件驱动模型"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-11</div><div class="title">Redis 事件驱动模型</div></div></a></div><div><a href="/2021/11/14/Redis-客户端与服务器/" title="Redis 客户端与服务器"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 客户端与服务器</div></div></a></div><div><a href="/2021/11/14/Redis-数据库/" title="Redis 数据库"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 数据库</div></div></a></div><div><a href="/2021/11/14/redis数据结构/" title="redis数据结构"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">redis数据结构</div></div></a></div><div><a href="/2021/11/14/Redis对象/" title="Redis对象"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis对象</div></div></a></div><div><a href="/2021/11/15/Redis-复制/" title="Redis 复制"><img class="cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-15</div><div class="title">Redis 复制</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81RDB-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">一、RDB 持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-RDB%E6%96%87%E4%BB%B6-%E8%BD%BD%E5%85%A5%E4%B8%8E%E5%88%9B%E5%BB%BA"><span class="toc-text">1.RDB文件 载入与创建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%87%AA%E5%8A%A8%E9%97%B4%E9%9A%94%E6%80%A7%E4%BF%9D%E5%AD%98"><span class="toc-text">2.自动间隔性保存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-RDB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-text">3.RDB文件结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%88%86%E6%9E%90RDB"><span class="toc-text">4. 分析RDB</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81AOF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">二、AOF持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-text">1.实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%BD%BD%E5%85%A5%E4%B8%8E%E8%BF%98%E5%8E%9F"><span class="toc-text">2.载入与还原</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-AOF-%E9%87%8D%E5%86%99"><span class="toc-text">3.AOF 重写</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/11/15/Redis-%E5%A4%8D%E5%88%B6/" title="Redis 复制"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 复制"/></a><div class="content"><a class="title" href="/2021/11/15/Redis-%E5%A4%8D%E5%88%B6/" title="Redis 复制">Redis 复制</a><time datetime="2021-11-15T14:12:00.000Z" title="Created 2021-11-15 22:12:00">2021-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Redis 客户端与服务器"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 客户端与服务器"/></a><div class="content"><a class="title" href="/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Redis 客户端与服务器">Redis 客户端与服务器</a><time datetime="2021-11-14T12:14:31.000Z" title="Created 2021-11-14 20:14:31">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis 持久化"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 持久化"/></a><div class="content"><a class="title" href="/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/" title="Redis 持久化">Redis 持久化</a><time datetime="2021-11-14T12:14:13.000Z" title="Created 2021-11-14 20:14:13">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Redis 数据库"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 数据库"/></a><div class="content"><a class="title" href="/2021/11/14/Redis-%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Redis 数据库">Redis 数据库</a><time datetime="2021-11-14T12:12:56.000Z" title="Created 2021-11-14 20:12:56">2021-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/" title="Redis对象"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis对象"/></a><div class="content"><a class="title" href="/2021/11/14/Redis%E5%AF%B9%E8%B1%A1/" title="Redis对象">Redis对象</a><time datetime="2021-11-14T10:09:11.000Z" title="Created 2021-11-14 18:09:11">2021-11-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
