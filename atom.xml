@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-11-15T16:22:33.678Z</updated>
+  <updated>2021-11-17T13:23:56.663Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis Sentinel</title>
+    <link href="http://example.com/2021/11/17/Redis-Sentinel/"/>
+    <id>http://example.com/2021/11/17/Redis-Sentinel/</id>
+    <published>2021-11-17T13:19:49.000Z</published>
+    <updated>2021-11-17T13:23:56.663Z</updated>
+    
+    <content type="html"><![CDATA[<p>Sentinel（哨岗、哨兵）是Redis的高可用性（highavailability）解决方案</p><p>通过Sentinel系统监视任意多的主服务器和从服务器，自动升级下线主服务器的从属服务器为主服务器，代理执行原主机的相关工作</p><p><img src="https://i.loli.net/2021/11/17/cNiLAkld9wQZMYK.png" alt="image-20211117212353672"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Sentinel（哨岗、哨兵）是Redis的高可用性（highavailability）解决方案&lt;/p&gt;
+&lt;p&gt;通过Sentinel系统监视任意多的主服务器和从服务器，自动升级下线主服务器的从属服务器为主服务器，代理执行原主机的相关工作&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;h</summary>
+      
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>String StringBuilder StringBuffer</title>
@@ -48,8 +74,16 @@
     <link href="http://example.com/2021/11/15/Redis-%E5%A4%8D%E5%88%B6/"/>
     <id>http://example.com/2021/11/15/Redis-%E5%A4%8D%E5%88%B6/</id>
     <published>2021-11-15T14:12:00.000Z</published>
-    <updated>2021-11-15T14:15:22.530Z</updated>
+    <updated>2021-11-17T13:17:43.253Z</updated>
     
+    <content type="html"><![CDATA[<h1 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h1><p>通过SLAVEOF 命令进行复制</p> <img src="https://i.loli.net/2021/11/17/81Dy94AgbwFop6B.png" alt="image-20211117210636423" style="zoom:67%;" /><p>被复制的叫做主服务器，相反，对主服务器进行复制的叫做从服务器</p><p>两个服务器经过复制之后数据库状态一致。</p><p>Redis2.8 版本前后对于服务器断线重连复制的问题解决方案不同，因此下面分两部分具体讨论。</p><h2 id="1-旧版复制实现"><a href="#1-旧版复制实现" class="headerlink" title="1.旧版复制实现"></a>1.旧版复制实现</h2><p>Redis2.8 版本之前</p><p>首先了解一些基本概念 ：</p><p>复制分为同步和命令传播</p><ul><li>同步： 从服务器的数据库状态更新至主服务器当前所处的数据库状态。</li><li>命令传播： 用于在主服务器的数据库状态修改， 主从服务器的数据库状态出现不一致时，让主从服务器的数据库重新回到一致状态。</li></ul><h3 id="1-1同步"><a href="#1-1同步" class="headerlink" title="1.1同步"></a>1.1同步</h3><p>通过SYNC命令实现</p><p>具体步骤如下：</p><p>1）从服务器向主服务器发送SYNC命令。</p><p>2）主服务器收到命令之后使用BGSAVE生成 RDB文件， 并且使用 缓冲区记录从现在开始执行的所有写命令。</p><p>3）当主服务器的BGSAVE命令执行完毕时， 将生成的RDB文件发送给从服务器，从服务器接收并载入这个RDB文件，将自己的数据库状态更新至主服务器执行BGSAVE命令时的数据库状态。</p><p>4）主服务器将缓冲区内容发送给从服务器，从服务器进而将自身的数据库状态更新至主服务器数据库当前所处的状态。</p><img src="https://i.loli.net/2021/11/17/ATBDEmIwagXUzHu.png" alt="image-20211117202010473" style="zoom:80%;" /><p><strong>命令传播</strong></p><p>同步完成之后，主从服务器状态达到一致。主服务器执行相关写命令时这种状态将会被改变。</p><p>为了保持状态的一致性，主服务需要对从服务器进行命令传播：即将主服务器执行的命令动态发送给从服务器。</p><h2 id="2、旧版复制缺陷"><a href="#2、旧版复制缺陷" class="headerlink" title="2、旧版复制缺陷"></a>2、旧版复制缺陷</h2><p>通常复制的状态分成两种：初次和复制和断线后重复制</p><ul><li>初次复制：从服务器之前没有复制过任何主服务器</li><li>断线后重复制：从服务器复制时，因某些原因断线，重新连接之后复制的问题。</li></ul><p>新旧复制在初次复制处理没有太大区别，在断线重复值上面旧版复制效率十分低下。新版进行了解决。</p><p>旧版复制断线之后，从服务器重新连接，会重新新进行复制，包括断线状态时，主机进行的新的写操作。断线之前进行定复制操作全部丢弃。</p><p>注：SYNC命令是一个非常耗费资源的操作， 会耗费主服务器大量的CPU、内存和磁盘I/O资源，</p><p> 耗费主从服务器大量的网络资源。</p><h2 id="3、新版复制功能"><a href="#3、新版复制功能" class="headerlink" title="3、新版复制功能"></a>3、新版复制功能</h2><p>Redis从2.8版本开始，使用PSYNC命令代替SYNC命令来执行复制时的同步操作。</p><p>PSYNC命令 分成完整重同步 和部分重同步 </p><p>❑ 完整重同步：处理初次复制情况 ，其步骤和SYNC命令相同</p><p>❑ 部分重同步：用于处理断线后重复制情况，冲服务器如果条件允许，从服务器断线重连，主服务器将连接断开期间执行的写命令发送给从服务器，从服务器 根据这些命令进行状态同步（用来解决旧版重复制是效率低下的问题）</p><p><img src="https://i.loli.net/2021/11/17/GuqR9MIkO674aWK.png" alt="image-20211117204237041"></p><h2 id="4、部分重同步实现"><a href="#4、部分重同步实现" class="headerlink" title="4、部分重同步实现"></a>4、部分重同步实现</h2><p>具体分成以下三个组成部分：</p><p>❑主服务器的复制偏移量（replication offset）和从服务器的复制偏移量。</p><p>❑主服务器的复制积压缓冲区（replicationbacklog）。</p><p>❑服务器的运行ID（run ID）。</p><p><strong>复制偏移量：</strong>主从服务器分别维护的一个状态量，两服务器每次传输一字节数据，复制偏移量都会变化1。对比主从服务器的复制偏移量，程序可以 知道主从服务器是否处于一致状态</p><p><strong>复制积压缓冲区</strong> ：（用于判断进行部分重同步还是完整重同步）</p><p>由主服务器维护的一个固定长度（fixed-size）先进先出（FIFO）队列，默认大小为1MB。</p><ul><li>当主服务器进行命令传播时，不仅会将写命令发送给所有从服务器，还会将写命令入队到复制积压缓冲区中</li><li>复制缓冲区保存一部分最近传播的命令</li><li>从服务器重连 ，从服务器通过PSYNC命令将自己的复制偏移量offset发送给主服务器</li><li>主服务器根据offset进行判断进行何种操作<ul><li>offset偏移量之后的数据 存在于复制积压缓冲区里面， 主服务器将对从服务器执行部分重同步操作</li><li>offset偏移量之后的数据已经不存在于复制积压缓冲区，那么主服务器将对从服务器执行完整重同步操作。</li></ul></li></ul><p>注：Redis为复制积压缓冲区设置的默认大小为1MB，可以自行调整。</p><p>​        复制积压缓冲区的最小大小可以根据公式second*write_size_per_second来估算</p><p><strong>服务器运行ID</strong>：主从服务器都有的六进制字符属性</p><ul><li>主从服务器初次复制时，主服务器发送自身运行ID 给从服务器进行保存</li><li>如果断线重连，通过比较运行ID，判断之前连接的服务器是否是同一个<ul><li>相同，进行复制缓冲区判断，决定是否进行部分重复制</li><li>不同，直接进行完整重同步</li></ul></li></ul><h2 id="5、PSYNC-的实现"><a href="#5、PSYNC-的实现" class="headerlink" title="5、PSYNC 的实现"></a>5、PSYNC 的实现</h2><p>psync的调用方法：</p><ul><li><p>从服务器以前没有复制过任何主服务器，或者之前执行过SLAVEOF no one命令（哨兵选举主服务器时的操作）</p></li><li><p> 从服务器已经复制过某个主服务器， 从服务器在开始一次新的复制时就将向主服务器发送PSYNC ＜runid＞ ＜offset＞命令</p></li></ul>  <!--runid是上一次复制的主服务器的运行ID，而offset则是从服务器当前的复制偏移量--><p>主服务器接收psync命令后有三种返回状态：</p><ul><li><p>返回+FULLRESYNC ＜runid＞ ＜offset＞：表示执行完整重同步</p></li><li><p>主服务器返回+CONTINUE：主从服务器执行部分重同步，从服务器等待主服务器发送自身缺少的命令数据</p></li><li><p>主服务器返回+CONTINUE： 主服务器的版本低于Redis 2.8，不能识别PSYNC命令，之后从服务器将向主服务器发送SYNC命令，并与主服务器执行完整同步操作。</p><p>图15-12 PSYNC执行完整重同步和部分重同步时可能遇上的情况：</p></li></ul><img src="https://i.loli.net/2021/11/17/aT9PpAujX8l3dh5.png" alt="image-20211117210438067" style="zoom:80%;" /><h2 id="6、复制的实现"><a href="#6、复制的实现" class="headerlink" title="6、复制的实现"></a>6、复制的实现</h2><p>下面举例说明 Redis2.8或以上版本的复制功能的 实现步骤。</p><p>步骤1：设置主服务器的地址和端口</p><p>步骤3：发送PING命令</p><p>步骤3：发送PING命令</p><p>步骤4：身份验证</p><p> 步骤5：发送端口信息</p><p>步骤6：同步</p><p>步骤7：命令传播</p><h2 id="7、心跳检测"><a href="#7、心跳检测" class="headerlink" title="7、心跳检测"></a>7、心跳检测</h2><p>在命令传播阶段，从服务器默认会以每秒一次的频率，向主服务器发送命令：</p><p><img src="https://i.loli.net/2021/11/17/dwYsgN6SmbBPIvy.png" alt="image-20211117210958609"></p><p>有三个作用： ❑检测主从服务器的网络连接状态。</p><p>​                        ❑辅助实现min-slaves选项。</p><p>​                        ❑检测命令丢失。</p><p><strong>检测主从服务器的网络连接状态：</strong></p><p>主从服务器 通过发送和接收REPLCONF ACK命令来检查两者之间的网络连接  主服务器一秒钟之内未收到从服务器 发来的REPLCONF ACK命令，主从服务器之间的网络连接出现了问题</p><p><strong>辅助实现min-slaves选项</strong>：</p><p>min-slaves-to-write和min-slaves-max-lag两个选项可以防止主服务器在不安全的情况下执行写命令（在一定的延迟或者从服务器链接数量下，主服务器都可能拒绝写命令）</p><p><strong>检测命令丢失</strong></p><p>通过发送的offset确定两者是否状态一致，命令是否丢失</p><p>注：Redis 2.8版本以前的命令丢失，主服务器和从服务器都不会注意到，主服务器更不会向从服务器补发丢失的数据。因此尽量使用2.8或以上版本的Redis</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;复制&quot;&gt;&lt;a href=&quot;#复制&quot; class=&quot;headerlink&quot; title=&quot;复制&quot;&gt;&lt;/a&gt;复制&lt;/h1&gt;&lt;p&gt;通过SLAVEOF 命令进行复制&lt;/p&gt;
+ &lt;img src=&quot;https://i.loli.net/2021/11/17/81Dy94Ag</summary>
+      
     
     
     
