@@ -1,34 +1,14 @@
-- 
-
-```
-title:Mysql 全文本搜索
-date: 2021-11-19 17:14:53 
-updated:
+---
+title: mysql全文本搜索
+date: 2021-11-25 11:10:14
 tags:
-
 - [Mysql]
 - ["学习笔记"]
-  categories:
+categories:
 
 - ["技术转载学习"]
-  keywords:
-  description:
-  top_img:
-  comments:
-  cover:
-  toc:
-  toc_number:
-  copyright:
-  copyright_author:
-  copyright_author_href:
-  copyright_url:
-  copyright_info:
-  mathjax:
-  katex:
-  aplayer:
-  highlight_shrink:
-  aside:
-```
+
+---
 
 # MySQL 之全文索引
 
@@ -251,4 +231,4 @@ MySQL 的全文索引最开始仅支持英语，因为英语的词与词之间�
 [mysql全文索引__简介](https://link.zhihu.com/?target=http%3A//blog.51cto.com/imysqldba/1618465)
 
 [MySQL 官方参考手册](https://link.zhihu.com/?target=https%3A//dev.mysql.com/doc/refman/5.7/en/fulltext-search.html)
-高性能 MySQL（第三版）
+高性能 MySQL
