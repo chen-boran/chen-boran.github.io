@@ -2,19 +2,7 @@
 title: JUC常见问题
 date: 2021-11-25 11:04:56
 tags:
--[JUC]
--["学习笔记"]
-categories: thinks 
-keywords:
-description: some of my thinks
-top_img: 
-comments: 
-cover: https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg
-toc:  
-toc_number:
-copyright:
-mathjax:
-katex:
+
 ---
 
 以下是学习多线程遗留的一些问题和相关简要的解答，参考了许多博客和网站（文末）。
