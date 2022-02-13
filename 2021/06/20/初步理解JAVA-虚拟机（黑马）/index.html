@@ -1,0 +1,1534 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>初步理解JAVA 虚拟机（黑马） | boranの小さな巣</title><meta name="keywords" content="thinks"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="some of my thinks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初步理解JAVA 虚拟机（黑马）">
+<meta property="og:url" content="http://example.com/2021/06/20/%E5%88%9D%E6%AD%A5%E7%90%86%E8%A7%A3JAVA-%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88%E9%BB%91%E9%A9%AC%EF%BC%89/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="some of my thinks">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg">
+<meta property="article:published_time" content="2021-06-20T12:12:56.000Z">
+<meta property="article:modified_time" content="2022-02-12T06:03:53.343Z">
+<meta property="article:author" content="chen-boran">
+<meta property="article:tag" content="thinks">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2021/06/20/%E5%88%9D%E6%AD%A5%E7%90%86%E8%A7%A3JAVA-%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88%E9%BB%91%E9%A9%AC%EF%BC%89/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-12 14:03:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">初步理解JAVA 虚拟机（黑马）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-06-20T12:12:56.000Z" title="Created 2021-06-20 20:12:56">2021-06-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-02-12T06:03:53.343Z" title="Updated 2022-02-12 14:03:53">2022-02-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/thinks/">thinks</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="初步理解JAVA 虚拟机（黑马）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文 是基于B站黑马程序员JVM 教程总结的笔记。仅供个人学习和参考。</p>
+<p><strong>JVM</strong>？</p>
+<p>定义：java Virtural Machine  （java二进制代码<strong>运行环境</strong>）</p>
+<p>优点：</p>
+<ul>
+<li><p>一次编写，到处运行</p>
+</li>
+<li><p>自动内存管理，垃圾回收机制</p>
+</li>
+<li><p>数组下标越界检查</p>
+</li>
+<li><p>多态机制</p>
+</li>
+</ul>
+<p>JVM屏蔽java和底层操作系统的差异：</p>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210618122158873.png" alt="image-20210618122158873"></p>
+<p>常见JVM：</p>
+<p>学习路线：<img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210618122633191.png" alt="image-20210618122633191"></p>
+<h1 id="一-内存结构"><a href="#一-内存结构" class="headerlink" title="一.内存结构"></a>一.内存结构</h1><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps1.png" alt="img"></p>
+<p>\1. 程序计数器</p>
+<p>\2. 虚拟机栈</p>
+<p>\3. 本地方法栈</p>
+<p>\4. 堆</p>
+<p>\5. 方法区</p>
+<h2 id="1-程序计数器"><a href="#1-程序计数器" class="headerlink" title="1. 程序计数器     "></a>1. 程序计数器    <a href="af://n31/"> </a></h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps2.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps3.png" alt="img"> </p>
+<h3 id="1-1-定义"><a href="#1-1-定义" class="headerlink" title="1.1 定义"></a>1.1 定义</h3><ul>
+<li><p>特点：</p>
+<p>Program Counter Register 程序计数器（寄存器</p>
+<ul>
+<li><p>作用：记住下一条jvm指令的执行地址</p>
+</li>
+<li><p>是线程私有的</p>
+</li>
+<li><p><strong>不会存在内存溢出</strong> </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-作用"><a href="#1-2-作用" class="headerlink" title="1.2 作用"></a>1.2 作用</h3><p> 线程私有的，每个线程都有自身计数器</p>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210618131139123.png" alt="image-20210618131139123">  </p>
+<h2 id="2-虚拟机栈"><a href="#2-虚拟机栈" class="headerlink" title="2.虚拟机栈"></a>2.虚拟机栈</h2><h3 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h3><p>Java Virtual Machine Stacks （Java 虚拟机栈）</p>
+<ul>
+<li><p>（虚拟机）栈：每个线程运行时所需要的内存   </p>
+</li>
+<li><p>每个栈由多个栈帧（Frame）组成</p>
+</li>
+<li><p>栈帧（Frame）：一个方法运行时需要的内存</p>
+</li>
+<li><p>每个线程只能有一个活动栈帧（正在执行的方法）</p>
+</li>
+</ul>
+<p><strong>问题辨析</strong></p>
+<ol>
+<li><p>垃圾回收是否涉及栈内存？</p>
+<p>-栈内存自动清除，垃圾是对堆得数据进行回收 </p>
+</li>
+<li><p>栈内存分配越大越好吗？</p>
+<p>栈内存越大，可同时运行的线程会减少，一般不建议增大内存</p>
+</li>
+<li><p>方法内的局部变量是否线程安全？</p>
+<p>取决于使用的局部变量是否共享</p>
+</li>
+</ol>
+<ul>
+<li><p>如果方法内局部变量没有逃离方法的作用访问，它是线程安全的</p>
+</li>
+<li><p>如果是局部变量引用了对象，并逃离方法的作用范围（return 返回），需要考虑线程安全 </p>
+</li>
+</ul>
+<h3 id="2-2-栈内存溢出"><a href="#2-2-栈内存溢出" class="headerlink" title="2.2 栈内存溢出"></a>2.2 栈内存溢出</h3><p>报错显示 <strong>java.lang.StackOverflowError</strong></p>
+<ul>
+<li><p>栈帧过多导致栈内存溢出</p>
+<p>例：方法递归调用</p>
+<img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210618133324333.png" alt="image-20210618133324333" style="zoom:25%;" /></li>
+<li><p>栈帧过大导致栈内存溢出</p>
+ <img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210618133359416.png" alt="image-20210618133359416" style="zoom:25%;" /></li>
+</ul>
+<h3 id="2-3-线程运行诊断"><a href="#2-3-线程运行诊断" class="headerlink" title="2.3 线程运行诊断"></a>2.3 线程运行诊断</h3><p>案例1： cpu 占用过多定位</p>
+<p>用top定位哪个进程对cpu的占用过高</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps10.png" alt="img">ps H -eo pid,tid,%cpu | grep 进程id （用ps命令进一步定位是哪个线程引起的cpu占用过高） jstack 进程id</p>
+<p>可以根据线程id 找到有问题的线程，进一步定位到问题代码的源码行号</p>
+<p>案例2：程序运行很长时间没有结果</p>
+<h2 id="3-本地方法栈"><a href="#3-本地方法栈" class="headerlink" title="3.本地方法栈"></a>3.本地方法栈</h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps11.png" alt="img"></p>
+<h2 id="4-堆"><a href="#4-堆" class="headerlink" title="4.堆"></a>4.堆</h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps12.png" alt="img"></p>
+<h3 id="4-1-定义"><a href="#4-1-定义" class="headerlink" title="4.1 定义"></a>4.1 定义</h3><p>Heap 堆</p>
+<ul>
+<li>通过 new 关键字，创建对象都会使用堆内存特点</li>
+</ul>
+<p>它是线程共享的，堆中对象都需要考虑线程安全的问题  </p>
+<h3 id="4-2-堆内存溢出"><a href="#4-2-堆内存溢出" class="headerlink" title="4.2 堆内存溢出"></a>4.2 堆内存溢出</h3><h3 id="4-3-堆内存诊断"><a href="#4-3-堆内存诊断" class="headerlink" title="4.3 堆内存诊断"></a>4.3 堆内存诊断</h3><ol>
+<li>jps 工具</li>
+</ol>
+<ul>
+<li> 查看当前系统中有哪些 java 进程</li>
+</ul>
+<ol start="2">
+<li><p>jmap 工具 <img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps16.png" alt="img"> 查看堆内存占用情况 jmap - heap 进程id</p>
+</li>
+<li><p>jconsole 工具</p>
+<p>图形界面的，多功能的监测工具，可以连续监测</p>
+</li>
+</ol>
+<p>案例 ： 垃圾回收后，内存占用仍然很高</p>
+<h2 id="5-方法区"><a href="#5-方法区" class="headerlink" title="5. 方法区"></a>5. 方法区</h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps19.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps20.png" alt="img"> </p>
+<h3 id="5-1-定义"><a href="#5-1-定义" class="headerlink" title="5.1 定义"></a>5.1 定义</h3><p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html">J</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html">VM</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html">规范</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html">-</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html">方法区定义</a></p>
+<h3 id="5-2-组成"><a href="#5-2-组成" class="headerlink" title="5.2 组成     "></a>5.2 组成    <a href="af://n248/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps21.png" alt="img"></p>
+<h3 id="5-3-方法区内存溢出"><a href="#5-3-方法区内存溢出" class="headerlink" title="5.3 方法区内存溢出     "></a>5.3 方法区内存溢出    <a href="af://n265/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps22.png" alt="img">    1.8 以前会导致永久代内存溢出</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps23.png" alt="img"></p>
+<p> 场景</p>
+<p>​    mybatis</p>
+<p>​    spring </p>
+<h3 id="5-4-运行时常量池"><a href="#5-4-运行时常量池" class="headerlink" title="5.4 运行时常量池     "></a>5.4 运行时常量池    <a href="af://n325/"> </a></h3><ul>
+<li><p>常量池，就是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量等信息</p>
+</li>
+<li><p>运行时常量池，常量池是 *.class 文件中的，当该类被加载，它的常量池信息就会放入运行时常量池，并把里面的符号地址变为真实地址</p>
+</li>
+</ul>
+<h3 id="5-5-StringTable-先看几道面试题："><a href="#5-5-StringTable-先看几道面试题：" class="headerlink" title="5.5 StringTable     先看几道面试题："></a>5.5 StringTable    <a href="af://n350/"> </a>先看几道面试题：</h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps26.png" alt="img"></p>
+<h3 id="5-5-StringTable-特性"><a href="#5-5-StringTable-特性" class="headerlink" title="5.5 StringTable 特性     "></a>5.5 StringTable 特性    <a href="af://n353/"> </a></h3><p>常量池中的字符串仅是符号，第一次用到时才变为对象利用串池的机制，来避免重复创建字符串对象</p>
+<ul>
+<li><p>字符串变量拼接的原理是 StringBuilder （1.8)字符串常量拼接的原理是编译期优化</p>
+</li>
+<li><p>可以使用 <strong>intern</strong> 方法，主动将串池中还没有的字符串对象放入串池</p>
+</li>
+</ul>
+<p>1.8 将这个字符串对象尝试放入串池，如果有则并不会放入，如果没有则放入串池， 会把串池中的对象返回</p>
+<p>1.6 将这个字符串对象尝试放入串池，如果有则并不会放入，如果没有会把此对象复制一份，放入串池， 会把串池中的对象返回</p>
+<h3 id="5-6-StringTable-位置"><a href="#5-6-StringTable-位置" class="headerlink" title="5.6 StringTable 位置     "></a>5.6 StringTable 位置    <a href="af://n375/"> </a></h3><h3 id="5-7-StringTable-垃圾回收"><a href="#5-7-StringTable-垃圾回收" class="headerlink" title="5.7 StringTable 垃圾回收     "></a>5.7 StringTable 垃圾回收    <a href="af://n388/"> </a></h3><h3 id="5-8-StringTable-性能调优"><a href="#5-8-StringTable-性能调优" class="headerlink" title="5.8 StringTable 性能调优     "></a>5.8 StringTable 性能调优    <a href="af://n401/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps28.png" alt="img"> 调整 -XX:StringTableSize=桶个数</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps29.png" alt="img"> 考虑将字符串对象是否入池</p>
+<h2 id="6-直接内存"><a href="#6-直接内存" class="headerlink" title="6. 直接内存"></a>6. 直接内存</h2><h2 id="6-1-定义"><a href="#6-1-定义" class="headerlink" title="6.1 定义     "></a>6.1 定义    <a href="af://n432/"> </a></h2><p>Direct Memory</p>
+<ul>
+<li>常见于 NIO 操作时，用于数据缓冲区分配回收成本较高，但读写性能高不受 JVM 内存回收管理</li>
+</ul>
+<h3 id="6-2-分配和回收原理"><a href="#6-2-分配和回收原理" class="headerlink" title="6.2 分配和回收原理     "></a>6.2 分配和回收原理    <a href="af://n452/"> </a></h3><ul>
+<li>使用了 Unsafe 对象完成直接内存的分配回收，并且回收需要主动调用 freeMemory 方法 ByteBuffer 的实现类内部，</li>
+<li>使用了 Cleaner （虚引用)来监测 ByteBuffer 对象，一旦ByteBuffer 对象被垃圾回收，那么就会由 ReferenceHandler 线程通过 Cleaner 的 clean 方法调用 freeMemory 来释放直接内存</li>
+</ul>
+<h1 id="二-垃圾回收"><a href="#二-垃圾回收" class="headerlink" title="二.垃圾回收"></a>二.垃圾回收</h1><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps33.png" alt="img"></p>
+<ol>
+<li><p> 如何判断对象可以回收</p>
+</li>
+<li><p> 垃圾回收算法</p>
+</li>
+<li><p> 分代垃圾回收</p>
+</li>
+<li><p> 垃圾回收器</p>
+</li>
+<li><p> 垃圾回收调优</p>
+</li>
+</ol>
+<h2 id="1-如何判断对象可以回收"><a href="#1-如何判断对象可以回收" class="headerlink" title="1.如何判断对象可以回收"></a>1.如何判断对象可以回收</h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps34.png" alt="img"> </p>
+<h3 id="1-2-可达性分析算法"><a href="#1-2-可达性分析算法" class="headerlink" title="1.2 可达性分析算法"></a>1.2 可达性分析算法</h3><ol>
+<li><p>Java 虚拟机中的垃圾回收器采用可达性分析来探索所有存活的对象</p>
+</li>
+<li><p>扫描堆中的对象，看是否能够沿着 GC Root对象 为起点的引用链找到该对象，找不到，表示可以回收</p>
+</li>
+<li><p>哪些对象可以作为 GC Root ?</p>
+</li>
+</ol>
+<h3 id="1-3-四种引用"><a href="#1-3-四种引用" class="headerlink" title="1.3 四种引用"></a>1.3 四种引用</h3><ol>
+<li> 强引用</li>
+</ol>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps38.png" alt="img"> 只有所有 GC Roots 对象都不通过【强引用】引用该对象，该对象才能被垃圾回收</p>
+<ol start="2">
+<li><p>软引用（SoftReference）</p>
+<p>仅有软引用引用该对象时，在垃圾回收后，内存仍不足时会再次出发垃圾回收，回收软引用对象</p>
+</li>
+</ol>
+<p>可以配合引用队列来释放软引用自身</p>
+<ol start="3">
+<li><p>弱引用（WeakReference）</p>
+<p>仅有弱引用引用该对象时，在垃圾回收时，无论内存是否充足，都会回收弱引用对象可以配合引用队列来释放弱引用自身</p>
+</li>
+<li><p>虚引用（PhantomReference）</p>
+<p>必须配合引用队列使用，主要配合 ByteBuffer 使用，被引用对象回收时，会将虚引用入队，由 Reference Handler 线程调用虚引用相关方法释放直接内存</p>
+</li>
+<li><p>终结器引用（FinalReference）</p>
+<p>无需手动编码，但其内部配合引用队列使用，在垃圾回收时，终结器引用入队（被引用对象暂时没有被回收），再由 Finalizer 线程通过终结器引用找到被引用对象并调用它的 finalize 方法，第二次 GC 时才能回收被引用对象</p>
+</li>
+</ol>
+<h2 id="2-垃圾回收算法"><a href="#2-垃圾回收算法" class="headerlink" title="2. 垃圾回收算法"></a>2. 垃圾回收算法</h2><h3 id="2-1标记回收"><a href="#2-1标记回收" class="headerlink" title="2.1标记回收"></a>2.1标记回收</h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps43.png" alt="img"></p>
+<ol>
+<li>标记可回收垃圾</li>
+<li>回收垃圾</li>
+</ol>
+<ul>
+<li>优点：速度快效率高</li>
+<li>缺点：造成内存碎片（内存空间不连续）</li>
+</ul>
+<h2 id="2-2-标记整理"><a href="#2-2-标记整理" class="headerlink" title="2.2 标记整理     "></a>2.2 标记整理    <a href="af://n170/"> </a></h2><p>定义：Mark Compact <img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps44.png" alt="img"> 速度慢</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps45.png" alt="img"></p>
+<ol>
+<li>标记可回收垃圾（存活多）</li>
+<li>回收垃圾（内存空间向前移动）</li>
+</ol>
+<ul>
+<li>优点：速度较慢（设计地址的变化等操作）</li>
+<li>缺点：不会造成内存碎片 </li>
+</ul>
+<h3 id="2-3-复制"><a href="#2-3-复制" class="headerlink" title="2.3 复制     "></a>2.3 复制    <a href="af://n188/"> </a></h3><p>定义：Copy</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps46.png" alt="img"></p>
+<p>把可以保存的对象复制到另一份内存空间，并交换from和to</p>
+<ul>
+<li><p>优点：没有内存碎片</p>
+</li>
+<li><p>占用双倍的内存空间 </p>
+</li>
+</ul>
+<h2 id="3-分代垃圾回收"><a href="#3-分代垃圾回收" class="headerlink" title="3. 分代垃圾回收     "></a>3. 分代垃圾回收    <a href="af://n207/"> </a></h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps47.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps48.png" alt="img"> </p>
+<ol>
+<li><p>对象首先分配在伊甸园区域</p>
+</li>
+<li><p>新生代空间不足时，触发 minor gc，伊甸园和 from 存活的对象使用 copy 复制到 to 中（其他对象空间 被回收），存活的对象年龄加 1并且交换 from to</p>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210619215049838.png" alt="image-20210619215049838"></p>
+</li>
+<li><p>minor gc 会引发 stop the world（避免线程混乱，涉及地质改变），暂停其它用户的线程，等垃圾回收结束，用户线程才恢复运行当对象寿命超过阈值时，会晋升至老年代，最大寿命是15（4bit）</p>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210619215117828.png" alt="image-20210619215117828"></p>
+</li>
+<li><p>当老年代空间不足，会先尝试触发 minor gc（初级垃圾清除），如果之后空间仍不足，那么触发 full gc，STW的时间更长</p>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210619215139218.png" alt="image-20210619215139218"></p>
+</li>
+</ol>
+<h3 id="3-1-相关-VM-参数"><a href="#3-1-相关-VM-参数" class="headerlink" title="3.1 相关 VM 参数     "></a>3.1 相关 VM 参数    <a href="af://n224/"> </a></h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>堆初始大小</td>
+<td>-Xms</td>
+</tr>
+<tr>
+<td>堆最大大小</td>
+<td>-Xmx 或 -XX:MaxHeapSize=size</td>
+</tr>
+<tr>
+<td>新生代大小</td>
+<td>-Xmn 或 (-XX:NewSize=size + -XX:MaxNewSize=size )</td>
+</tr>
+<tr>
+<td>幸存区比例（动态）</td>
+<td>-XX:InitialSurvivorRatio=ratio 和 -XX:+UseAdaptiveSizePolicy</td>
+</tr>
+<tr>
+<td>幸存区比例</td>
+<td>-XX:SurvivorRatio=ratio</td>
+</tr>
+<tr>
+<td>晋升阈值</td>
+<td>-XX:MaxTenuringThreshold=threshold</td>
+</tr>
+<tr>
+<td>晋升详情</td>
+<td>-XX:+PrintTenuringDistribution</td>
+</tr>
+<tr>
+<td>GC详情</td>
+<td>-XX:+PrintGCDetails -verbose:gc</td>
+</tr>
+<tr>
+<td>FullGC 前 MinorGC</td>
+<td>-XX:+ScavengeBeforeFullGC</td>
+</tr>
+</tbody></table>
+<p> <strong>大对象直接送到老年代机制</strong></p>
+<h2 id="4-垃圾回收器"><a href="#4-垃圾回收器" class="headerlink" title="4. 垃圾回收器    @@@@@"></a>4. 垃圾回收器    @@@@@</h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps50.png" alt="img"></p>
+<ol>
+<li><p>串行</p>
+<ul>
+<li>底层是单线程，- </li>
+<li>适用于堆内存较小，适合个人电脑</li>
+</ul>
+</li>
+<li><p>吞吐量优先</p>
+<ul>
+<li>多线程</li>
+<li>适用于堆内存较大，多核 cpu </li>
+<li>让<strong>单位时间</strong>内，STW 的时间最短 0.2 0.2 = 4，垃圾回收时间占比最低，这样就称吞吐量高</li>
+</ul>
+</li>
+<li><p>响应时间优先</p>
+<ul>
+<li><p>多线程</p>
+</li>
+<li><p>适用于堆内存较大，</p>
+</li>
+<li><p>多核 cpu</p>
+</li>
+<li><p>尽可能让单次 STW 的单次时间最短     0.1 0.1 0.1 0.1 0.1 = 0.5</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-1-串行"><a href="#4-1-串行" class="headerlink" title="4.1 串行     "></a>4.1 串行    <a href="af://n311/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps54.png" alt="img"></p>
+<ol>
+<li>空间不足</li>
+<li>在安全点暂停（阻塞）——-》开启单个垃圾回收线程</li>
+<li>垃圾回收完成————》线程继续</li>
+</ol>
+<h3 id="4-2-吞吐量优先"><a href="#4-2-吞吐量优先" class="headerlink" title="4.2 吞吐量优先"></a>4.2 吞吐量优先</h3><p>-XX:+UseParallelGC ~ -XX:+UseParallelOldGC</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps56.png" alt="img"></p>
+<ol>
+<li> 内存空间不足</li>
+<li> 在安全点暂停（阻塞）——-》开启多个垃圾回收线程（）</li>
+<li> 垃圾回收完成————》线程继续</li>
+</ol>
+<h3 id="4-3-响应时间优先"><a href="#4-3-响应时间优先" class="headerlink" title="4.3 响应时间优先     "></a>4.3 响应时间优先    <a href="af://n341/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps57.png" alt="img"></p>
+<h3 id="4-4-G1"><a href="#4-4-G1" class="headerlink" title="4.4 G1     "></a>4.4 G1    <a href="af://n363/"> </a></h3><p>定义：Garbage First</p>
+<ul>
+<li><p>2004 论文发布</p>
+</li>
+<li><p>2009 JDK 6u14 体验</p>
+</li>
+<li><p>2012 JDK 7u4 官方支持 </p>
+</li>
+<li><p>2017 JDK 9 默认成为垃圾回收器</p>
+</li>
+</ul>
+<p>适用场景</p>
+<ul>
+<li><p>同时注重吞吐量（Throughput）和低延迟（Low latency)，默认的暂停目标是 200 ms</p>
+</li>
+<li><p>超大堆内存，会将堆划分为多个大小相等的 Region </p>
+</li>
+<li><p>整体上是<strong>标记+整理算法</strong>，两个区域之间是<strong>复制算法</strong></p>
+</li>
+<li><p>相关 JVM 参数</p>
+<p>-XX:+UseG1GC</p>
+<p>-XX:G1HeapRegionSize=size</p>
+<p>-XX:MaxGCPauseMillis=time</p>
+</li>
+</ul>
+<h4 id="1-G1-垃圾回收阶段"><a href="#1-G1-垃圾回收阶段" class="headerlink" title="1) G1 垃圾回收阶段"></a>1) G1 垃圾回收阶段</h4><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps63.png" alt="img"> </p>
+<h4 id="2-Young-Collection"><a href="#2-Young-Collection" class="headerlink" title="2) Young Collection     "></a>2) Young Collection    <a href="af://n406/"> </a></h4><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps64.png" alt="img"> 会 STW</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps65.png" alt="img"> </p>
+<p> S:幸存区</p>
+<p>O:老年代</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps66.png" alt="img"> </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps67.png" alt="img"> </p>
+<h4 id="3-Young-Collection-CM"><a href="#3-Young-Collection-CM" class="headerlink" title="3) Young Collection + CM     "></a>3) Young Collection + CM    <a href="af://n436/"> </a></h4><ul>
+<li><p>在 Young GC 时会进行 GC Root 的初始标记</p>
+</li>
+<li><p>老年代占用堆空间比例达到阈值时，进行<strong>并发标记</strong>（不会 STW），由下面的 JVM 参数决定 </p>
+</li>
+</ul>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps69.png" alt="img"></p>
+<h4 id="4-Mixed-Collection"><a href="#4-Mixed-Collection" class="headerlink" title="4) Mixed Collection"></a>4) Mixed Collection</h4><p>混合收集阶段</p>
+<ul>
+<li>会对 E、S、O 进行全面垃圾回收最终标记（Remark）会 STW </li>
+<li>拷贝存活（Evacuation）会 STW </li>
+<li>不是所有老年代都被回收，优先回收垃圾最多的标记，</li>
+</ul>
+<p>-XX:MaxGCPauseMillis=ms</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps71.png" alt="img"> </p>
+<h4 id="5-Full-GC"><a href="#5-Full-GC" class="headerlink" title="5) Full GC     "></a>5) Full GC    <a href="af://n459/"> </a></h4><ul>
+<li><p>SerialGC</p>
+<p>新生代内存不足发生的垃圾收集 - minor gc</p>
+<p>老年代内存不足发生的垃圾收集 - full gc</p>
+</li>
+<li><p>ParallelGC </p>
+<p>新生代内存不足发生的垃圾收集 - minor gc </p>
+<p>老年代内存不足发生的垃圾收集- </p>
+</li>
+<li><p>full gc</p>
+<p>新生代内存不足发生的垃圾收集 - minor gc 老年代内存不足</p>
+<p>新生代内存不足发生的垃圾收集 - minor gc 老年代内存不足</p>
+</li>
+</ul>
+<h4 id="6）Young-Collection跨代引用"><a href="#6）Young-Collection跨代引用" class="headerlink" title="6）Young Collection跨代引用"></a>6）Young Collection跨代引用</h4><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps73.png" alt="img"></p>
+<p> 老年代引用了新生代被标记成脏卡区</p>
+<p> 垃圾回收时，对脏卡去进行查找，加快垃圾回收速度</p>
+<ul>
+<li><p>卡表与 Remembered Set</p>
+</li>
+<li><p>在引用变更时通过 <strong>post-write barrier</strong> （标记脏卡）+ dirty card queue </p>
+</li>
+<li><p>concurrent refinement threads 更新 Remembered Set</p>
+</li>
+</ul>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps75.png" alt="img"> </p>
+<h4 id="7-Remark"><a href="#7-Remark" class="headerlink" title="7) Remark     "></a>7) Remark    <a href="af://n530/"> </a></h4><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps76.png" alt="img"></p>
+<p> 注：黑色处理完；    灰色正在处理；    白色尚未处理</p>
+<p>并发标记阶段，如果回收期间引用关系发生了改变：</p>
+<ol>
+<li><p>C被A 引用（A是根引用）</p>
+</li>
+<li><p>C就会被添加<strong>写屏障</strong>，进入队列中，被<strong>重新标记</strong>成灰色</p>
+</li>
+<li><p>并发标记结束，进入重新标记阶段（remark），其他线程结束</p>
+</li>
+</ol>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210620100531126.png" alt="image-20210620100531126"></p>
+<h4 id="8-JDK-8u20-字符串去重"><a href="#8-JDK-8u20-字符串去重" class="headerlink" title="8) JDK 8u20 字符串去重"></a>8) JDK 8u20 字符串去重</h4><p>优点：节省大量内存</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps77.png" alt="img">优点：节省大量内存</p>
+<h4 id="9-JDK-8u40-并发标记类卸载"><a href="#9-JDK-8u40-并发标记类卸载" class="headerlink" title="9) JDK 8u40 并发标记类卸载"></a>9) JDK 8u40 并发标记类卸载</h4><p>所有对象都经过并发标记后，就能知道哪些类不再被使用，当一个类加载器的所有类都不再使用，则卸载它所加载的所有类XX:+ClassUnloadingWithConcurrentMark 默认启用</p>
+<h4 id="10-JDK-8u60-回收巨型对象"><a href="#10-JDK-8u60-回收巨型对象" class="headerlink" title="10) JDK 8u60 回收巨型对象     "></a>10) JDK 8u60 回收巨型对象    <a href="af://n587/"> </a></h4><ul>
+<li><p>一个对象大于 region 的一半时，称之为巨型对象 </p>
+</li>
+<li><p>G1 不会对巨型对象进行拷贝</p>
+</li>
+<li><p>回收时被优先考虑</p>
+</li>
+<li><p>G1 会跟踪老年代所有 incoming 引用，这样老年代 incoming 引用为0 的巨型对象就可以在新生代垃圾回收时处理掉(回收得越早越好)</p>
+</li>
+</ul>
+<h4 id="11-JDK-9-并发标记起始时间的调整"><a href="#11-JDK-9-并发标记起始时间的调整" class="headerlink" title="11) JDK 9 并发标记起始时间的调整     "></a>11) JDK 9 并发标记起始时间的调整    <a href="af://n614/"> </a></h4><p>并发标记必须在堆空间占满前完成，否则退化为 FullGC</p>
+<ul>
+<li><p>JDK 9 之前需要使用 -XX:InitiatingHeapOccupancyPercent（默认45%)</p>
+</li>
+<li><p>JDK 9 可以动态调整</p>
+</li>
+<li><p>-XX:InitiatingHeapOccupancyPercent 用来设置初始值</p>
+</li>
+<li><p>进行数据采样并动态调整</p>
+</li>
+<li><p>总会添加一个安全的空档空间</p>
+</li>
+<li></li>
+</ul>
+<h4 id="12-JDK-9-更高效的回收"><a href="#12-JDK-9-更高效的回收" class="headerlink" title="12) JDK 9 更高效的回收     "></a>12) JDK 9 更高效的回收    <a href="af://n645/"> </a></h4><p>250+增强</p>
+<p>180+bug修复</p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">https://docs.oracle.com/en/</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">j</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">ava/</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">j</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">avase/12/</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">g</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">ctunin</a><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">g</a></p>
+<h2 id="5-垃圾回收调优"><a href="#5-垃圾回收调优" class="headerlink" title="5. 垃圾回收调优     "></a>5. 垃圾回收调优    <a href="af://n670/"> </a></h2><p>预备知识</p>
+<ul>
+<li><p>掌握 GC 相关的 VM 参数，会基本的空间调整掌握相关工具</p>
+</li>
+<li><p>知识点：调优跟应用、环境有关，没有放之四海而皆准的法则</p>
+</li>
+</ul>
+<h3 id="5-1-调优领域"><a href="#5-1-调优领域" class="headerlink" title="5.1 调优领域"></a>5.1 调优领域</h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps85.png" alt="img">内存锁竞争</p>
+<p>cpu 占用 io</p>
+<h3 id="5-2-确定目标"><a href="#5-2-确定目标" class="headerlink" title="5.2 确定目标"></a>5.2 确定目标</h3><p>【低延迟】还是【高吞吐量】，选择合适的回收器</p>
+<p>CMS，G1，ZGC</p>
+<p>ParallelGC</p>
+<h3 id="5-3-最快的-GC"><a href="#5-3-最快的-GC" class="headerlink" title="5.3 最快的 GC     "></a>5.3 最快的 GC    <a href="af://n742/"> </a></h3><p>答案是不发生 GC 查看 FullGC 前后的内存占用，考虑下面几个问题</p>
+<p>数据是不是太多？</p>
+<p>resultSet = statement.executeQuery(“select * from 大表 limit n”) 数据表示是否太臃肿？</p>
+<p>对象图</p>
+<p>对象大小 16 Integer 24 int 4 是否存在内存泄漏？</p>
+<p>static Map map =</p>
+<p>软弱第三方缓存实现</p>
+<h3 id="5-4-新生代调优"><a href="#5-4-新生代调优" class="headerlink" title="5.4 新生代调优     "></a>5.4 新生代调优    <a href="af://n798/"> </a></h3><p>新生代的特点所有的 new 操作的内存分配非常廉价</p>
+<p>TLAB thread-local allocation buffer 死亡对象的回收代价是零大部分对象用过即死</p>
+<p>Minor GC 的时间远远低于 Full GC</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps89.png" alt="img"> 越大越好吗？</p>
+<p>-Xmn Sets the initial and maximum size (in bytes) of the heap for the young generation (nursery). GC is performed in this region more often than in other regions. If the size for the young generation is too small, then a lot of minor garbage collections are performed. If the size is too large, then only full garbage collections are performed, which can take a long time to complete. Oracle recommends that you keep the size for the young generation greater than 25% and less than 50% of the overall heap size.</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps90.png" alt="img">新生代能容纳所有【并发量 * (请求-响应)】的数据幸存区大到能保留【当前活跃对象+需要晋升对象】</p>
+<h3 id="5-5-老年代调优"><a href="#5-5-老年代调优" class="headerlink" title="5.5 老年代调优     "></a>5.5 老年代调优    <a href="af://n860/"> </a></h3><p>以 CMS 为例</p>
+<p>CMS 的老年代内存越大越好</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps91.png" alt="img">先尝试不做调优，如果没有 Full GC 那么已经…，否则先尝试调优新生代观察发生 Full GC 时老年代内存占用，将老年代内存预设调大 1/4 ~ 1/3</p>
+<p>-XX:CMSInitiatingOccupancyFraction=percent</p>
+<h3 id="5-6-案例"><a href="#5-6-案例" class="headerlink" title="5.6 案例     "></a>5.6 案例    <a href="af://n882/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps92.png" alt="img">案例1 Full GC 和 Minor GC频繁</p>
+<p>案例2 请求高峰期发生 Full GC，单次暂停时间特别长 （CMS）案例3 老年代充裕情况下，发生 Full GC （CMS jdk1.7）</p>
+<h1 id="三-类加载与字节码技术"><a href="#三-类加载与字节码技术" class="headerlink" title="三. 类加载与字节码技术"></a>三. 类加载与字节码技术</h1><p> 类加载与字节码技术     </p>
+<ol>
+<li>类文件结构 </li>
+<li>字节码指令 </li>
+<li>编译期处理</li>
+<li>类加载阶</li>
+<li>类加载器</li>
+<li>运行期优化</li>
+</ol>
+<h2 id="1-类文件结构"><a href="#1-类文件结构" class="headerlink" title="1.类文件结构"></a>1.类文件结构</h2><p>一个简单的 HelloWorld.java</p>
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210620123640244.png" alt="image-20210620123640244"></p>
+<p>编译为 HelloWorld.class 后是这个样子的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# od -t xC HelloWorld.class </span><br><span class="line">0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 09</span><br><span class="line">0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07</span><br><span class="line">0000040 00 1c 01 00 06 3c 69 6e 69 74 3e 01 00 03 28 29</span><br><span class="line">0000060 56 01 00 04 43 6f 64 65 01 00 0f 4c 69 6e 65 4e</span><br><span class="line">0000100 75 6d 62 65 72 54 61 62 6c 65 01 00 12 4c 6f 63</span><br><span class="line">0000120 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65 01</span><br><span class="line">0000140 00 04 74 68 69 73 01 00 1d 4c 63 6e 2f 69 74 63</span><br><span class="line">0000160 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c 6f</span><br><span class="line">0000200 57 6f 72 6c 64 3b 01 00 04 6d 61 69 6e 01 00 16</span><br><span class="line">0000220 28 5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72</span><br><span class="line">0000240 69 6e 67 3b 29 56 01 00 04 61 72 67 73 01 00 13</span><br><span class="line">0000260 5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69</span><br><span class="line">0000300 6e 67 3b 01 00 10 4d 65 74 68 6f 64 50 61 72 61</span><br><span class="line">0000320 6d 65 74 65 72 73 01 00 0a 53 6f 75 72 63 65 46</span><br><span class="line">0000340 69 6c 65 01 00 0f 48 65 6c 6c 6f 57 6f 72 6c 64</span><br><span class="line">0000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d 0c 00 1e</span><br><span class="line">0000400 00 1f 01 00 0b 68 65 6c 6c 6f 20 77 6f 72 6c 64</span><br><span class="line">0000420 07 00 20 0c 00 21 00 22 01 00 1b 63 6e 2f 69 74</span><br><span class="line">0000440 63 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c</span><br><span class="line">0000460 6f 57 6f 72 6c 64 01 00 10 6a 61 76 61 2f 6c 61</span><br><span class="line">0000500 6e 67 2f 4f 62 6a 65 63 74 01 00 10 6a 61 76 61</span><br><span class="line">0000520 2f 6c 61 6e 67 2f 53 79 73 74 65 6d 01 00 03 6f</span><br><span class="line">0000540 75 74 01 00 15 4c 6a 61 76 61 2f 69 6f 2f 50 72</span><br><span class="line">0000560 69 6e 74 53 74 72 65 61 6d 3b 01 00 13 6a 61 76</span><br><span class="line">0000600 61 2f 69 6f 2f 50 72 69 6e 74 53 74 72 65 61 6d</span><br><span class="line">0000620 01 00 07 70 72 69 6e 74 6c 6e 01 00 15 28 4c 6a</span><br><span class="line">0000640 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69 6e 67 3b</span><br><span class="line">0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01</span><br><span class="line">0000700 00 07 00 08 00 01 00 09 00 00 00 2f 00 01 00 01</span><br><span class="line">0000720 00 00 00 05 2a b7 00 01 b1 00 00 00 02 00 0a 00</span><br><span class="line">0000740 00 00 06 00 01 00 00 00 04 00 0b 00 00 00 0c 00</span><br><span class="line">0000760 01 00 00 00 05 00 0c 00 0d 00 00 00 09 00 0e 00</span><br><span class="line">0001000 0f 00 02 00 09 00 00 00 37 00 02 00 01 00 00 00</span><br><span class="line">0001020 09 b2 00 02 12 03 b6 00 04 b1 00 00 00 02 00 0a</span><br><span class="line">0001040 00 00 00 0a 00 02 00 00 00 06 00 08 00 07 00 0b</span><br><span class="line">0001060 00 00 00 0c 00 01 00 00 00 09 00 10 00 11 00 00</span><br><span class="line">0001100 00 12 00 00 00 05 01 00 10 00 00 00 01 00 13 00</span><br><span class="line">0001120 00 00 02 00 14</span><br></pre></td></tr></table></figure>
+
+<p>根据 JVM 规范，类文件结构如下：<br> <img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210620123750334.png" alt="image-20210620123750334"></p>
+<p>下面分别进行解释：</p>
+<h3 id="1-1-魔数"><a href="#1-1-魔数" class="headerlink" title="1.1 魔数"></a>1.1 魔数</h3><p>表示文件类型</p>
+<p>0~3 字节，表示它是否是【class】类型的文件<br>0000000 <strong>ca fe ba be</strong> 00 00 00 34 00 23 0a 00 06 00 15 09</p>
+<h3 id="1-2-版本"><a href="#1-2-版本" class="headerlink" title="1.2 版本"></a>1.2 版本</h3><p>4~7 字节，表示类的版本 00 34（52） 表示是 Java 8<br>0000000 ca fe ba be <strong>00 00 00 34</strong> 00 23 0a 00 06 00 15 09</p>
+<h3 id="1-3-常量池"><a href="#1-3-常量池" class="headerlink" title="1.3 常量池     @@@@"></a>1.3 常量池     @@@@</h3><table>
+<thead>
+<tr>
+<th>Constant Type</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONSTANT_Class</td>
+<td>7</td>
+</tr>
+<tr>
+<td>CONSTANT_Fieldref</td>
+<td>9</td>
+</tr>
+<tr>
+<td>CONSTANT_Methodref</td>
+<td>10</td>
+</tr>
+<tr>
+<td>CONSTANT_InterfaceMethodref</td>
+<td>11</td>
+</tr>
+<tr>
+<td>CONSTANT_String</td>
+<td>8</td>
+</tr>
+<tr>
+<td>CONSTANT_Integer</td>
+<td>3</td>
+</tr>
+<tr>
+<td>CONSTANT_Float</td>
+<td>4</td>
+</tr>
+<tr>
+<td>CONSTANT_Long</td>
+<td>5</td>
+</tr>
+<tr>
+<td>CONSTANT_Double</td>
+<td>6</td>
+</tr>
+<tr>
+<td>CONSTANT_NameAndType</td>
+<td>12</td>
+</tr>
+<tr>
+<td>CONSTANT_Utf8</td>
+<td>1</td>
+</tr>
+<tr>
+<td>CONSTANT_MethodHandle</td>
+<td>15</td>
+</tr>
+<tr>
+<td>CONSTANT_MethodType</td>
+<td>16</td>
+</tr>
+<tr>
+<td>CONSTANT_InvokeDynamic</td>
+<td>18</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>8<del>9 字节，表示常量池长度，00 23 （35） 表示常量池有 #1</del>#34项，注意 #0 项不计入，也没有值<br>0000000 ca fe ba be 00 00 00 34 <strong>00 23</strong> 0a 00 06 00 15 09##</li>
+</ul>
+<p>第#1项 0a 表示一个 Method 信息，00 06 和 00 15（21） 表示它引用了常量池中 #6 和 #21 项来获得这个方法的【所属类】和【方法名】<br>0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 09</p>
+<p>第#2项 09 表示一个 Field 信息，00 16（22）和 00 17（23） 表示它引用了常量池中 #22 和 # 23 项来获得这个成员变量的【所属类】和【成员变量名】<br>0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 09<br>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07</p>
+<p>第#3项 08 表示一个字符串常量名称，00 18（24）表示它引用了常量池中 #24 项<br>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07</p>
+<p>第#4项 0a 表示一个 Method 信息，00 19（25） 和 00 1a（26） 表示它引用了常量池中 #25 和 #26 项来获得这个方法的【所属类】和【方法名】<br>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07<br>第#5项 07 表示一个 Class 信息，00 1b（27） 表示它引用了常量池中 #27 项<br>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07</p>
+<p>第#6项 07 表示一个 Class 信息，00 1c（28） 表示它引用了常量池中 #28 项<br>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b 07<br>0000040 00 1c 01 00 06 3c 69 6e 69 74 3e 01 00 03 28 29</p>
+<p>第#7项 01 表示一个 utf8 串，00 06 表示长度，3c 69 6e 69 74 3e 是【<init>】<br>0000040 00 1c 01 00 06 3c 69 6e 69 74 3e 01 00 03 28 29</p>
+<p>第#8项 01 表示一个 utf8 串，00 03 表示长度，28 29 56 是【()V】其实就是表示无参、无返回值<br>0000040 00 1c 01 00 06 3c 69 6e 69 74 3e 01 00 03 28 29<br>0000060 56 01 00 04 43 6f 64 65 01 00 0f 4c 69 6e 65 4e</p>
+<p>第#9项 01 表示一个 utf8 串，00 04 表示长度，43 6f 64 65 是【Code】<br>0000060 56 01 00 04 43 6f 64 65 01 00 0f 4c 69 6e 65 4e</p>
+<p>第#10项 01 表示一个 utf8 串，00 0f（15） 表示长度，4c 69 6e 65 4e 75 6d 62 65 72 54 61 62 6c 65 是【LineNumberTable】<br>0000060 56 01 00 04 43 6f 64 65 01 00 0f 4c 69 6e 65 4e<br>0000100 75 6d 62 65 72 54 61 62 6c 65 01 00 12 4c 6f 63</p>
+<p>第#11项 01 表示一个 utf8 串，00 12（18） 表示长度，4c 6f 63 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65是【LocalVariableTable】<br>0000100 75 6d 62 65 72 54 61 62 6c 65 01 00 12 4c 6f 63<br>0000120 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65 01</p>
+<p>第#12项 01 表示一个 utf8 串，00 04 表示长度，74 68 69 73 是【this】<br>0000120 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65 01<br>0000140 00 04 74 68 69 73 01 00 1d 4c 63 6e 2f 69 74 63</p>
+<p>第#13项 01 表示一个 utf8 串，00 1d（29） 表示长度，是【Lcn/itcast/jvm/t5/HelloWorld;】<br>0000140 00 04 74 68 69 73 01 00 1d 4c 63 6e 2f 69 74 63<br>0000160 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c 6f<br>0000200 57 6f 72 6c 64 3b 01 00 04 6d 61 69 6e 01 00 16</p>
+<p>第#14项 01 表示一个 utf8 串，00 04 表示长度，74 68 69 73 是【main】<br>0000200 57 6f 72 6c 64 3b 01 00 04 6d 61 69 6e 01 00 16</p>
+<p>第#15项 01 表示一个 utf8 串，00 16（22） 表示长度，是【([Ljava/lang/String;)V】其实就是参数为字符串数组，无返回值<br>0000200 57 6f 72 6c 64 3b 01 00 04 6d 61 69 6e 01 00 16<br>0000220 28 5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72<br>0000240 69 6e 67 3b 29 56 01 00 04 61 72 67 73 01 00 13</p>
+<p>第#16项 01 表示一个 utf8 串，00 04 表示长度，是【args】<br>0000240 69 6e 67 3b 29 56 01 00 04 61 72 67 73 01 00 13</p>
+<p>第#17项 01 表示一个 utf8 串，00 13（19） 表示长度，是【[Ljava/lang/String;】<br>0000240 69 6e 67 3b 29 56 01 00 04 61 72 67 73 01 00 13 0000260 5b 4c 6a 61 76 61 2f 6c 61 6e<br>67 2f 53 74 72 69 0000300 6e 67 3b 01 00 10 4d 65 74 68 6f 64 50 61 72 61</p>
+<p>第#18项 01 表示一个 utf8 串，00 10（16） 表示长度，是【MethodParameters】<br>0000300 6e 67 3b 01 00 10 4d 65 74 68 6f 64 50 61 72 61<br>0000320 6d 65 74 65 72 73 01 00 0a 53 6f 75 72 63 65 46</p>
+<p>第#19项 01 表示一个 utf8 串，00 0a（10） 表示长度，是【SourceFile】<br>0000320 6d 65 74 65 72 73 01 00 0a 53 6f 75 72 63 65 46<br>0000340 69 6c 65 01 00 0f 48 65 6c 6c 6f 57 6f 72 6c 64</p>
+<p>第#20项 01 表示一个 utf8 串，00 0f（15） 表示长度，是【HelloWorld.java】<br>0000340 69 6c 65 01 00 0f 48 65 6c 6c 6f 57 6f 72 6c 64 0000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d 0c 00 1e</p>
+<p>第#21项 0c 表示一个 【名+类型】，00 07 00 08 引用了常量池中 #7 #8 两项<br>0000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d 0c 00 1e</p>
+<p>第#22项 07 表示一个 Class 信息，00 1d（29） 引用了常量池中 #29 项<br>0000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d 0c 00 1e<br>第#23项 0c 表示一个 【名+类型】，00 1e（30） 00 1f （31）引用了常量池中 #30 #31 两项<br>0000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d 0c 00 1e<br>0000400 00 1f 01 00 0b 68 65 6c 6c 6f 20 77 6f 72 6c 64</p>
+<p>第#24项 01 表示一个 utf8 串，00 0f（15） 表示长度，是【hello world】<br>0000400 00 1f 01 00 0b 68 65 6c 6c 6f 20 77 6f 72 6c 64</p>
+<p>第#25项 07 表示一个 Class 信息，00 20（32） 引用了常量池中 #32 项<br>0000420 07 00 20 0c 00 21 00 22 01 00 1b 63 6e 2f 69 74</p>
+<p>第#26项 0c 表示一个 【名+类型】，00 21（33） 00 22（34）引用了常量池中 #33 #34 两项<br>0000420 07 00 20 0c 00 21 00 22 01 00 1b 63 6e 2f 69 74</p>
+<p>第#27项 01 表示一个 utf8 串，00 1b（27） 表示长度，是【cn/itcast/jvm/t5/HelloWorld】<br>0000420 07 00 20 0c 00 21 00 22 01 00 1b 63 6e 2f 69 74<br>0000440 63 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c<br>0000460 6f 57 6f 72 6c 64 01 00 10 6a 61 76 61 2f 6c 61</p>
+<p>第#28项 01 表示一个 utf8 串，00 10（16） 表示长度，是【java/lang/Object】<br>0000460 6f 57 6f 72 6c 64 01 00 10 6a 61 76 61 2f 6c 61<br>0000500 6e 67 2f 4f 62 6a 65 63 74 01 00 10 6a 61 76 61</p>
+<p>第#29项 01 表示一个 utf8 串，00 10（16） 表示长度，是【java/lang/System】<br>0000500 6e 67 2f 4f 62 6a 65 63 74 01 00 10 6a 61 76 61<br>0000520 2f 6c 61 6e 67 2f 53 79 73 74 65 6d 01 00 03 6f</p>
+<p>第#30项 01 表示一个 utf8 串，00 03 表示长度，是【out】<br>0000520 2f 6c 61 6e 67 2f 53 79 73 74 65 6d 01 00 03 6f<br>0000540 75 74 01 00 15 4c 6a 61 76 61 2f 69 6f 2f 50 72</p>
+<p>第#31项 01 表示一个 utf8 串，00 15（21） 表示长度，是【Ljava/io/PrintStream;】<br>0000540 75 74 01 00 15 4c 6a 61 76 61 2f 69 6f 2f 50 72<br>0000560 69 6e 74 53 74 72 65 61 6d 3b 01 00 13 6a 61 76<br>第#32项 01 表示一个 utf8 串，00 13（19） 表示长度，是【java/io/PrintStream】<br>0000560 69 6e 74 53 74 72 65 61 6d 3b 01 00 13 6a 61 76<br>0000600 61 2f 69 6f 2f 50 72 69 6e 74 53 74 72 65 61 6d</p>
+<p>第#33项 01 表示一个 utf8 串，00 07 表示长度，是【println】<br>0000620 01 00 07 70 72 69 6e 74 6c 6e 01 00 15 28 4c 6a</p>
+<p>第#34项 01 表示一个 utf8 串，00 15（21） 表示长度，是【(Ljava/lang/String;)V】<br>0000620 01 00 07 70 72 69 6e 74 6c 6e 01 00 15 28 4c 6a<br>0000640 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69 6e 67 3b<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01</p>
+<h3 id="1-4-访问标识与继承信息"><a href="#1-4-访问标识与继承信息" class="headerlink" title="1.4 访问标识与继承信息"></a>1.4 访问标识与继承信息</h3><p>21 表示该 class 是一个类，公共的<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01<br>05表示根据常量池中 #5 找到本类全限定名<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01<br>06表示根据常量池中 #6 找到父类全限定名<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01<br>表示接口的数量，本类为 0<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01<br>Flag Name    Value    Interpretation<br>ACC_PUBLIC    0x0001    Declared public ; may be accessed from outside its package.<br>ACC_FINAL    0x0010    Declared final ; no subclasses allowed.<br>ACC_SUPER    0x0020    Treat superclass methods specially when invoked by the invokespecial instruction.<br>ACC_INTERFACE    0x0200    Is an interface, not a class.<br>ACC_ABSTRACT    0x0400    Declared abstract ; must not be instantiated.<br>ACC_SYNTHETIC    0x1000    Declared synthetic; not present in the source code.<br>ACC_ANNOTATION    0x2000    Declared as an annotation type.<br>ACC_ENUM    0x4000    Declared as an enum type.</p>
+<h3 id="1-5-Field-信息"><a href="#1-5-Field-信息" class="headerlink" title="1.5 Field 信息"></a>1.5 Field 信息</h3><p>表示成员变量数量，本类为 0<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01</p>
+<table>
+<thead>
+<tr>
+<th>FieldType</th>
+<th>Type</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B</td>
+<td>byte</td>
+<td>signed byte</td>
+</tr>
+<tr>
+<td>C</td>
+<td>char</td>
+<td>Unicode character code point in the Basic Multilingual Plane, encoded with UTF-16</td>
+</tr>
+<tr>
+<td>D</td>
+<td>double</td>
+<td>double-precision floating-point value</td>
+</tr>
+<tr>
+<td>F</td>
+<td>float</td>
+<td>single-precision floating-point value</td>
+</tr>
+<tr>
+<td>I</td>
+<td>int</td>
+<td>integer</td>
+</tr>
+<tr>
+<td>J</td>
+<td>long</td>
+<td>long integer</td>
+</tr>
+<tr>
+<td>L ClassName</td>
+<td>reference</td>
+<td>an instance of class ClassName</td>
+</tr>
+<tr>
+<td>S</td>
+<td>short</td>
+<td>signed short</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>boolean</td>
+<td>true or false</td>
+</tr>
+<tr>
+<td>[</td>
+<td>reference</td>
+<td>one array dimension</td>
+</tr>
+</tbody></table>
+<h3 id="1-6-Method-信息"><a href="#1-6-Method-信息" class="headerlink" title="1.6 Method 信息"></a>1.6 Method 信息</h3><p>表示方法数量，本类为 2<br>0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01</p>
+<ul>
+<li><p>一个方法由 访问修饰符，名称，参数描述，方法属性数量，方法属性组成<br>红色代表访问修饰符（本类中是 public）<br>蓝色代表引用了常量池 #07 项作为方法名称<br>绿色代表引用了常量池 #08 项作为方法参数描述黄色代表方法属性数量，本方法是 1 红色代表方法属性<br>00 09 表示引用了常量池 #09 项，发现是【Code】属性<br>00 00 00 2f 表示此属性的长度是 47<br>00 01 表示【操作数栈】 大深度<br>00 01 表示【局部变量表】 大槽（slot）数<br>00 00 00 05 表示字节码长度，本例是 5</p>
+</li>
+<li><p>2a b7 00 01 b1 是字节码指令</p>
+</li>
+<li><p>00 00 00 02 表示方法细节属性数量，本例是 2</p>
+</li>
+<li><p>00 0a 表示引用了常量池 #10 项，发现是【LineNumberTable】属性<br>00 00 00 06 表示此属性的总长度，本例是 6<br>00 01 表示【LineNumberTable】长度<br>00 00 表示【字节码】行号 00 04 表示【java 源码】行号</p>
+</li>
+<li><p>00 0b 表示引用了常量池 #11 项，发现是【LocalVariableTable】属性<br>00 00 00 0c 表示此属性的总长度，本例是 12<br>00 01 表示【LocalVariableTable】长度<br>00 00 表示局部变量生命周期开始，相对于字节码的偏移量<br>00 05 表示局部变量覆盖的范围长度<br>00 0c 表示局部变量名称，本例引用了常量池 #12 项，是【this】<br>00 0d 表示局部变量的类型，本例引用了常量池 #13 项，是<br>【Lcn/itcast/jvm/t5/HelloWorld;】<br>00 00 表示局部变量占有的槽位（slot）编号，本例是 0</p>
+</li>
+</ul>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0000660 29 56 00 21 00 05 00 06 00 00 00 00 00 02 00 01</span><br><span class="line">0000700 00 07 00 08 00 01 00 09 00 00 00 2f 00 01 00 01</span><br><span class="line">0000720 00 00 00 05 2a b7 00 01 b1 00 00 00 02 00 0a 00</span><br><span class="line">0000740 00 00 06 00 01 00 00 00 04 00 0b 00 00 00 0c 00 </span><br><span class="line"></span><br><span class="line">0000760 01 00 00 00 05 00 0c 00 0d 00 00 00 09 00 0e 00</span><br></pre></td></tr></table></figure>
+
+
+
+<p>红色代表访问修饰符（本类中是 public static）蓝色代表引用了常量池 #14 项作为方法名称绿色代表引用了常量池 #15 项作为方法参数描述黄色代表方法属性数量，本方法是 2 红色代表方法属性（属性1）<br>00 09 表示引用了常量池 #09 项，发现是【Code】属性<br>00 00 00 37 表示此属性的长度是 55<br>00 02 表示【操作数栈】 大深度<br>00 01 表示【局部变量表】 大槽（slot）数 00 00 00 05 表示字节码长度，本例是 9<br>b2 00 02 12 03 b6 00 04 b1 是字节码指令<br>00 00 00 02 表示方法细节属性数量，本例是 2<br>00 0a 表示引用了常量池 #10 项，发现是【LineNumberTable】属性<br>00 00 00 0a 表示此属性的总长度，本例是 10<br>00 02 表示【LineNumberTable】长度<br>00 00 表示【字节码】行号 00 06 表示【java 源码】行号<br>00 08 表示【字节码】行号 00 07 表示【java 源码】行号<br>00 0b 表示引用了常量池 #11 项，发现是【LocalVariableTable】属性<br>00 00 00 0c 表示此属性的总长度，本例是 12<br>00 01 表示【LocalVariableTable】长度<br>00 00 表示局部变量生命周期开始，相对于字节码的偏移量<br>00 09 表示局部变量覆盖的范围长度<br>00 10 表示局部变量名称，本例引用了常量池 #16 项，是【args】<br>00 11 表示局部变量的类型，本例引用了常量池 #17 项，是【[Ljava/lang/String;】<br>00 00 表示局部变量占有的槽位（slot）编号，本例是 0</p>
+<p>0000760 01 00 00 00 05 00 0c 00 0d 00 00 00 09 00 0e 00<br>0001000 0f 00 02 00 09 00 00 00 37 00 02 00 01 00 00 00<br>0001020 09 b2 00 02 12 03 b6 00 04 b1 00 00 00 02 00 0a<br>0001040 00 00 00 0a 00 02 00 00 00 06 00 08 00 07 00 0b<br>0001060 00 00 00 0c 00 01 00 00 00 09 00 10 00 11 00 00</p>
+<p>红色代表方法属性（属性2）<br>00 12 表示引用了常量池 #18 项，发现是【MethodParameters】属性<br>0000 00 05 表示此属性的总长度，本例是 5<br>01参数数量<br>00 10 表示引用了常量池 #16 项，是【args】<br>00 00 访问修饰符<br>0001100 00 12 00 00 00 05 01 00 10 00 00 00 01 00 13 00<br>0001120 00 00 02 00 14<br>1.7 附加属性<br>00 01 表示附加属性数量<br>00 13 表示引用了常量池 #19 项，即【SourceFile】<br>00 00 00 02 表示此属性的长度<br>00 14 表示引用了常量池 #20 项，即【HelloWorld.java】<br>0001100 00 12 00 00 00 05 01 00 10 00 00 00 01 00 13 00<br>0001120 00 00 02 00 14</p>
+<p>参考文献<br><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html</a></p>
+<h2 id="2-字节码指令"><a href="#2-字节码指令" class="headerlink" title="2.字节码指令"></a>2.字节码指令</h2><h3 id="2-1-入门"><a href="#2-1-入门" class="headerlink" title="2.1 入门"></a>2.1 入门</h3><p>接着上一节，研究一下两组字节码指令，一个是<br>public cn.itcast.jvm.t5.HelloWorld(); 构造方法的字节码指令</p>
+<p>1.2a =&gt; aload_0 加载 slot 0 的局部变量，即 this，做为下面的 invokespecial 构造方法调用的参数<br>2.b7 =&gt; invokespecial 预备调用构造方法，哪个方法呢？</p>
+<ol start="3">
+<li>00 01 引用常量池中 #1 项，即【Method java/lang/Object.”<init>“:()V】</li>
+<li>b1 表示返回</li>
+</ol>
+<p>1.b2 =&gt; getstatic 用来加载静态变量，哪个静态变量呢？<br>2.00 02 引用常量池中 #2 项，即【Field java/lang/System.out:Ljava/io/PrintStream;】<br>3.12 =&gt; ldc 加载参数，哪个参数呢？<br>4.03 引用常量池中 #3 项，即 【String hello world】<br>5.b6 =&gt; invokevirtual 预备调用成员方法，哪个方法呢？<br>6.00 04 引用常量池中 #4 项，即【Method java/io/PrintStream.println:(Ljava/lang/String;)V】<br>7.b1 表示返回</p>
+<p>请参考<br><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5</a></p>
+<h3 id="2-2-javap-工具"><a href="#2-2-javap-工具" class="headerlink" title="2.2 javap 工具"></a>2.2 javap 工具</h3><p>自己分析类文件结构太麻烦了，Oracle 提供了 javap 工具来反编译 class 文件<br>[root@localhost ~]# javap -v HelloWorld.class<br>Classfile /root/HelloWorld.class<br>  Last modified Jul 7, 2019; size 597 bytes<br>  MD5 checksum 361dca1c3f4ae38644a9cd5060ac6dbc   Compiled from “HelloWorld.java” public class cn.itcast.jvm.t5.HelloWorld   minor version: 0   major version: 52   flags: ACC_PUBLIC, ACC_SUPER Constant pool:<br>   #1 = Methodref          #6.#21         // java/lang/Object.”<init>“:()V<br>   #2 = Fieldref           #22.#23        // java/lang/System.out:Ljava/io/PrintStream;    #3 = String             #24            // hello world    #4 = Methodref          #25.#26        // java/io/PrintStream.println:<br>(Ljava/lang/String;)V<br>   #5 = Class              #27            // cn/itcast/jvm/t5/HelloWorld<br>   #6 = Class              #28            // java/lang/Object<br>   #7 = Utf8               <init><br>   #8 = Utf8               ()V<br>   #9 = Utf8               Code<br>  #10 = Utf8               LineNumberTable<br>  #11 = Utf8               LocalVariableTable<br>  #12 = Utf8               this<br>  #13 = Utf8               Lcn/itcast/jvm/t5/HelloWorld;</p>
+<p>  #14 = Utf8               main   #15 = Utf8               ([Ljava/lang/String;)V<br>  #16 = Utf8               args<br>  #17 = Utf8               [Ljava/lang/String;<br>  #18 = Utf8               MethodParameters<br>  #19 = Utf8               SourceFile<br>  #20 = Utf8               HelloWorld.java<br>  #21 = NameAndType        #7:#8          // “<init>“:()V<br>  #22 = Class              #29            // java/lang/System<br>  #23 = NameAndType        #30:#31        // out:Ljava/io/PrintStream;<br>  #24 = Utf8               hello world<br>  #25 = Class              #32            // java/io/PrintStream<br>  #26 = NameAndType        #33:#34        // println:(Ljava/lang/String;)V<br>  #27 = Utf8               cn/itcast/jvm/t5/HelloWorld<br>  #28 = Utf8               java/lang/Object<br>  #29 = Utf8               java/lang/System<br>  #30 = Utf8               out<br>  #31 = Utf8               Ljava/io/PrintStream;<br>  #32 = Utf8               java/io/PrintStream<br>  #33 = Utf8               println   #34 = Utf8               (Ljava/lang/String;)V<br>{   public cn.itcast.jvm.t5.HelloWorld();     descriptor: ()V<br>    flags: ACC_PUBLIC     Code:<br>      stack=1, locals=1, args_size=1<br>         0: aload_0          1: invokespecial #1                  // Method java/lang/Object.”<br><init>“:()V<br>         4: return<br>      LineNumberTable:<br>        line 4: 0       LocalVariableTable:<br>        Start  Length  Slot  Name   Signature             0       5     0  this   Lcn/itcast/jvm/t5/HelloWorld;<br>  public static void main(java.lang.String[]);     descriptor: ([Ljava/lang/String;)V     flags: ACC_PUBLIC, ACC_STATIC     Code:<br>      stack=2, locals=1, args_size=1<br>         0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;          3: ldc           #3                  // String hello world<br>         5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V          8: return<br>      LineNumberTable:<br>        line 6: 0<br>        line 7: 8       LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            0       9     0  args   [Ljava/lang/String;     MethodParameters:       Name                           Flags<br>      args<br>}<br>北京市昌平区建材城西路金燕龙办公楼一层   电话：400-618-9090</p>
+<h3 id="2-3-图解方法执行流程"><a href="#2-3-图解方法执行流程" class="headerlink" title="2.3 图解方法执行流程"></a>2.3 图解方法执行流程</h3><p> 1）原始 java 代码     </p>
+<p>2）编译后的字节码文件<br>[root@localhost ~]# javap -v Demo3_1.class Classfile /root/Demo3_1.class<br>  Last modified Jul 7, 2019; size 665 bytes<br>  MD5 checksum a2c29a22421e218d4924d31e6990cfc5   Compiled from “Demo3_1.java” public class cn.itcast.jvm.t3.bytecode.Demo3_1   minor version: 0   major version: 52   flags: ACC_PUBLIC, ACC_SUPER Constant pool:<br>   #1 = Methodref          #7.#26         // java/lang/Object.”<init>“:()V    #2 = Class              #27            // java/lang/Short<br>   #3 = Integer            32768<br>   #4 = Fieldref           #28.#29        // java/lang/System.out:Ljava/io/PrintStream;    #5 = Methodref          #30.#31        // java/io/PrintStream.println:(I)V<br>   #6 = Class              #32            // cn/itcast/jvm/t3/bytecode/Demo3_1<br>   #7 = Class              #33            // java/lang/Object<br>   #8 = Utf8               <init><br>   #9 = Utf8               ()V<br>  #10 = Utf8               Code<br>  #11 = Utf8               LineNumberTable<br>  #12 = Utf8               LocalVariableTable<br>  #13 = Utf8               this   #14 = Utf8               Lcn/itcast/jvm/t3/bytecode/Demo3_1;<br>  #15 = Utf8               main   #16 = Utf8               ([Ljava/lang/String;)V<br>  #17 = Utf8               args   #18 = Utf8               [Ljava/lang/String;<br>  #19 = Utf8               a</p>
+<p>  #20 = Utf8               I<br>  #21 = Utf8               b<br>  #22 = Utf8               c<br>  #23 = Utf8               MethodParameters<br>  #24 = Utf8               SourceFile<br>  #25 = Utf8               Demo3_1.java<br>  #26 = NameAndType        #8:#9          // “<init>“:()V<br>  #27 = Utf8               java/lang/Short<br>  #28 = Class              #34            // java/lang/System<br>  #29 = NameAndType        #35:#36        // out:Ljava/io/PrintStream;<br>  #30 = Class              #37            // java/io/PrintStream<br>  #31 = NameAndType        #38:#39        // println:(I)V   #32 = Utf8               cn/itcast/jvm/t3/bytecode/Demo3_1<br>  #33 = Utf8               java/lang/Object<br>  #34 = Utf8               java/lang/System<br>  #35 = Utf8               out<br>  #36 = Utf8               Ljava/io/PrintStream;<br>  #37 = Utf8               java/io/PrintStream<br>  #38 = Utf8               println<br>  #39 = Utf8               (I)V {   public cn.itcast.jvm.t3.bytecode.Demo3_1();     descriptor: ()V<br>    flags: ACC_PUBLIC     Code:<br>      stack=1, locals=1, args_size=1<br>         0: aload_0          1: invokespecial #1                  // Method java/lang/Object.”<br><init>“:()V<br>         4: return<br>      LineNumberTable:<br>        line 6: 0       LocalVariableTable:<br>        Start  Length  Slot  Name   Signature             0       5     0  this   Lcn/itcast/jvm/t3/bytecode/Demo3_1;<br>  public static void main(java.lang.String[]);     descriptor: ([Ljava/lang/String;)V     flags: ACC_PUBLIC, ACC_STATIC     Code:<br>      stack=2, locals=4, args_size=1<br>         0: bipush        10<br>         2: istore_1<br>         3: ldc           #3                  // int 32768<br>         5: istore_2<br>         6: iload_1<br>         7: iload_2<br>         8: iadd<br>         9: istore_3<br>        10: getstatic     #4                  // Field java/lang/System.out:Ljava/io/PrintStream;         13: iload_3<br>        14: invokevirtual #5                  // Method java/io/PrintStream.println:(I)V<br>        17: return<br>      LineNumberTable:<br>        line 8: 0<br>        line 9: 3</p>
+<p>3）常量池载入运行时常量池     </p>
+<p>4）方法字节码载入方法区     </p>
+<p>5）main 线程开始运行，分配栈帧内存<br>（stack=2，locals=4）</p>
+<p>6）执行引擎开始执行字节码     </p>
+<p>bipush 10<br>将一个 byte 压入操作数栈（其长度会补齐 4 个字节），类似的指令还有 sipush 将一个 short 压入操作数栈（其长度会补齐 4 个字节） ldc 将一个 int 压入操作数栈 ldc2_w 将一个 long 压入操作数栈（分两次压入，因为 long 是 8 个字节）<br>这里小的数字都是和字节码指令存在一起，超过 short 范围的数字存入了常量池</p>
+<p>istore_1      将操作数栈顶数据弹出，存入局部变量表的 slot 1</p>
+<p>istore_2     </p>
+<p>iload_1     </p>
+<p>iload_2     </p>
+<p>iadd     </p>
+<p>istore_3     </p>
+<p>getstatic #4     </p>
+<p>iload_3     </p>
+<p>invokevirtual #5<br>va/io/PrintStream.println:(I)V 方法<br>生成新的栈帧（分配 locals、stack等）<br>传递参数，执行新栈帧中的字节码</p>
+<p>完成 main 方法调用，弹出 main 栈帧程序结束</p>
+<h3 id="2-4-练习-分析-i"><a href="#2-4-练习-分析-i" class="headerlink" title="2.4 练习 - 分析 i++"></a>2.4 练习 - 分析 i++</h3><p>目的：从字节码角度分析 a++ 相关题目源码：</p>
+<p>字节码：</p>
+<p>分析：</p>
+<h3 id="2-5-条件判断指令"><a href="#2-5-条件判断指令" class="headerlink" title="2.5 条件判断指令"></a>2.5 条件判断指令</h3><p>指令    助记符    含义<br>0x99    ifeq    判断是否 == 0<br>0x9a    ifne    判断是否 != 0<br>0x9b    iflt    判断是否 &lt; 0<br>0x9c    ifge    判断是否 &gt;= 0<br>0x9d    ifgt    判断是否 &gt; 0<br>0x9e    ifle    判断是否 &lt;= 0<br>0x9f    if_icmpeq    两个int是否 ==<br>0xa0    if_icmpne    两个int是否 !=<br>0xa1    if_icmplt    两个int是否 &lt;<br>0xa2    if_icmpge    两个int是否 &gt;=<br>0xa3    if_icmpgt    两个int是否 &gt;<br>0xa4    if_icmple    两个int是否 &lt;=<br>0xa5    if_acmpeq    两个引用是否 ==<br>0xa6    if_acmpne    两个引用是否 !=<br>0xc6    ifnull    判断是否 == null<br>0xc7    ifnonnull    判断是否 != null<br>几点说明：<br>byte，short，char 都会按 int 比较，因为操作数栈都是 4 字节 goto 用来进行跳转到指定行号的字节码源码：</p>
+<p>字节码：</p>
+<h3 id="2-6-循环控制指令-其实循环控制还是前面介绍的那些指令，例如-while-循环："><a href="#2-6-循环控制指令-其实循环控制还是前面介绍的那些指令，例如-while-循环：" class="headerlink" title="2.6 循环控制指令     其实循环控制还是前面介绍的那些指令，例如 while 循环："></a>2.6 循环控制指令     其实循环控制还是前面介绍的那些指令，例如 while 循环：</h3><p>字节码是：</p>
+<p>再比如 do while 循环：</p>
+<p>字节码是：<br>0: iconst_0 1: istore_1 2: iinc 1, 1 5: iload_1 6: bipush 10 8: if_icmplt 2 11: return<br>后再看看 for 循环：</p>
+<p>字节码是：</p>
+<h3 id="2-7-练习-判断结果"><a href="#2-7-练习-判断结果" class="headerlink" title="2.7 练习 - 判断结果"></a>2.7 练习 - 判断结果</h3><p>请从字节码角度分析，下列代码运行的结果：</p>
+<h3 id="2-8-构造方法"><a href="#2-8-构造方法" class="headerlink" title="2.8 构造方法"></a>2.8 构造方法</h3><p>1）<cinit>()V     </p>
+<p>编译器会按从上至下的顺序，收集所有 static 静态代码块和静态成员赋值的代码，合并为一个特殊的方</p>
+<p>编译器会按从上至下的顺序，收集所有 {} 代码块和成员变量赋值的代码，形成新的构造方法，但原始构造方法内的代码总是在 后<br>public cn.itcast.jvm.t3.bytecode.Demo3_8_2(java.lang.String, int);<br>    descriptor: (Ljava/lang/String;I)V<br>    flags: ACC_PUBLIC     Code:<br>      stack=2, locals=3, args_size=3<br>         0: aload_0<br>         1: invokespecial #1    // super.<init>()V<br>         4: aload_0<br>         5: ldc           #2    // &lt;- “s1”<br>         7: putfield      #3    // -&gt; this.a<br>        10: aload_0<br>        11: bipush        20    // &lt;- 20<br>        13: putfield      #4    // -&gt; this.b<br>        16: aload_0<br>        17: bipush        10    // &lt;- 10<br>        19: putfield      #4    // -&gt; this.b<br>        22: aload_0<br>        23: ldc           #5    // &lt;- “s2”<br>        25: putfield      #3    // -&gt; this.a<br>        28: aload_0             // ——————————<br>        29: aload_1             // &lt;- slot 1(a) “s3”            |         30: putfield      #3    // -&gt; this.a                    |         33: aload_0                                             |         34: iload_2             // &lt;- slot 2(b) 30              |         35: putfield      #4    // -&gt; this.b ——————–<br>        38: return<br>      LineNumberTable: …<br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>            0      39     0  this   Lcn/itcast/jvm/t3/bytecode/Demo3_8_2;<br>            0      39     1     a   Ljava/lang/String;<br>            0      39     2     b   I     MethodParameters: …</p>
+<h3 id="2-9-方法调用"><a href="#2-9-方法调用" class="headerlink" title="2.9 方法调用"></a>2.9 方法调用</h3><p>看一下几种不同的方法调用对应的字节码指令</p>
+<p>字节码：<br>new 是创建【对象】，给对象分配堆内存，执行成功会将【对象引用】压入操作数栈<br>dup 是赋值操作数栈栈顶的内容，本例即为【对象引用】，为什么需要两份引用呢，一个是要配合 invokespecial 调用该对象的构造方法 “<init>“:()V （会消耗掉栈顶一个引用），另一个要配合 astore_1 赋值给局部变量<br>终方法（final），私有方法（private），构造方法都是由 invokespecial 指令来调用，属于静态绑定<br>普通成员方法是由 invokevirtual 调用，属于动态绑定，即支持多态<br>成员方法与静态方法调用的另一个区别是，执行方法前是否需要【对象引用】比较有意思的是 d.test4(); 是通过【对象引用】调用一个静态方法，可以看到在调用 invokestatic 之前执行了 pop 指令，把【对象引用】从操作数栈弹掉了还有一个执行 invokespecial 的情况是通过 super 调用父类方法</p>
+<h3 id="2-10-多态的原理"><a href="#2-10-多态的原理" class="headerlink" title="2.10 多态的原理"></a>2.10 多态的原理</h3><p>1）运行代码<br>停在 System.in.read() 方法上，这时运行 jps 获取进程 id<br>2）运行 HSDB 工具<br>进入 JDK 安装目录，执行</p>
+<p>进入图形界面 attach 进程 id<br>3）查找某个对象     </p>
+<p>4）查看对象内存结构<br>点击超链接可以看到对象的内存结构，此对象没有任何属性，因此只有对象头的 16 字节，前 8 字节是<br>MarkWord，后 8 字节就是对象的 Class 指针但目前看不到它的实际地址</p>
+<p>5）查看对象 Class 的内存地址<br>可以通过 Windows -&gt; Console 进入命令行模式，执行</p>
+<p>mem 有两个参数，参数 1 是对象地址，参数 2 是查看 2 行（即 16 字节）结果中第二行 0x000000001b7d4028 即为 Class 的内存地址</p>
+<p>6）查看类的 vtable<br> 方法1：Alt+R 进入 Inspector 工具，输入刚才的 Class 内存地址，看到如下界面</p>
+<p>无论通过哪种方法，都可以找到 Dog Class 的 vtable 长度为 6，意思就是 Dog 类有 6 个虚方法（多态相关的，final，static 不会列入）<br>那么这 6 个方法都是谁呢？从 Class 的起始地址开始算，偏移 0x1b8 就是 vtable 的起始地址，进行计算得到：</p>
+<p>通过 Windows -&gt; Console 进入命令行模式，执行</p>
+<p>就得到了 6 个虚方法的入口地址<br>7）验证方法地址<br>通过 Tools -&gt; Class Browser 查看每个类的方法定义，比较可知<br>Dog - public void eat() @0x000000001b7d3fa8<br>Animal - public java.lang.String toString() @0x000000001b7d35e8;<br>Object - protected void finalize() @0x000000001b3d1b10;<br>Object - public boolean equals(java.lang.Object) @0x000000001b3d15e8;<br>Object - public native int hashCode() @0x000000001b3d1540; Object - protected native java.lang.Object clone() @0x000000001b3d1678;<br>对号入座，发现<br>    eat() 方法是 Dog 类自己的<br>toString() 方法是继承 String 类的<br>finalize() ，equals()，hashCode()，clone() 都是继承 Object 类的<br>8）小结<br>当执行 invokevirtual 指令时，<br>1.先通过栈帧中的对象引用找到对象<br>2.分析对象头，找到对象的实际 Class<br>3.Class 结构中有 vtable，它在类加载的链接阶段就已经根据方法的重写规则生成好了<br>4.查表得到方法的具体地址<br>5.执行方法的字节码</p>
+<h3 id="2-11-异常处理-try-catch"><a href="#2-11-异常处理-try-catch" class="headerlink" title="2.11 异常处理     try-catch"></a>2.11 异常处理     try-catch</h3><pre><code>    11: istore_1
+    12: return
+  Exception table:
+     from    to  target type
+         2     5     8   Class java/lang/Exception
+  LineNumberTable: ...              LocalVariableTable:
+    Start  Length  Slot  Name   Signature
+        9       3     2     e   Ljava/lang/Exception;
+        0      13     0  args   [Ljava/lang/String;
+        2      11     1     i   I       StackMapTable: ...
+MethodParameters: ...
+</code></pre>
+<p>}<br>可以看到多出来一个 Exception table 的结构，[from, to) 是前闭后开的检测范围，一旦这个范围内的字节码执行出现异常，则通过 type 匹配异常类型，如果一致，进入 target 所指示行号<br>8 行的字节码指令 astore_2 是将异常对象引用存入局部变量表的 slot 2 位置</p>
+<p>多个 single-catch 块的情况     </p>
+<p>multi-catch 的情况     </p>
+<p>finally     </p>
+<p>public static void main(java.lang.String[]);<br>    descriptor: ([Ljava/lang/String;)V<br>    flags: ACC_PUBLIC, ACC_STATIC     Code:<br>      stack=1, locals=4, args_size=1<br>         0: iconst_0<br>1istore_1            // 0 -&gt; i<br>2bipush        10    // try ————————————-         4 istore_1            // 10 -&gt; i                                  |          5 bipush        30    // finally                                  |          7 istore_1            // 30 -&gt; i                                  |<br>         8 goto          27    // return ———————————-11 astore_2            // catch Exceptin -&gt; e ———————-</p>
+<pre><code>    12: bipush        20    //                                          |         14: istore_1            // 20 -&gt; i                                  |         15: bipush        30    // finally                                  |         17: istore_1            // 30 -&gt; i                                  |         18: goto          27    // return ----------------------------------        21: astore_3            // catch any -&gt; slot 3 ---------------------        22: bipush        30    // finally                                  |         24: istore_1            // 30 -&gt; i                                  |
+    25: aload_3             // &lt;- slot 3                                |
+    26: athrow              // throw ------------------------------------
+    27: return
+  Exception table:
+     from    to  target type
+         2     5    11   Class java/lang/Exception
+         2     5    21   any    // 剩余的异常类型，比如 Error
+</code></pre>
+<p>1115    21   any    // 剩余的异常类型，比如 Error       LineNumberTable: …<br>      LocalVariableTable:<br>        Start  Length  Slot  Name   Signature<br>123     2     e   Ljava/lang/Exception;<br>            0      28     0  args   [Ljava/lang/String;<br>            2      26     1     i   I       StackMapTable: …<br>    MethodParameters: …<br>可以看到 finally 中的代码被复制了 3 份，分别放入 try 流程，catch 流程以及 catch 剩余的异常类型流程</p>
+<h3 id="2-12-练习-finally-面试题"><a href="#2-12-练习-finally-面试题" class="headerlink" title="2.12 练习 - finally 面试题"></a>2.12 练习 - finally 面试题</h3><p>finally 出现了 return<br>先问问自己，下面的题目输出什么？</p>
+<pre><code>     2: istore_0            // 10 -&gt; slot 0 (从栈顶移除了)
+     3: bipush        20    // &lt;- 20 放入栈顶
+     5: ireturn             // 返回栈顶 int(20)
+     6: astore_1            // catch any -&gt; slot 1
+     7: bipush        20    // &lt;- 20 放入栈顶          9: ireturn             // 返回栈顶 int(20)       Exception table:
+     from    to  target type              0     3     6   any       LineNumberTable: ...
+  StackMapTable: ...
+</code></pre>
+<p>由于 finally 中的 ireturn 被插入了所有可能的流程，因此返回结果肯定以 finally 的为准至于字节码中第 2 行，似乎没啥用，且留个伏笔，看下个例子<br>跟上例中的 finally 相比，发现没有 athrow 了，这告诉我们：如果在 finally 中出现了 return，会吞掉异常 ，可以试一下下面的代码</p>
+<p>finally 对返回值影响<br>同样问问自己，下面的题目输出什么？</p>
+<h3 id="2-13-synchronized"><a href="#2-13-synchronized" class="headerlink" title="2.13 synchronized"></a>2.13 synchronized</h3><h2 id="3-编译期处理"><a href="#3-编译期处理" class="headerlink" title="3. 编译期处理"></a>3. 编译期处理</h2><p>所谓的 语法糖，其实就是指 java 编译器把 *.java 源码编译为 *.class 字节码的过程中，自动生成和转换的一些代码，主要是为了减轻程序员的负担，算是 java 编译器给我们的一个额外福利（给糖吃嘛）<br>注意，以下代码的分析，借助了 javap 工具，idea 的反编译功能，idea 插件 jclasslib 等工具。另外，编译器转换的结果直接就是 class 字节码，只是为了便于阅读，给出了 几乎等价 的 java 源码方式，并不是编译器还会转换出中间的 java 源码，切记。</p>
+<h3 id="3-1-默认构造器"><a href="#3-1-默认构造器" class="headerlink" title="3.1 默认构造器"></a>3.1 默认构造器</h3><p>编译成class后的代码：</p>
+<h3 id="3-2-自动拆装箱"><a href="#3-2-自动拆装箱" class="headerlink" title="3.2 自动拆装箱"></a>3.2 自动拆装箱</h3><p>显然之前版本的代码太麻烦了，需要在基本类型和包装类型之间来回转换（尤其是集合类中操作的都是包装类型），因此这些转换的事情在 JDK 5 以后都由编译器在编译阶段完成。即 代码片段1 都会在编译阶段被转换为 代码片段2</p>
+<h3 id="3-3-泛型集合取值"><a href="#3-3-泛型集合取值" class="headerlink" title="3.3 泛型集合取值"></a>3.3 泛型集合取值</h3><p>泛型也是在 JDK 5 开始加入的特性，但 java 在编译泛型代码后会执行 泛型擦除 的动作，即泛型信息在编译为字节码之后就丢失了，实际的类型都当做了 Object 类型来处理：<br>public class Candy3 {<br>    public static void main(String[] args) {<br>        List<Integer> list = new ArrayList&lt;&gt;();<br>        list.add(10); // 实际调用的是 List.add(Object e)<br>        Integer x = list.get(0); // 实际调用的是 Object obj = List.get(int index);<br>    }<br>}<br>所以在取值时，编译器真正生成的字节码中，还要额外做一个类型转换的操作：</p>
+<p>如果前面的 x 变量类型修改为 int 基本类型那么 终生成的字节码是：</p>
+<p>还好这些麻烦事都不用自己做。</p>
+<p>擦除的是字节码上的泛型信息，可以看到 LocalVariableTypeTable 仍然保留了方法参数泛型的信息</p>
+<p>使用反射，仍然能够获得这些信息：</p>
+<p>输出</p>
+<h3 id="3-4-可变参数"><a href="#3-4-可变参数" class="headerlink" title="3.4 可变参数"></a>3.4 可变参数</h3><h3 id="3-5-foreach-循环"><a href="#3-5-foreach-循环" class="headerlink" title="3.5 foreach 循环"></a>3.5 foreach 循环</h3><p>会被编译器转换为：</p>
+<p>而集合的循环：</p>
+<p>实际被编译器转换为对迭代器的调用：</p>
+<h3 id="3-6-switch-字符串"><a href="#3-6-switch-字符串" class="headerlink" title="3.6 switch 字符串"></a>3.6 switch 字符串</h3><p>可以看到，执行了两遍 switch，第一遍是根据字符串的 hashCode 和 equals 将字符串的转换为相应 byte 类型，第二遍才是利用 byte 执行进行比较。</p>
+<p>会被编译器转换为：</p>
+<h3 id="3-7-switch-枚举-switch-枚举的例子，原始代码："><a href="#3-7-switch-枚举-switch-枚举的例子，原始代码：" class="headerlink" title="3.7 switch 枚举     switch 枚举的例子，原始代码："></a>3.7 switch 枚举     switch 枚举的例子，原始代码：</h3><p>转换后代码：</p>
+<h3 id="3-8-枚举类"><a href="#3-8-枚举类" class="headerlink" title="3.8 枚举类"></a>3.8 枚举类</h3><h3 id="3-9-try-with-resources"><a href="#3-9-try-with-resources" class="headerlink" title="3.9 try-with-resources"></a>3.9 try-with-resources</h3><p>息的丢失（想想 try-with-resources 生成的 fianlly 中如果抛出了异常）：</p>
+<p>输出：</p>
+<p>如以上代码所示，两个异常信息都不会丢。</p>
+<h3 id="3-10-方法重写时的桥接方法"><a href="#3-10-方法重写时的桥接方法" class="headerlink" title="3.10 方法重写时的桥接方法"></a>3.10 方法重写时的桥接方法</h3><p>我们都知道，方法重写时对返回值分两种情况：父子类的返回值完全一致</p>
+<p>其中桥接方法比较特殊，仅对 java 虚拟机可见，并且与原来的 public Integer m() 没有命名冲突，可以用下面反射代码来验证：</p>
+<p>会输出：</p>
+<h3 id="3-11-匿名内部类-源代码："><a href="#3-11-匿名内部类-源代码：" class="headerlink" title="3.11 匿名内部类     源代码："></a>3.11 匿名内部类     源代码：</h3><p>转换后代码：</p>
+<p>引用局部变量的匿名内部类，源代码：</p>
+<p>转换后代码：</p>
+<h2 id="4-类加载阶段"><a href="#4-类加载阶段" class="headerlink" title="4 . 类加载阶段"></a>4 . 类加载阶段</h2><h3 id="4-1-加载"><a href="#4-1-加载" class="headerlink" title="4.1 加载"></a>4.1 加载</h3><p>将类的字节码载入方法区中，内部采用 C++ 的 instanceKlass 描述 java 类，它的重要 field 有：<br>_java_mirror 即 java 的类镜像，例如对 String 来说，就是 String.class，作用是把 klass 暴露给 java 使用 _super 即父类<br>_fields 即成员变量<br>_methods 即方法<br>_constants 即常量池<br>_class_loader 即类加载器<br>_vtable 虚方法表<br>_itable 接口方法表<br>如果这个类还有父类没有加载，先加载父类加载和链接可能是交替运行的<br>instanceKlass 这样的【元数据】是存储在方法区（1.8 后的元空间内），但 _java_mirror 是存储在堆中可以通过前面介绍的 HSDB 工具查看</p>
+<h3 id="4-2-链接"><a href="#4-2-链接" class="headerlink" title="4.2 链接"></a>4.2 链接</h3><p>验证<br>验证类是否符合 JVM规范，安全性检查<br>用 UE 等支持二进制的编辑器修改 HelloWorld.class 的魔数，在控制台运行<br>E:\git\jvm\out\production\jvm&gt;java cn.itcast.jvm.t5.HelloWorld<br>Error: A JNI error has occurred, please check your installation and try again<br>Exception in thread “main” java.lang.ClassFormatError: Incompatible magic value<br>3405691578 in class file cn/itcast/jvm/t5/HelloWorld<br>        at java.lang.ClassLoader.defineClass1(Native Method)<br>        at java.lang.ClassLoader.defineClass(ClassLoader.java:763)<br>        at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)         at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)<br>        at java.net.URLClassLoader.access$100(URLClassLoader.java:73)<br>        at java.net.URLClassLoader$1.run(URLClassLoader.java:368)<br>        at java.net.URLClassLoader$1.run(URLClassLoader.java:362)<br>        at java.security.AccessController.doPrivileged(Native Method)<br>        at java.net.URLClassLoader.findClass(URLClassLoader.java:361)<br>        at java.lang.ClassLoader.loadClass(ClassLoader.java:424)<br>        at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)<br>        at java.lang.ClassLoader.loadClass(ClassLoader.java:357)         at sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:495)<br>准备<br>为 static 变量分配空间，设置默认值<br>static 变量在 JDK 7 之前存储于 instanceKlass 末尾，从 JDK 7 开始，存储于 _java_mirror 末尾 static 变量分配空间和赋值是两个步骤，分配空间在准备阶段完成，赋值在初始化阶段完成如果 static 变量是 final 的基本类型，以及字符串常量，那么编译阶段值就确定了，赋值在准备阶段完成<br>如果 static 变量是 final 的，但属于引用类型，那么赋值也会在初始化阶段完成</p>
+<p>解析     将常量池中的符号引用解析为直接引用</p>
+<h3 id="4-3-初始化"><a href="#4-3-初始化" class="headerlink" title="4.3 初始化"></a>4.3 初始化</h3><p><cinit>()V 方法<br>初始化即调用 <cinit>()V ，虚拟机会保证这个类的『构造方法』的线程安全<br>发生的时机<br>概括得说，类初始化是【懒惰的】<br>main 方法所在的类，总会被首先初始化首次访问这个类的静态变量或静态方法时子类初始化，如果父类还没初始化，会引发子类访问父类的静态变量，只会触发父类的初始化<br>Class.forName<br>new 会导致初始化不会导致类初始化的情况<br>访问类的 static final 静态常量（基本类型和字符串）不会触发初始化<br>类对象.class 不会触发初始化<br>创建该类的数组不会触发初始化<br>类加载器的 loadClass 方法<br>Class.forName 的参数 2 为 false 时</p>
+<p>实验</p>
+<p>验证（实验时请先全部注释，每次只执行其中一个）</p>
+<h3 id="4-4-练习"><a href="#4-4-练习" class="headerlink" title="4.4 练习"></a>4.4 练习</h3><p>从字节码分析，使用 a，b，c 这三个常量是否会导致 E 初始化</p>
+<p>典型应用 - 完成懒惰初始化单例模式</p>
+<p>以上的实现特点是：懒惰实例化<br>初始化时的线程安全是有保障的</p>
+<h2 id="5-类加载器"><a href="#5-类加载器" class="headerlink" title="5.类加载器"></a>5.类加载器</h2><p>以 JDK 8 为例：<br>名称    加载哪的类    说明<br>Bootstrap ClassLoader    JAVA_HOME/jre/lib    无法直接访问<br>Extension ClassLoader    JAVA_HOME/jre/lib/ext    上级为 Bootstrap，显示为 null<br>Application ClassLoader    classpath    上级为 Extension<br>自定义类加载器    自定义    上级为 Application</p>
+<h3 id="5-1-启动类加载器-用-Bootstrap-类加载器加载类："><a href="#5-1-启动类加载器-用-Bootstrap-类加载器加载类：" class="headerlink" title="5.1 启动类加载器     用 Bootstrap 类加载器加载类："></a>5.1 启动类加载器     用 Bootstrap 类加载器加载类：</h3><p>执行</p>
+<p>输出</p>
+<h3 id="5-2-扩展类加载器"><a href="#5-2-扩展类加载器" class="headerlink" title="5.2 扩展类加载器"></a>5.2 扩展类加载器</h3><p>执行</p>
+<p>输出</p>
+<p>写一个同名的类</p>
+<p>打个 jar 包<br>E:\git\jvm\out\production\jvm&gt;jar -cvf my.jar cn/itcast/jvm/t3/load/G.class 已添加清单<br>正在添加: cn/itcast/jvm/t3/load/G.class(输入 = 481) (输出 = 322)(压缩了 33%) 将 jar 包拷贝到 JAVA_HOME/jre/lib/ext 重新执行 Load5_2 输出</p>
+<h3 id="5-3-双亲委派模式"><a href="#5-3-双亲委派模式" class="headerlink" title="5.3 双亲委派模式"></a>5.3 双亲委派模式</h3><p>所谓的双亲委派，就是指调用类加载器的 loadClass 方法时，查找类的规则<br> 注意</p>
+<p>执行流程为：</p>
+<ol>
+<li>sun.misc.Launcher$AppClassLoader //1 处， 开始查看已加载的类，结果没有<br>2.sun.misc.Launcher$AppClassLoader // 2 处，委派上级 sun.misc.Launcher$ExtClassLoader.loadClass()<br>3.sun.misc.Launcher$ExtClassLoader // 1 处，查看已加载的类，结果没有<br>4.sun.misc.Launcher$ExtClassLoader // 3 处，没有上级了，则委派 BootstrapClassLoader 查找<br>5.BootstrapClassLoader 是在 JAVA_HOME/jre/lib 下找 H 这个类，显然没有</li>
+<li>sun.misc.Launcher$ExtClassLoader // 4 处，调用自己的 findClass 方法，是在<br>JAVA_HOME/jre/lib/ext 下找 H 这个类，显然没有，回到 sun.misc.Launcher$AppClassLoader</li>
+<li>到 sun.misc.Launcher$AppClassLoader // 4 处，调用它自己的 findClass 方法，在 classpath 下查找，找到了</li>
+</ol>
+<h3 id="5-4-线程上下文类加载器"><a href="#5-4-线程上下文类加载器" class="headerlink" title="5.4 线程上下文类加载器"></a>5.4 线程上下文类加载器</h3><p>我们在使用 JDBC 时，都需要加载 Driver 驱动，不知道你注意到没有，不写</p>
+<p>让我们追踪一下源码：</p>
+<p>先不看别的，看看 DriverManager 的类加载器：</p>
+<p>打印 null，表示它的类加载器是 Bootstrap ClassLoader，会到 JAVA_HOME/jre/lib 下搜索类，但<br>JAVA_HOME/jre/lib 下显然没有 mysql-connector-java-5.1.47.jar 包，这样问题来了，在 DriverManager 的静态代码块中，怎么能正确加载 com.mysql.jdbc.Driver 呢？继续看 loadInitialDrivers() 方法：</p>
+<p>先看 2）发现它 后是使用 Class.forName 完成类的加载和初始化，关联的是应用程序类加载器，因此可以顺利完成类加载<br>再看 1）它就是大名鼎鼎的 Service Provider Interface （SPI）<br>约定如下，在 jar 包的 META-INF/services 包下，以接口全限定名名为文件，文件内容是实现类名称</p>
+<p>这样就可以使用</p>
+<p>来得到实现类，体现的是【面向接口编程+解耦】的思想，在下面一些框架中都运用了此思想：<br>JDBC<br>Servlet 初始化器<br>Spring 容器<br>Dubbo（对 SPI 进行了扩展）接着看 ServiceLoader.load 方法：</p>
+<p>线程上下文类加载器是当前线程使用的类加载器，默认就是应用程序类加载器，它内部又是由 Class.forName 调用了线程上下文类加载器完成类加载，具体代码在 ServiceLoader 的内部类<br>LazyIterator 中：</p>
+<h3 id="5-5-自定义类加载器"><a href="#5-5-自定义类加载器" class="headerlink" title="5.5 自定义类加载器"></a>5.5 自定义类加载器</h3><p>问问自己，什么时候需要自定义类加载器<br>1）想加载非 classpath 随意路径中的类文件<br>2）都是通过接口来使用实现，希望解耦时，常用在框架设计<br>3）这些类希望予以隔离，不同应用的同名类都可以加载，不冲突，常见于 tomcat 容器</p>
+<p>步骤：<br>1.继承 ClassLoader 父类<br>2.要遵从双亲委派机制，重写 findClass 方法<br> 注意不是重写 loadClass 方法，否则不会走双亲委派机制<br>3.读取类文件的字节码<br>4.调用父类的 defineClass 方法来加载类<br>5.使用者调用该类加载器的 loadClass 方法示例：<br>准备好两个类文件放入 E:\myclasspath，它实现了 java.util.Map 接口，可以先反编译看一下：</p>
+<h2 id="6-运行期优化"><a href="#6-运行期优化" class="headerlink" title="6. 运行期优化"></a>6. 运行期优化</h2><h3 id="6-1-即时编译"><a href="#6-1-即时编译" class="headerlink" title="6.1 即时编译"></a>6.1 即时编译</h3><p>分层编译<br>（TieredCompilation）<br>先来个例子</p>
+<p>2357173<br>2450346<br>2552906<br>2650346<br>2747786<br>2849920<br>2964000<br>3049067<br>3163574<br>3263147<br>3356746<br>3449494<br>3564853<br>36107520<br>3746933<br>3851627<br>3945653<br>40103680<br>4151626<br>4260160<br>4349067<br>4445653<br>4549493<br>4651626<br>4749066<br>4847360<br>4950774<br>5070827<br>5164000<br>5272107<br>5349066<br>5446080<br>5544800<br>5646507<br>5773813<br>5861013<br>5957600<br>6083200<br>617024204<br>6249493<br>6320907<br>6420907<br>6520053<br>6620906<br>6720907<br>6821333<br>6922187<br>7020480<br>7121760<br>7219200<br>7315360<br>7418347<br>7519627<br>7617067<br>7734134<br>7819200<br>7918347<br>8017493</p>
+<p>8115360<br>8218774<br>8317067<br>8421760<br>8523467<br>8617920<br>8717920<br>8818774<br>8918773<br>9019200<br>9120053<br>9218347<br>9322187<br>9417920<br>9518774<br>9619626<br>9733280<br>9820480<br>9920480<br>10018773<br>10147786<br>10217493<br>10322614<br>10464427<br>10518347<br>10619200<br>10726027<br>10821333<br>10920480<br>11024747<br>11132426<br>11221333<br>11317920<br>11417920<br>11519200<br>11618346<br>11715360<br>11824320<br>11919200<br>12020053<br>12117920<br>12218773<br>12320053<br>12418347<br>12518347<br>12622613<br>12718773<br>12819627<br>12920053<br>13020480<br>13119627<br>13220053<br>13315360<br>134136533<br>13543093<br>136853<br>137853<br>138853</p>
+<p>139853<br>140854<br>141853<br>142853<br>143853<br>144853<br>145853<br>146853<br>147854<br>148853<br>149853<br>150854<br>151853<br>152853<br>153853<br>1541280<br>155853<br>156853<br>157854<br>158853<br>159853<br>160854<br>161854<br>162853<br>163854<br>164854<br>165854<br>166854<br>167853<br>168853<br>169854<br>170853<br>171853<br>172853<br>1731280 174 853<br>1751280<br>176853<br>177854<br>178854<br>179427<br>180853<br>181854<br>182854<br>183854<br>184853<br>185853<br>186854<br>187853<br>188853<br>189854<br>1901280<br>191853<br>192853<br>193853<br>194853<br>195854<br>196853</p>
+<p>原因是什么呢？<br>JVM 将执行状态分成了 5 个层次：<br>0层，解释执行（Interpreter）<br>1层，使用 C1 即时编译器编译执行（不带 profiling）<br>2层，使用 C1 即时编译器编译执行（带基本的 profiling）<br>3层，使用 C1 即时编译器编译执行（带完全的 profiling）<br>4层，使用 C2 即时编译器编译执行<br>profiling 是指在运行过程中收集一些程序执行状态的数据，例如【方法的调用次数】，【循环的回边次数】等<br>即时编译器（JIT）与解释器的区别<br>解释器是将字节码解释为机器码，下次即使遇到相同的字节码，仍会执行重复的解释<br>JIT 是将一些字节码编译为机器码，并存入 Code Cache，下次遇到相同的代码，直接执行，无需再编译<br>解释器是将字节码解释为针对所有平台都通用的机器码<br>JIT 会根据平台类型，生成平台特定的机器码<br>对于占据大部分的不常用的代码，我们无需耗费时间将其编译成机器码，而是采取解释执行的方式运行；另一方面，对于仅占据小部分的热点代码，我们则可以将其编译成机器码，以达到理想的运行速度。 执行效率上简单比较一下 Interpreter &lt; C1 &lt; C2，总的目标是发现热点代码（hotspot名称的由来），优化之</p>
+<p>刚才的一种优化手段称之为【逃逸分析】，发现新建的对象是否逃逸。可以使用 -XX:-<br>DoEscapeAnalysis 关闭逃逸分析，再运行刚才的示例观察结果</p>
+<p>参考资料：<a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/vm/java-hotspot-virtual-machineperformance-enhancements.html#GUID-D2E3DC58-D18B-4A6C-8167-4A1DFB4888E4">https://docs.oracle.com/en/java/javase/12/vm/java-hotspot-virtual-machineperformance-enhancements.html#GUID-D2E3DC58-D18B-4A6C-8167-4A1DFB4888E4</a> 方法内联<br>（Inlining）</p>
+<p>如果发现 square 是热点方法，并且长度不太长时，会进行内联，所谓的内联就是把方法内代码拷贝、粘贴到调用者的位置：</p>
+<p>还能够进行常量折叠（constant folding）的优化</p>
+<p>实验：</p>
+<p>字段优化<br>JMH 基准测试请参考：<a target="_blank" rel="noopener" href="http://openjdk.java.net/projects/code-tools/jmh/">http://openjdk.java.net/projects/code-tools/jmh/</a> 创建 maven 工程，添加依赖如下</p>
+<p>编写基准测试代码：</p>
+<p>import org.openjdk.jmh.runner.options.Options; import org.openjdk.jmh.runner.options.OptionsBuilder;<br>import java.util.Random; import java.util.concurrent.ThreadLocalRandom;<br>@Warmup(iterations = 2, time = 1)<br>@Measurement(iterations = 5, time = 1)<br>@State(Scope.Benchmark) public class Benchmark1 {<br>    int[] elements = randomInts(1_000);<br>    private static int[] randomInts(int size) {<br>        Random random = ThreadLocalRandom.current();<br>        int[] values = new int[size];<br>        for (int i = 0; i &lt; size; i++) {<br>            values[i] = random.nextInt();<br>        }<br>        return values;<br>    }<br>    @Benchmark<br>    public void test1() {<br>        for (int i = 0; i &lt; elements.length; i++) {<br>            doSum(elements[i]);<br>        }<br>    }<br>    @Benchmark<br>    public void test2() {<br>        int[] local = this.elements;<br>        for (int i = 0; i &lt; local.length; i++) {<br>            doSum(local[i]);<br>        }<br>    }<br>    @Benchmark<br>    public void test3() {<br>        for (int element : elements) {<br>            doSum(element);<br>        }<br>    }<br>    static int sum = 0;<br>    @CompilerControl(CompilerControl.Mode.INLINE)<br>    static void doSum(int x) {<br>        sum += x;<br>    }<br>    public static void main(String[] args) throws RunnerException {<br>        Options opt = new OptionsBuilder()<br>                .include(Benchmark1.class.getSimpleName())<br>                .forks(1)                 .build();<br>        new Runner(opt).run();<br>北京市昌平区建材城西路金燕龙办公楼一层   电话：400-618-9090</p>
+<p>首先启用 doSum 的方法内联，测试结果如下（每秒吞吐量，分数越高的更好）：<br>Benchmark              Mode  Samples        Score  Score error  Units t.Benchmark1.test1    thrpt        5  2420286.539   390747.467  ops/s<br>t.Benchmark1.test2    thrpt        5  2544313.594    91304.136  ops/s<br>t.Benchmark1.test3    thrpt        5  2469176.697   450570.647  ops/s<br>接下来禁用 doSum 方法内联</p>
+<p>测试结果如下：<br>Benchmark              Mode  Samples       Score  Score error  Units t.Benchmark1.test1    thrpt        5  296141.478    63649.220  ops/s<br>t.Benchmark1.test2    thrpt        5  371262.351    83890.984  ops/s<br>t.Benchmark1.test3    thrpt        5  368960.847    60163.391  ops/s<br>分析：<br>在刚才的示例中，doSum 方法是否内联会影响 elements 成员变量读取的优化：如果 doSum 方法内联了，刚才的 test1 方法会被优化成下面的样子（伪代码）：</p>
+<p>可以节省 1999 次 Field 读取操作<br>但如果 doSum 方法没有内联，则不会进行上面的优化</p>
+<p>练习：在内联情况下将 elements 添加 volatile 修饰符，观察测试结果</p>
+<h3 id="6-2-反射优化"><a href="#6-2-反射优化" class="headerlink" title="6.2 反射优化"></a>6.2 反射优化</h3><p>foo.invoke 前面 0 ~ 15 次调用使用的是 MethodAccessor 的 NativeMethodAccessorImpl 实现</p>
+<p>当调用到第 16 次（从0开始算）时，会采用运行时生成的类代替掉 初的实现，可以通过 debug 得到类名为 sun.reflect.GeneratedMethodAccessor1 可以使用阿里的 arthas 工具：</p>
+<p>选择 1 回车表示分析该进程</p>
+<p>1 [INFO] arthas home: /root/.arthas/lib/3.1.1/arthas<br>[INFO] Try to attach process 13065 [INFO] Attach process 13065 success.<br>[INFO] arthas-client connect 127.0.0.1 3658<br>  ,—.  ,——. ,——–.,–.  ,–.  ,—.   ,—.                            /  O  \ |  .–. ‘’–.  .–’|  ‘–’  | /  O  \ ‘   .-‘<br>|  .-.  ||  ‘–’.’   |  |   |  .–.  ||  .-.  |<code>.  </code>-.                          |  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-‘    |                         <code>--&#39; </code>–’<code>--&#39; &#39;--&#39;   </code>–’   <code>--&#39;  </code>–’<code>--&#39; </code>–’`—–’<br>wiki      <a target="_blank" rel="noopener" href="https://alibaba.github.io/arthas">https://alibaba.github.io/arthas</a>                                      tutorials <a target="_blank" rel="noopener" href="https://alibaba.github.io/arthas/arthas-tutorials">https://alibaba.github.io/arthas/arthas-tutorials</a>                     version   3.1.1                                                                 pid       13065                                                                 time      2019-06-10 12:23:54<br>再输入【jad + 类名】来进行反编译<br>$ jad sun.reflect.GeneratedMethodAccessor1<br>ClassLoader:<br>+-sun.reflect.DelegatingClassLoader@15db9742                                     </p>
+<p>  +-sun.misc.Launcher$AppClassLoader@4e0e2f2a<br>    +-sun.misc.Launcher$ExtClassLoader@2fdb006e<br>Location:                                                                       </p>
+<p>/*<br>*Decompiled with CFR 0_132.</p>
+<ul>
+<li>*Could not load the following classes:<br>*cn.itcast.jvm.t3.reflect.Reflect1<br> <em>/<br>package sun.reflect;<br>import cn.itcast.jvm.t3.reflect.Reflect1; import java.lang.reflect.InvocationTargetException; import sun.reflect.MethodAccessorImpl;<br>public class GeneratedMethodAccessor1 extends MethodAccessorImpl {<br> /</em><br>*Loose catch block<br>*Enabled aggressive block sorting<br>*Enabled unnecessary exception pruning<br>*Enabled aggressive exception aggregation<br>*Lifted jumps to return sites<br>  */</li>
+</ul>
+<h1 id="四-内存模型"><a href="#四-内存模型" class="headerlink" title="四.内存模型"></a>四.内存模型</h1><h2 id="1-java-内存模型"><a href="#1-java-内存模型" class="headerlink" title="1. java 内存模型"></a>1. java 内存模型</h2><p>很多人将【java 内存结构】与【java 内存模型】傻傻分不清，【java 内存模型】是 Java Memory Model（JMM）的意思。</p>
+<p><a target="_blank" rel="noopener" href="https://download.oracle.com/otn-pub/jcp/memory_model-1.0-pfd-spec-oth-JSpec/memory_model-1_0-pfd-spec.pdf?AuthParam=1562811549_4d4994cbd5b59d964cd2907ea22ca08b">关于它的权威解释，请参考</a></p>
+<p>简单的说，JMM 定义了一套在<strong>多线程读写</strong>共享数据时（成员变量、数组）时，对数据的可见性、有序性、和原子性的规则和保障</p>
+<h3 id="1-1-原子性"><a href="#1-1-原子性" class="headerlink" title="1.1 原子性     "></a>1.1 原子性    <a href="af://n13/"> </a></h3><p>原子性在学习线程时讲过，下面来个例子简单回顾一下：</p>
+<p>问题提出，两个线程对初始值为 0 的静态变量一个做自增，一个做自减，各做 5000 次，结果是 0 吗？</p>
+<h3 id="1-2-问题分析"><a href="#1-2-问题分析" class="headerlink" title="1.2 问题分析"></a>1.2 问题分析</h3><p>以上的结果可能是正数、负数、零。为什么呢？因为 Java 中对静态变量的自增，自减并不是原子操作。</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps95.png" alt="img"></p>
+<p>而 Java 的内存模型如下，完成静态变量的自增，自减需要在主存和线程内存中进行数据交换： </p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps96.png" alt="img"> </p>
+<p>如果是单线程以上 8 行代码是顺序执行（不会交错）没有问题：</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps97.png" alt="img"></p>
+<p>但多线程下这 8 行代码可能交错运行（为什么会交错？思考一下）： 出现负数的情况：</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps98.png" alt="img"></p>
+<p>出现正数的情况：</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps99.png" alt="img"></p>
+<h3 id="1-3-解决方法"><a href="#1-3-解决方法" class="headerlink" title="1.3 解决方法     "></a>1.3 解决方法    <a href="af://n29/"> </a></h3><p>synchronized（同步关键字)</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps101.png" alt="img"></p>
+<p>如何理解呢：你可以把 obj 想象成一个房间，线程 t1，t2 想象成两个人。</p>
+<ol>
+<li><p>当线程 t1 执行到 synchronized(obj) 时就好比 t1 进入了这个房间，并反手锁住了门，在门内执行 count++ 代码。</p>
+</li>
+<li><p>这时候如果 t2 也运行到了 synchronized(obj) 时，它发现门被锁住了，只能在门外等待。</p>
+</li>
+<li><p>当 t1 执行完 synchronized{} 块内的代码，这时候才会解开门上的锁，从 obj 房间出来。t2 线程这时才可以进入 obj 房间，反锁住门，执行它的 count– 代码。</p>
+</li>
+</ol>
+<p>注意：上例中 t1 和 t2 线程必须用 synchronized 锁住同一个 obj 对象，如果 t1 锁住的是 m1 对象，t2 锁住的是 m2 对象，就好比两个人分别进入了两个不同的房间，没法起到同步的效果。</p>
+<h2 id="2-可见性"><a href="#2-可见性" class="headerlink" title="2. 可见性"></a>2. 可见性</h2><h3 id="2-1-退不出的循环"><a href="#2-1-退不出的循环" class="headerlink" title="2.1 退不出的循环"></a>2.1 退不出的循环</h3><p>先来看一个现象，main 线程对 run 变量的修改对于 t 线程不可见，导致了 t 线程无法停止</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps104.png" alt="img"></p>
+<p>为什么呢？ </p>
+<ol>
+<li>初始状态， t 线程刚开始从主内存读取了 run 的值到工作内存。</li>
+</ol>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps105.png" alt="img"> </p>
+<ol start="2">
+<li>因为 t 线程要频繁从主内存中读取 run 的值，JIT 编译器会将 run 的值缓存至自己工作内存中的高速缓存中，减少对主存中 run 的访问，提高效率</li>
+</ol>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps106.png" alt="img"> </p>
+<ol start="3">
+<li>1 秒之后，main 线程修改了 run 的值，并同步至主存，而 t 是从自己工作内存中的高速缓存中读取这个变量的值，结果永远是旧值</li>
+</ol>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps107.png" alt="img"> </p>
+<h3 id="2-2-解决方法"><a href="#2-2-解决方法" class="headerlink" title="2.2 解决方法"></a>2.2 解决方法</h3><p>volatile（易变关键字）</p>
+<p>它可以用来修饰成员变量和静态成员变量，他可以*<!--避免线程从自己的工作缓存中查找变量的值-->*，必须到主存中获取它的值，线程操作 volatile 变量都是直接操作主存</p>
+<img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210620131455851.png" alt="image-20210620131455851" style="zoom:80%;" />
+
+ 
+
+<h3 id="2-3-可见性"><a href="#2-3-可见性" class="headerlink" title="2.3 可见性     "></a>2.3 可见性    <strong><a href="af://n71/"> </a></strong></h3><p>前面例子体现的实际就是可见性，它保证的是在多个线程之间，一个线程对 volatile 变量的修改对另一个线程可见， <u><em>不能保证原子性</em></u>，仅用在一个写线程，多个读线程的情况： 上例从字节码理解是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">getstatic   run  // 线程 t 获取 run true </span><br><span class="line">getstatic   run  // 线程 t 获取 run true </span><br><span class="line">getstatic   run  // 线程 t 获取 run true </span><br><span class="line">getstatic   run  // 线程 t 获取 run true</span><br><span class="line"></span><br><span class="line">putstatic   run  //  线程 main 修改 run 为 false， 仅此一次 getstatic   run  // 线程 t 获取 run false</span><br></pre></td></tr></table></figure>
+
+<p>比较一下之前我们将线程安全时举的例子：两个线程一个 i++ 一个 i– ，只能保证看到 新值，不能解决指令交错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 假设i的初始值为0 getstatic   i  </span><br><span class="line">// 线程1-获取静态变量i的值 线程内i=0 getstatic   i  </span><br><span class="line">// 线程2-获取静态变量i的值 线程内i=0 iconst_1     </span><br><span class="line">// 线程1-准备常量1 iadd       </span><br><span class="line">// 线程1-自增 线程内i=1 putstatic   i </span><br><span class="line">// 线程1-将修改后的值存入静态变量i 静态变量i=1 iconst_1     </span><br><span class="line">// 线程2-准备常量1 isub       </span><br><span class="line">// 线程2-自减 线程内i=-1</span><br><span class="line"></span><br><span class="line">putstatic   i  // 线程2-将修改后的值存入静态变量i 静态变量i=-1</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>:</p>
+<p>​    <u>synchronized 语句块既可以保证代码块的原子性，也同时保证代码块内变量的可见性</u>。但缺点是synchronized是属于重量级操作，性能相对更低</p>
+<p>如果在前面示例的死循环中加入 System.out.println() 会发现即使不加 volatile 修饰符，线程 t 也能正确看到对 run 变量的修改了，想一想为什么？</p>
+<h2 id="3-有序性"><a href="#3-有序性" class="headerlink" title="3. 有序性     "></a>3. 有序性    <a href="af://n81/"> </a></h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps110.png" alt="img"></p>
+<h3 id="3-1-诡异的结果"><a href="#3-1-诡异的结果" class="headerlink" title="3.1 诡异的结果     "></a>3.1 诡异的结果    <a href="af://n82/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps111.png" alt="img"></p>
+<p>I_Result 是一个对象，有一个属性 r1 用来保存结果，问，可能的结果有几种？有同学这么分析</p>
+<p>情况1：线程1 先执行，这时 ready = false，所以进入 else 分支结果为 1</p>
+<p>情况2：线程2 先执行 num = 2，但没来得及执行 ready = true，线程1 执行，还是进入 else 分支，结果为1</p>
+<p>情况3：线程2 执行到 ready = true，线程1 执行，这回进入 if 分支，结果为 4（因为 num 已经执行过了）</p>
+<p>但我告诉你，结果还有可能是 0 ，信不信吧！</p>
+<p>这种情况下是：线程2 执行 ready = true，切换到线程1，进入 if 分支，相加为 0，再切回线程2 执行 num = 2</p>
+<p>相信很多人已经晕了 </p>
+<p>这种现象叫做指令重排，是 JIT 编译器在运行时的一些优化，这个现象需要通过大量测试才能复现：</p>
+<p>借助 java 并发压测工具 jcstress <a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">https://wiki.open</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">j</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">dk</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">.j</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">ava.net/displa</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">y</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">/CodeTools/</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">j</a><a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/CodeTools/jcstress">cstress</a></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps112.png" alt="img">mvn archetype:generate  -DinteractiveMode=false DarchetypeGroupId=org.openjdk.jcstress -DarchetypeArtifactId=jcstress-java-testarchetype -DgroupId=org.sample -DartifactId=test -Dversion=1.0</p>
+<p>创建 maven 项目，提供如下测试类</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps113.png" alt="img"></p>
+<p>执行</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps114.png" alt="img"></p>
+<p>会输出我们感兴趣的结果，摘录其中一次结果：</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps115.png" alt="img"></p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0   1,729  ACCEPTABLE_INTERESTING  !!!!</span><br><span class="line">1   42,617,915        ACCEPTABLE  ok</span><br><span class="line">4   5,146,627        ACCEPTABLE  ok</span><br><span class="line">[OK] test.ConcurrencyTest</span><br><span class="line"></span><br><span class="line">(JVM args: [])</span><br><span class="line"> Observed state  Occurrences        Expectation  Interpretation         0     1,652  ACCEPTABLE_INTERESTING  !!!!</span><br><span class="line"></span><br><span class="line">​        1   46,460,657        ACCEPTABLE  ok</span><br><span class="line"></span><br><span class="line">​        4   4,571,072        ACCEPTABLE  ok</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，出现结果为 0 的情况有 638 次，虽然次数相对很少，但毕竟是出现了。</p>
+<h3 id="3-2-解决方法"><a href="#3-2-解决方法" class="headerlink" title="3.2 解决方法     "></a>3.2 解决方法    <a href="af://n104/"> </a></h3><p>volatile 修饰的变量，可以禁用指令重排</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps117.png" alt="img"></p>
+<p>结果为：</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps118.png" alt="img"></p>
+<h3 id="3-3-有序性理解"><a href="#3-3-有序性理解" class="headerlink" title="3.3 有序性理解     "></a>3.3 有序性理解    <a href="af://n111/"> </a></h3><p>JVM 会在不影响正确性的前提下，可以调整语句的执行顺序，思考下面一段代码</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps119.png" alt="img"></p>
+<p>可以看到，至于是先执行 i 还是 先执行 j ，对 终的结果不会产生影响。所以，上面代码真正执行时，既可以是</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps120.png" alt="img"></p>
+<p>也可以是</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps121.png" alt="img"></p>
+<p>这种特性称之为<strong>『指令重排』</strong>，</p>
+<p> 单线程不会产生问题；多线程下『指令重排』会影响正确性。</p>
+<p>例如著名的 double-checked locking 模式实现单例</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps122.png" alt="img"></p>
+<p>以上的实现特点是：</p>
+<ul>
+<li><p>懒惰实例化</p>
+</li>
+<li><p>首次使用 getInstance() 才使用 synchronized 加锁，后续使用时无需加锁</p>
+<p>但在多线程环境下，上面的代码是有问题的，INSTANCE = new Singleton() 对应的字节码为：</p>
+</li>
+</ul>
+<p>0: new      #2          // class cn/itcast/jvm/t4/Singleton</p>
+<p>3: dup</p>
+<p>4: invokespecial #3          // Method “<init>“:()V</p>
+<p>7: putstatic   #4          // Field </p>
+<p>INSTANCE:Lcn/itcast/jvm/t4/Singleton;</p>
+<p>其中 4 7 两步的顺序不是固定的，也许 jvm 会优化为：先将引用地址赋值给 INSTANCE 变量后，再执行构造方法，如果两个线程 t1，t2 按如下时间序列执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">时间1  t1 线程执行到 INSTANCE = new Singleton(); 时间2  t1 线程分配空间，为Singleton对象生成了引用地址（0 处）时间3  t1 线程将引用地址赋值给 INSTANCE，这时 INSTANCE != null（7 处）时间4  t2 线程进入getInstance() 方法，发现 INSTANCE != null（synchronized块外），直接返回 INSTANCE时间5  t1 线程执行Singleton的构造方法（4 处）</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这时 t1 还未完全将构造方法执行完毕，如果在构造方法中要执行很多初始化操作，那么 t2 拿到的是将是一个未初始化完毕的单例</p>
+<p>对 INSTANCE 使用 volatile 修饰即可，可以禁用指令重排，但要注意在 <strong>JDK 5 以上</strong>的版本的 volatile 才会真正有效</p>
+<h3 id="3-4-happens-before"><a href="#3-4-happens-before" class="headerlink" title="3.4 happens-before     "></a>3.4 happens-before    <a href="af://n133/"> </a></h3><p>happens-before 规定了哪些写操作对其它线程的读操作可见，它是可见性与有序性的一套规则总结，</p>
+<p>抛开以下 happens-before 规则，JMM 并不能保证一个线程对共享变量的写，对于其它线程对该共享变量的读可见</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps126.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps127.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps128.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps129.png" alt="img"> 线程结束前对变量的写，对其它线程得知它结束后的读可见（比如其它线程调用 t1.isAlive() 或 t1.join()等待它结束）</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps130.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps131.png" alt="img"> 线程 t1 打断 t2（interrupt）前对变量的写，对于其他线程得知 t2 被打断后对变量的读可见（通过t2.interrupted 或 t2.isInterrupted）</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps132.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps133.png" alt="img"></p>
+<ul>
+<li><p>对变量默认值（0，false，null)的写，对其它线程对该变量的读可见</p>
+</li>
+<li><p>具有传递性，如果 x hb-&gt; y 并且 y hb-&gt; z 那么有 x hb-&gt; z 变量都是指成员变量或静态成员变量参考： 第17页</p>
+</li>
+</ul>
+<h2 id="4-CAS-与-原子类"><a href="#4-CAS-与-原子类" class="headerlink" title="4. CAS 与 原子类     "></a>4. CAS 与 原子类    <a href="af://n168/"> </a></h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps135.png" alt="img"></p>
+<h3 id="4-1-CAS"><a href="#4-1-CAS" class="headerlink" title="4.1 CAS     "></a>4.1 CAS    <a href="af://n169/"> </a></h3><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps136.png" alt="img"></p>
+<p>获取共享变量时，为了保证该变量的可见性，需要使用 volatile 修饰。结合 CAS 和 volatile 可以实现无锁并发，适用于竞争不激烈、多核 CPU 的场景下。</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps137.png" alt="img">因为没有使用 synchronized，所以线程不会陷入阻塞，这是效率提升的因素之一但如果竞争激烈，可以想到重试必然频繁发生，反而效率会受影响</p>
+<p>CAS 底层依赖于一个 Unsafe 类来直接调用操作系统底层的 CAS 指令，下面是直接使用 Unsafe 对象进行线程安全保护的一个例子</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps138.png" alt="img"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread t1 = new Thread(() -&gt; &#123;      	for (int i = 0; i &lt; count; i++) &#123;     		dc.increase();      &#125;    &#125;);          t1.start();    t1.join();    							System.out.println(dc.getData());  &#125; &#125;class DataContainer &#123;  		private volatile int data;  		static final Unsafe unsafe; 		static final long DATA_OFFSET;  		static &#123;   			try &#123;      // Unsafe 对象不能直接调用，只能通过反射获得      		Field theUnsafe = 		Unsafe.class.getDeclaredField(&quot;theUnsafe&quot;);      theUnsafe.setAccessible(true);      unsafe = (Unsafe) theUnsafe.get(null);    &#125; catch (NoSuchFieldException | IllegalAccessException e) &#123;      throw new Error(e);    &#125;    try &#123;      // data 属性在 DataContainer 对象中的偏移量，用于 Unsafe 直接访问该属性      DATA_OFFSET = unsafe.objectFieldOffset(DataContainer.class.getDeclaredField(&quot;data&quot;));    &#125; catch (NoSuchFieldException e) &#123;      throw new Error(e);    &#125;  &#125;  </span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\ASUS\AppData\Roaming\Typora\typora-user-images\image-20210620141319373.png" alt="image-20210620141319373"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps139.png" alt="img"></p>
+<h3 id="4-2-乐观锁与悲观锁"><a href="#4-2-乐观锁与悲观锁" class="headerlink" title="4.2 乐观锁与悲观锁     "></a>4.2 乐观锁与悲观锁    <a href="af://n180/"> </a></h3><p>CAS 是基于乐观锁的思想： 乐观的估计，不怕别的线程来修改共享变量，就算改了也没关系，我吃亏点再重试呗。</p>
+<p>synchronized 是基于悲观锁的思想： 悲观的估计，得防着其它线程来修改共享变量，我上了锁你们都别想改，我改完了解开锁，你们才有机会。</p>
+<h3 id="4-3-原子操作类"><a href="#4-3-原子操作类" class="headerlink" title="4.3 原子操作类     "></a>4.3 原子操作类    <a href="af://n201/"> </a></h3><p>juc（java.util.concurrent）中提供了原子操作类，可以提供线程安全的操作，</p>
+<p>例如：AtomicInteger、AtomicBoolean等，</p>
+<p>它们底层就是采用 CAS 技术 + volatile 来实现的。</p>
+<p>可以使用 AtomicInteger 改写之前的例子：</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps141.png" alt="img"></p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps142.png" alt="img"></p>
+<h2 id="5-synchronized-优化"><a href="#5-synchronized-优化" class="headerlink" title="5. synchronized 优化     "></a>5. synchronized 优化    <a href="af://n220/"> </a></h2><p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps143.png" alt="img"></p>
+<ul>
+<li>Java HotSpot 虚拟机中，每个对象都有对象头（包括 class 指针和 Mark Word)。Mark Word 平时存储这个对象的 哈希码、分代年龄，当加锁时，这些信息就根据情况被替换为 标记位、线程锁记录指针、重量级锁指针、线程ID 等内容</li>
+</ul>
+<h3 id="5-1-轻量级锁"><a href="#5-1-轻量级锁" class="headerlink" title="5.1 轻量级锁     "></a>5.1 轻量级锁    <a href="af://n233/"> </a></h3><p>*<!--如果一个对象虽然有多线程访问，但多线程访问的时间是错开的（也就是没有竞争），那么可以使用轻量级锁来优化-->*。</p>
+<p>这就好比：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">学生（线程 A）用课本占座，上了半节课，出门了（CPU时间到），回来一看，发现课本没变，说明没有竞争，继续上他的课。 如果这期间有其它学生（线程 B）来了，会告知（线程A）有并发访问，线程 A 随即升级为重量级锁(锁膨胀)，进入重量级锁的流程。而重量级锁就不是那么用课本占座那么简单了，可以想象线程 A 走之前，把座位用一个铁栅栏围起来假设有两个方法同步块，利用同一个对象加锁</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps146.png" alt="img"></p>
+<p>每个线程的栈帧都会包含一个锁记录的结构，内部可以存储锁定对象的 Mark Word</p>
+<table>
+<thead>
+<tr>
+<th>线程 1</th>
+<th>对象 Mark Word</th>
+<th>线程 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>访问同步块 A，把 Mark 复制到线程 1 的锁记录</td>
+<td>01（无锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>CAS 修改 Mark 为线程 1 锁记录地址</td>
+<td>01（无锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>成功（加锁）</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块 A</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>访问同步块 B，把 Mark 复制到线程 1 的锁记录</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>CAS 修改 Mark 为线程 1 锁记录地址</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>失败（发现是自己的锁）</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>锁重入</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块 B</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>同步块 B 执行完毕</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>同步块 A 执行完毕</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>成功（解锁）</td>
+<td>01（无锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>-</td>
+<td>01（无锁）</td>
+<td>访问同步块 A，把 Mark 复制到线程 2 的锁记录</td>
+</tr>
+<tr>
+<td>-</td>
+<td>01（无锁）</td>
+<td>CAS 修改 Mark 为线程 2 锁记录地址</td>
+</tr>
+<tr>
+<td>-</td>
+<td>00（轻量锁）线程 2 锁记录地址</td>
+<td>成功（加锁）</td>
+</tr>
+<tr>
+<td>-</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-锁膨胀"><a href="#5-2-锁膨胀" class="headerlink" title="5.2 锁膨胀     "></a>5.2 锁膨胀    <a href="af://n310/"> </a></h3><p>如果在尝试加轻量级锁的过程中，CAS 操作无法成功，这时一种情况就是有其它线程为此对象加上了轻量级锁（有竞争），这时需要进行锁膨胀，将轻量级锁变为重量级锁。</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps147.png" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th>线程 1</th>
+<th>对象 Mark</th>
+<th>线程 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>访问同步块，把 Mark 复制到线程1 的锁记录</td>
+<td>01（无锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>CAS 修改 Mark 为线程 1 锁记录地址</td>
+<td>01（无锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>成功（加锁）</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>访问同步块，把 Mark 复制到线程 2</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>CAS 修改 Mark 为线程 2 锁记录地址</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>失败（发现别人已经占了锁）</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>00（轻量锁）线程 1 锁记录地址</td>
+<td>CAS 修改 Mark 为重量锁</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>阻塞中</td>
+</tr>
+<tr>
+<td>执行完毕</td>
+<td>10（重量锁）重量锁指针</td>
+<td>阻塞中</td>
+</tr>
+<tr>
+<td>失败（解锁）</td>
+<td>10（重量锁）重量锁指针</td>
+<td>阻塞中</td>
+</tr>
+<tr>
+<td>释放重量锁，唤起阻塞线程竞争</td>
+<td>01（无锁）</td>
+<td>阻塞中</td>
+</tr>
+<tr>
+<td>-</td>
+<td>10（重量锁）</td>
+<td>竞争重量锁</td>
+</tr>
+<tr>
+<td>-</td>
+<td>10（重量锁）</td>
+<td>成功（加锁）</td>
+</tr>
+<tr>
+<td>-</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<h3 id="5-3-重量锁"><a href="#5-3-重量锁" class="headerlink" title="5.3 重量锁     "></a>5.3 重量锁    <a href="af://n378/"> </a></h3><p>重量级锁竞争的时候，还可以使用自旋来进行优化，如果当前线程自旋成功（即这时候持锁线程已经退出了同步块，释放了锁），这时当前线程就可以避免阻塞。</p>
+<ul>
+<li><p>在 Java 6 之后自旋锁是自适应的，比如对象刚刚的一次自旋操作成功过，那么认为这次自旋成功的可能性会高，就多自旋几次；反之，就少自旋甚至不自旋，总之，比较智能。</p>
+</li>
+<li><p><strong>自旋会占用 CPU 时间</strong>，单核 CPU 自旋就是浪费，多核 CPU 自旋才能发挥优势。</p>
+<p>好比等红灯时汽车是不是熄火，不熄火相当于自旋（等待时间短了划算），熄火了相当于阻塞（等待时间长了划算）</p>
+</li>
+<li><p>Java 7 之后不能控制是否开启自旋功能 </p>
+</li>
+</ul>
+<p>自旋重试成功的情况</p>
+<table>
+<thead>
+<tr>
+<th>线程 1 （cpu 1 上）</th>
+<th>对象 Mark</th>
+<th>线程 2 （cpu 2 上）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>10（重量锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>访问同步块，获取 monitor</td>
+<td>10（重量锁）重量锁指针</td>
+<td>-</td>
+</tr>
+<tr>
+<td>成功（加锁）</td>
+<td>10（重量锁）重量锁指针</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>访问同步块，获取 monitor</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>自旋重试</td>
+</tr>
+<tr>
+<td>执行完毕</td>
+<td>10（重量锁）重量锁指针</td>
+<td>自旋重试</td>
+</tr>
+<tr>
+<td>成功（解锁）</td>
+<td>01（无锁）</td>
+<td>自旋重试</td>
+</tr>
+<tr>
+<td>-</td>
+<td>10（重量锁）重量锁指针</td>
+<td>成功（加锁）</td>
+</tr>
+<tr>
+<td>-</td>
+<td>10（重量锁）重量锁指针</td>
+<td>执行同步块</td>
+</tr>
+<tr>
+<td>-</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<p>自旋重试失败的情况</p>
+<table>
+<thead>
+<tr>
+<th>线程 1（cpu 1 上）</th>
+<th>对象 Mark</th>
+<th>线程 2（cpu 2 上）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>10（重量锁）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>访问同步块，获取 monitor</td>
+<td>10（重量锁）重量锁指针</td>
+<td>-</td>
+</tr>
+<tr>
+<td>成功（加锁）</td>
+<td>10（重量锁）重量锁指针</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>-</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>访问同步块，获取 monitor</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>自旋重试</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>自旋重试</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>自旋重试</td>
+</tr>
+<tr>
+<td>执行同步块</td>
+<td>10（重量锁）重量锁指针</td>
+<td>阻塞</td>
+</tr>
+<tr>
+<td>-</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<h3 id="5-4-偏向锁"><a href="#5-4-偏向锁" class="headerlink" title="5.4 偏向锁"></a>5.4 偏向锁</h3><p>轻量级锁在没有竞争时（就自己这个线程），每次重入仍然需要执行 CAS 操作。Java 6 中引入了偏向锁来做进一步优化：只有第一次使用 CAS 将线程 ID 设置到对象的 Mark Word 头，之后发现这个线程 ID 是自己的就表示没有竞争，不用重新 CAS.</p>
+<ul>
+<li><p>撤销偏向需要将持锁线程升级为轻量级锁，这个过程中所有线程需要暂停（STW)</p>
+</li>
+<li><p>访问对象的 hashCode 也会撤销偏向锁</p>
+</li>
+<li><p>如果对象虽然被多个线程访问，但没有竞争，这时偏向了线程 T1 的对象仍有机会重新偏向 T2，重偏向会重置对象的 Thread ID</p>
+</li>
+<li><p>撤销偏向和重偏向都是批量进行的，以类为单位</p>
+</li>
+<li><p>如果撤销偏向到达某个阈值，整个类的所有对象都会变为不可偏向的</p>
+</li>
+<li><p>可以主动使用 -XX:-UseBiasedLocking 禁用偏向锁</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/java/biasedlocking-oopsla2006-wp-149958.pdf">可以参考这篇论文：</a></p>
+<p>假设有两个方法同步块，利用同一个对象加锁</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps150.png" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th>线程 1</th>
+<th>对象 Mark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>访问同步块 A，检查 Mark 中是否有线程 ID</td>
+<td>101（无锁可偏向）</td>
+</tr>
+<tr>
+<td>尝试加偏向锁</td>
+<td>101（无锁可偏向）对象 hashCode</td>
+</tr>
+<tr>
+<td>成功</td>
+<td>101（无锁可偏向）线程ID</td>
+</tr>
+<tr>
+<td>执行同步块 A</td>
+<td>101（无锁可偏向）线程ID</td>
+</tr>
+<tr>
+<td>访问同步块 B，检查 Mark 中是否有线程 ID</td>
+<td>101（无锁可偏向）线程ID</td>
+</tr>
+<tr>
+<td>是自己的线程 ID，锁是自己的，无需做更多操作</td>
+<td>101（无锁可偏向）线程ID</td>
+</tr>
+<tr>
+<td>执行同步块 B</td>
+<td>101（无锁可偏向）线程ID</td>
+</tr>
+<tr>
+<td>执行完毕</td>
+<td>101（无锁可偏向）对象 hashCode</td>
+</tr>
+</tbody></table>
+<h3 id="5-5-其它优化"><a href="#5-5-其它优化" class="headerlink" title="5.5 其它优化"></a>5.5 其它优化</h3><ol>
+<li>减少上锁时间    </li>
+</ol>
+<p>同步代码块中尽量短</p>
+<ol start="2">
+<li><p>减少锁的粒度    </p>
+<p>将一个锁拆分为多个锁提高并发度，例如：</p>
+</li>
+</ol>
+<ul>
+<li><p>ConcurrentHashMap</p>
+</li>
+<li><p>LongAdder 分为 base 和 cells 两部分。没有并发争用的时候或者是 cells 数组正在初始化的时候，会使用 CAS 来累加值到 base，有并发争用，会初始化 cells 数组，数组有多少个 cell，就允许有多少线程并行修改， 后将数组中每个 cell 累加，再加上 base 就是 终的值</p>
+</li>
+<li><p>LinkedBlockingQueue 入队和出队使用不同的锁，相对于LinkedBlockingArray只有一个锁效率要高</p>
+</li>
+</ul>
+<ol start="3">
+<li>锁粗化    <a href="af://n542/"> </a></li>
+</ol>
+<p>多次循环进入同步块不如同步块内多次循环 另外 JVM 可能会做如下优化，把多次 append 的加锁操作粗化为一次（因为都是对同一个对象加锁，没必要重入多次）</p>
+<p><img src="file:///C:\Users\ASUS\AppData\Local\Temp\ksohtml57648\wps153.png" alt="img"></p>
+<ol start="4">
+<li>锁消除    </li>
+</ol>
+<p>JVM 会进行代码的逃逸分析，例如某个加锁对象是方法内局部变量，不会被其它线程所访问到，这时候就会被即时编译器忽略掉所有同步操作。</p>
+<ol start="5">
+<li>读写分离    </li>
+</ol>
+<p>CopyOnWriteArrayList ConyOnWriteSet</p>
+<p> <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/46312817/does-java-ever-rebias-an-individual-lock">https://stackoverflow.com/questions/46312817/does-java-ever-rebias-an-individual-lock</a>)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/06/20/%E5%88%9D%E6%AD%A5%E7%90%86%E8%A7%A3JAVA-%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88%E9%BB%91%E9%A9%AC%EF%BC%89/">http://example.com/2021/06/20/%E5%88%9D%E6%AD%A5%E7%90%86%E8%A7%A3JAVA-%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88%E9%BB%91%E9%A9%AC%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/thinks/">thinks</a></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/10/28/picGo-github%E5%9B%BE%E5%BA%8A%E5%88%9B%E5%BB%BA%E8%B8%A9%E5%9D%91/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">picGo+github图床创建踩坑</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/20/Computer-Network-summery-%E7%BD%91%E7%BB%9C%E5%B1%82/"><img class="next-cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Computer Network summery  网络层</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/06/20/Computer-Network-summery-应用层/" title="Computer Network summery  应用层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Computer Network summery  应用层</div></div></a></div><div><a href="/2021/06/20/Computer-Network-summery：运输层/" title="Computer Network  summery：运输层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Computer Network  summery：运输层</div></div></a></div><div><a href="/2021/06/20/Computer-Network-summery-网络层/" title="Computer Network summery  网络层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-20</div><div class="title">Computer Network summery  网络层</div></div></a></div><div><a href="/2021/06/02/Computer-network-Summery-of-数据链路层/" title="Computer network Summery 数据链路层"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">Computer network Summery 数据链路层</div></div></a></div><div><a href="/2022/02/12/MySQL技术内幕-事务/" title="MySQL技术内幕-事务"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-12</div><div class="title">MySQL技术内幕-事务</div></div></a></div><div><a href="/2022/02/12/MySQL技术内幕-InnDB存储引擎与文件/" title="MySQL技术内幕-InnDB存储引擎与文件"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-12</div><div class="title">MySQL技术内幕-InnDB存储引擎与文件</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-text">一.内存结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-text">1. 程序计数器    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">1.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%BD%9C%E7%94%A8"><span class="toc-text">1.2 作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="toc-text">2.虚拟机栈</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">2.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%A0%88%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-text">2.2 栈内存溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%BA%BF%E7%A8%8B%E8%BF%90%E8%A1%8C%E8%AF%8A%E6%96%AD"><span class="toc-text">2.3 线程运行诊断</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-text">3.本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%A0%86"><span class="toc-text">4.堆</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">4.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%A0%86%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-text">4.2 堆内存溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%A0%86%E5%86%85%E5%AD%98%E8%AF%8A%E6%96%AD"><span class="toc-text">4.3 堆内存诊断</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-text">5. 方法区</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">5.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E7%BB%84%E6%88%90"><span class="toc-text">5.2 组成    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%96%B9%E6%B3%95%E5%8C%BA%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-text">5.3 方法区内存溢出    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">5.4 运行时常量池    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-StringTable-%E5%85%88%E7%9C%8B%E5%87%A0%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A"><span class="toc-text">5.5 StringTable    先看几道面试题：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-StringTable-%E7%89%B9%E6%80%A7"><span class="toc-text">5.5 StringTable 特性    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-StringTable-%E4%BD%8D%E7%BD%AE"><span class="toc-text">5.6 StringTable 位置    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-7-StringTable-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-text">5.7 StringTable 垃圾回收    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-StringTable-%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98"><span class="toc-text">5.8 StringTable 性能调优    </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98"><span class="toc-text">6. 直接内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">6.1 定义    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E5%88%86%E9%85%8D%E5%92%8C%E5%9B%9E%E6%94%B6%E5%8E%9F%E7%90%86"><span class="toc-text">6.2 分配和回收原理    </span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-text">二.垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E5%8F%AF%E4%BB%A5%E5%9B%9E%E6%94%B6"><span class="toc-text">1.如何判断对象可以回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95"><span class="toc-text">1.2 可达性分析算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%9B%9B%E7%A7%8D%E5%BC%95%E7%94%A8"><span class="toc-text">1.3 四种引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="toc-text">2. 垃圾回收算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E6%A0%87%E8%AE%B0%E5%9B%9E%E6%94%B6"><span class="toc-text">2.1标记回收</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E6%A0%87%E8%AE%B0%E6%95%B4%E7%90%86"><span class="toc-text">2.2 标记整理    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%A4%8D%E5%88%B6"><span class="toc-text">2.3 复制    </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%88%86%E4%BB%A3%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-text">3. 分代垃圾回收    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%9B%B8%E5%85%B3-VM-%E5%8F%82%E6%95%B0"><span class="toc-text">3.1 相关 VM 参数    </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-text">4. 垃圾回收器    @@@@@</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%B8%B2%E8%A1%8C"><span class="toc-text">4.1 串行    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%90%9E%E5%90%90%E9%87%8F%E4%BC%98%E5%85%88"><span class="toc-text">4.2 吞吐量优先</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%93%8D%E5%BA%94%E6%97%B6%E9%97%B4%E4%BC%98%E5%85%88"><span class="toc-text">4.3 响应时间优先    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-G1"><span class="toc-text">4.4 G1    </span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-G1-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E9%98%B6%E6%AE%B5"><span class="toc-text">1) G1 垃圾回收阶段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Young-Collection"><span class="toc-text">2) Young Collection    </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Young-Collection-CM"><span class="toc-text">3) Young Collection + CM    </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-Mixed-Collection"><span class="toc-text">4) Mixed Collection</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-Full-GC"><span class="toc-text">5) Full GC    </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6%EF%BC%89Young-Collection%E8%B7%A8%E4%BB%A3%E5%BC%95%E7%94%A8"><span class="toc-text">6）Young Collection跨代引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-Remark"><span class="toc-text">7) Remark    </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-JDK-8u20-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8E%BB%E9%87%8D"><span class="toc-text">8) JDK 8u20 字符串去重</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-JDK-8u40-%E5%B9%B6%E5%8F%91%E6%A0%87%E8%AE%B0%E7%B1%BB%E5%8D%B8%E8%BD%BD"><span class="toc-text">9) JDK 8u40 并发标记类卸载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-JDK-8u60-%E5%9B%9E%E6%94%B6%E5%B7%A8%E5%9E%8B%E5%AF%B9%E8%B1%A1"><span class="toc-text">10) JDK 8u60 回收巨型对象    </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-JDK-9-%E5%B9%B6%E5%8F%91%E6%A0%87%E8%AE%B0%E8%B5%B7%E5%A7%8B%E6%97%B6%E9%97%B4%E7%9A%84%E8%B0%83%E6%95%B4"><span class="toc-text">11) JDK 9 并发标记起始时间的调整    </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-JDK-9-%E6%9B%B4%E9%AB%98%E6%95%88%E7%9A%84%E5%9B%9E%E6%94%B6"><span class="toc-text">12) JDK 9 更高效的回收    </span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E8%B0%83%E4%BC%98"><span class="toc-text">5. 垃圾回收调优    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%B0%83%E4%BC%98%E9%A2%86%E5%9F%9F"><span class="toc-text">5.1 调优领域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E7%A1%AE%E5%AE%9A%E7%9B%AE%E6%A0%87"><span class="toc-text">5.2 确定目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%9C%80%E5%BF%AB%E7%9A%84-GC"><span class="toc-text">5.3 最快的 GC    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E6%96%B0%E7%94%9F%E4%BB%A3%E8%B0%83%E4%BC%98"><span class="toc-text">5.4 新生代调优    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E8%80%81%E5%B9%B4%E4%BB%A3%E8%B0%83%E4%BC%98"><span class="toc-text">5.5 老年代调优    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-%E6%A1%88%E4%BE%8B"><span class="toc-text">5.6 案例    </span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%AD%97%E8%8A%82%E7%A0%81%E6%8A%80%E6%9C%AF"><span class="toc-text">三. 类加载与字节码技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-text">1.类文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E9%AD%94%E6%95%B0"><span class="toc-text">1.1 魔数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%89%88%E6%9C%AC"><span class="toc-text">1.2 版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">1.3 常量池     @@@@</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E8%AE%BF%E9%97%AE%E6%A0%87%E8%AF%86%E4%B8%8E%E7%BB%A7%E6%89%BF%E4%BF%A1%E6%81%AF"><span class="toc-text">1.4 访问标识与继承信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-Field-%E4%BF%A1%E6%81%AF"><span class="toc-text">1.5 Field 信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-6-Method-%E4%BF%A1%E6%81%AF"><span class="toc-text">1.6 Method 信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4"><span class="toc-text">2.字节码指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%85%A5%E9%97%A8"><span class="toc-text">2.1 入门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-javap-%E5%B7%A5%E5%85%B7"><span class="toc-text">2.2 javap 工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%9B%BE%E8%A7%A3%E6%96%B9%E6%B3%95%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">2.3 图解方法执行流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E7%BB%83%E4%B9%A0-%E5%88%86%E6%9E%90-i"><span class="toc-text">2.4 练习 - 分析 i++</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E6%8C%87%E4%BB%A4"><span class="toc-text">2.5 条件判断指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6%E6%8C%87%E4%BB%A4-%E5%85%B6%E5%AE%9E%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6%E8%BF%98%E6%98%AF%E5%89%8D%E9%9D%A2%E4%BB%8B%E7%BB%8D%E7%9A%84%E9%82%A3%E4%BA%9B%E6%8C%87%E4%BB%A4%EF%BC%8C%E4%BE%8B%E5%A6%82-while-%E5%BE%AA%E7%8E%AF%EF%BC%9A"><span class="toc-text">2.6 循环控制指令     其实循环控制还是前面介绍的那些指令，例如 while 循环：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-%E7%BB%83%E4%B9%A0-%E5%88%A4%E6%96%AD%E7%BB%93%E6%9E%9C"><span class="toc-text">2.7 练习 - 判断结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="toc-text">2.8 构造方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="toc-text">2.9 方法调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10-%E5%A4%9A%E6%80%81%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">2.10 多态的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-11-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-try-catch"><span class="toc-text">2.11 异常处理     try-catch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-12-%E7%BB%83%E4%B9%A0-finally-%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="toc-text">2.12 练习 - finally 面试题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-13-synchronized"><span class="toc-text">2.13 synchronized</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%BC%96%E8%AF%91%E6%9C%9F%E5%A4%84%E7%90%86"><span class="toc-text">3. 编译期处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-text">3.1 默认构造器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%87%AA%E5%8A%A8%E6%8B%86%E8%A3%85%E7%AE%B1"><span class="toc-text">3.2 自动拆装箱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%B3%9B%E5%9E%8B%E9%9B%86%E5%90%88%E5%8F%96%E5%80%BC"><span class="toc-text">3.3 泛型集合取值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0"><span class="toc-text">3.4 可变参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-foreach-%E5%BE%AA%E7%8E%AF"><span class="toc-text">3.5 foreach 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-switch-%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-text">3.6 switch 字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-switch-%E6%9E%9A%E4%B8%BE-switch-%E6%9E%9A%E4%B8%BE%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E5%8E%9F%E5%A7%8B%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="toc-text">3.7 switch 枚举     switch 枚举的例子，原始代码：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-8-%E6%9E%9A%E4%B8%BE%E7%B1%BB"><span class="toc-text">3.8 枚举类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-9-try-with-resources"><span class="toc-text">3.9 try-with-resources</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-10-%E6%96%B9%E6%B3%95%E9%87%8D%E5%86%99%E6%97%B6%E7%9A%84%E6%A1%A5%E6%8E%A5%E6%96%B9%E6%B3%95"><span class="toc-text">3.10 方法重写时的桥接方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-11-%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB-%E6%BA%90%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="toc-text">3.11 匿名内部类     源代码：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E9%98%B6%E6%AE%B5"><span class="toc-text">4 . 类加载阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%8A%A0%E8%BD%BD"><span class="toc-text">4.1 加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%93%BE%E6%8E%A5"><span class="toc-text">4.2 链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">4.3 初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E7%BB%83%E4%B9%A0"><span class="toc-text">4.4 练习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">5.类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8-%E7%94%A8-Bootstrap-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8A%A0%E8%BD%BD%E7%B1%BB%EF%BC%9A"><span class="toc-text">5.1 启动类加载器     用 Bootstrap 类加载器加载类：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%89%A9%E5%B1%95%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">5.2 扩展类加载器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%BC%8F"><span class="toc-text">5.3 双亲委派模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E7%BA%BF%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">5.4 线程上下文类加载器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">5.5 自定义类加载器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%BF%90%E8%A1%8C%E6%9C%9F%E4%BC%98%E5%8C%96"><span class="toc-text">6. 运行期优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%8D%B3%E6%97%B6%E7%BC%96%E8%AF%91"><span class="toc-text">6.1 即时编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E5%8F%8D%E5%B0%84%E4%BC%98%E5%8C%96"><span class="toc-text">6.2 反射优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-text">四.内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-java-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-text">1. java 内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="toc-text">1.1 原子性    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-text">1.2 问题分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">1.3 解决方法    </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-text">2. 可见性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%80%80%E4%B8%8D%E5%87%BA%E7%9A%84%E5%BE%AA%E7%8E%AF"><span class="toc-text">2.1 退不出的循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">2.2 解决方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-text">2.3 可见性     </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9C%89%E5%BA%8F%E6%80%A7"><span class="toc-text">3. 有序性    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%AF%A1%E5%BC%82%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-text">3.1 诡异的结果    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">3.2 解决方法    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%9C%89%E5%BA%8F%E6%80%A7%E7%90%86%E8%A7%A3"><span class="toc-text">3.3 有序性理解    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-happens-before"><span class="toc-text">3.4 happens-before    </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-CAS-%E4%B8%8E-%E5%8E%9F%E5%AD%90%E7%B1%BB"><span class="toc-text">4. CAS 与 原子类    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-CAS"><span class="toc-text">4.1 CAS    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81"><span class="toc-text">4.2 乐观锁与悲观锁    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%B1%BB"><span class="toc-text">4.3 原子操作类    </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-synchronized-%E4%BC%98%E5%8C%96"><span class="toc-text">5. synchronized 优化    </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81"><span class="toc-text">5.1 轻量级锁    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E9%94%81%E8%86%A8%E8%83%80"><span class="toc-text">5.2 锁膨胀    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E9%87%8D%E9%87%8F%E9%94%81"><span class="toc-text">5.3 重量锁    </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E5%81%8F%E5%90%91%E9%94%81"><span class="toc-text">5.4 偏向锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E5%85%B6%E5%AE%83%E4%BC%98%E5%8C%96"><span class="toc-text">5.5 其它优化</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/02/13/JAVA%E5%B9%B6%E5%8F%91%E5%AE%9E%E6%88%98-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="JAVA并发实战-基础知识"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JAVA并发实战-基础知识"/></a><div class="content"><a class="title" href="/2022/02/13/JAVA%E5%B9%B6%E5%8F%91%E5%AE%9E%E6%88%98-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="JAVA并发实战-基础知识">JAVA并发实战-基础知识</a><time datetime="2022-02-13T08:27:27.000Z" title="Created 2022-02-13 16:27:27">2022-02-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E8%A1%A8/" title="MySQL技术内幕-表"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL技术内幕-表"/></a><div class="content"><a class="title" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E8%A1%A8/" title="MySQL技术内幕-表">MySQL技术内幕-表</a><time datetime="2022-02-12T05:57:23.000Z" title="Created 2022-02-12 13:57:23">2022-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-InnDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E4%B8%8E%E6%96%87%E4%BB%B6/" title="MySQL技术内幕-InnDB存储引擎与文件"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL技术内幕-InnDB存储引擎与文件"/></a><div class="content"><a class="title" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-InnDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E4%B8%8E%E6%96%87%E4%BB%B6/" title="MySQL技术内幕-InnDB存储引擎与文件">MySQL技术内幕-InnDB存储引擎与文件</a><time datetime="2022-02-12T05:57:10.000Z" title="Created 2022-02-12 13:57:10">2022-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E4%BA%8B%E5%8A%A1/" title="MySQL技术内幕-事务"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL技术内幕-事务"/></a><div class="content"><a class="title" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E4%BA%8B%E5%8A%A1/" title="MySQL技术内幕-事务">MySQL技术内幕-事务</a><time datetime="2022-02-12T05:56:18.000Z" title="Created 2022-02-12 13:56:18">2022-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E9%94%81/" title="MySQL技术内幕-锁"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL技术内幕-锁"/></a><div class="content"><a class="title" href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E9%94%81/" title="MySQL技术内幕-锁">MySQL技术内幕-锁</a><time datetime="2022-02-12T05:56:09.000Z" title="Created 2022-02-12 13:56:09">2022-02-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
