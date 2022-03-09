@@ -36,15 +36,15 @@ katex:
 
 二、数据库操作
 
-启动数据库:
+观察数据库进程情况：通过 ps 命令
 
-观察数据库进程情况：
-
-
+​	![image-20220307195121263](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203071951341.png)
 
 mysql配置文件：
 
-按照      顺序读取
+​	按照/etc/my.cnf  ——>/etc/mysql/my.cnf /——>/usr/local/mysql/etc/my.cnf ——>/.my.cnf
+
+顺序读取
 
 并且以最后读取的数据文件为基准。
 
@@ -146,7 +146,7 @@ MySQL支持多种数据库存储引擎，根据自身需要可以使用预定义
 
 MySQL5.1开始允许存储引擎开发商动态方式加载引擎
 
-
+![image-20220307195451295](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203071954361.png)
 
 
 
@@ -154,7 +154,7 @@ MySQL5.1开始允许存储引擎开发商动态方式加载引擎
 
 首先观察下图：
 
-
+![image-20220307195505494](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203071955565.png)
 
 InnoDB中有很多内存块，组成了大的内存池，负责：
 
@@ -197,6 +197,8 @@ InnoDB是按照磁盘进行存储的，记录是按照页的方式进行管理�
 ​	缓冲池中缓存的数据页类型有：索引、数据页、undo页、插入缓冲、自适应哈希索引、锁信息、数据字典信息。
 
 数**据对象如图**：
+
+​	![image-20220307195534647](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203071955740.png)
 
 
 
@@ -339,7 +341,8 @@ InnoDB是按照磁盘进行存储的，记录是按照页的方式进行管理�
 
    来确定是否使用索引。
 
-3. 
+   
+
 
 DBA 可以根据慢查询日志找出有问题的SQL 语句，对其进行优化。
 
@@ -444,7 +447,7 @@ DBA 可以根据慢查询日志找出有问题的SQL 语句，对其进行优化
 
 如图所示：
 
-
+​	![image-20220307195730160](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203071957224.png)
 
 从左到右分别表示：
 
@@ -457,7 +460,7 @@ DBA 可以根据慢查询日志找出有问题的SQL 语句，对其进行优化
 
 如图所示：
 
-
+​	![image-20220307195744774](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203071957835.png)
 
 ​	写入是按照扇区的大小进行写入的（512字节），因此可以保证写入的成功性，不需要doublewrite。
 
