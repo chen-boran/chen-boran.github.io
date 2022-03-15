@@ -340,13 +340,6 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/JAVA/</loc>
-    <lastmod>2022-03-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://example.com/tags/SpringMVC/</loc>
     <lastmod>2022-03-15</lastmod>
     <changefreq>daily</changefreq>
@@ -361,6 +354,13 @@
   </url>
   
   <url>
+    <loc>http://example.com/tags/JAVA/</loc>
+    <lastmod>2022-03-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/tags/Mysql/</loc>
     <lastmod>2022-03-15</lastmod>
     <changefreq>daily</changefreq>
@@ -368,7 +368,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/JVM/</loc>
+    <loc>http://example.com/tags/thinks/</loc>
     <lastmod>2022-03-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -389,7 +389,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/thinks/</loc>
+    <loc>http://example.com/tags/JVM/</loc>
     <lastmod>2022-03-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
