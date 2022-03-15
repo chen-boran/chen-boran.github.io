@@ -3225,115 +3225,114 @@ blockquote footer cite:before {
   max-height: 1.4em;
   width: auto;
 }
-#page-header {
+page-header {
   position: relative;
   width: 100%;
-  background-color: #49b1f5;
-  background-position: center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  transition: all 0.5s;
 }
-#page-header.full_page {
+page-header #background-color: $light-blue,
+page-header background-position: center center,
+page-header background-size: cover,
+page-header background-repeat: no-repeat,
+page-header transition: all .5s,
+page-header.full_page {
   height: 100vh;
   background-attachment: fixed;
 }
-#page-header.full_page #site-info {
+page-header #background-color: $light-blue #site-info,
+page-header background-position: center center #site-info,
+page-header background-size: cover #site-info,
+page-header background-repeat: no-repeat #site-info,
+page-header transition: all .5s #site-info,
+page-header.full_page #site-info {
   position: absolute;
   top: 43%;
   padding: 0 0.5rem;
   width: 100%;
 }
-#page-header #site-title,
-#page-header #site-subtitle,
-#page-header #scroll-down .scroll-down-effects {
+page-header #site-title,
+page-header #site-subtitle,
+page-header #scroll-down .scroll-down-effects {
   text-align: center;
   text-shadow: 0.1rem 0.1rem 0.2rem rgba(0,0,0,0.15);
   line-height: 1.5;
 }
-#page-header #site-title {
+page-header #site-title {
   margin: 0;
   color: var(--white);
   font-size: 1.85em;
 }
 @media screen and (min-width: 768px) {
-  #page-header #site-title {
+  page-header #site-title {
     font-size: 2.85em;
   }
 }
-#page-header #site-subtitle {
+page-header #site-subtitle {
   color: var(--light-grey);
   font-size: 1.15em;
 }
 @media screen and (min-width: 768px) {
-  #page-header #site-subtitle {
+  page-header #site-subtitle {
     font-size: 1.72em;
   }
 }
-#page-header #site_social_icons {
+page-header #site_social_icons {
   display: none;
   margin: 0 auto;
   width: 15rem;
   text-align: center;
 }
 @media screen and (max-width: 768px) {
-  #page-header #site_social_icons {
+  page-header #site_social_icons {
     display: block;
   }
 }
-#page-header #site_social_icons .social-icon {
+page-header #site_social_icons .social-icon {
   margin: 0 0.5rem;
   color: var(--light-grey);
   text-shadow: 0.1rem 0.1rem 0.2rem rgba(0,0,0,0.15);
   font-size: 1.43em;
   cursor: pointer;
 }
-#page-header #scroll-down {
+page-header #scroll-down {
   position: absolute;
   bottom: 0;
   width: 100%;
   cursor: pointer;
 }
-#page-header #scroll-down .scroll-down-effects {
+page-header #scroll-down .scroll-down-effects {
   position: relative;
   width: 100%;
   color: var(--light-grey);
   font-size: 30px;
 }
-#page-header.not-home-page {
+page-header.not-home-page {
   height: 20rem;
 }
 @media screen and (max-width: 768px) {
-  #page-header.not-home-page {
+  page-header.not-home-page {
     height: 14rem;
   }
 }
-#page-header #page-site-info {
+page-header #page-site-info {
   position: absolute;
   top: 10rem;
   padding: 0 0.5rem;
   width: 100%;
 }
 @media screen and (max-width: 768px) {
-  #page-header #page-site-info {
+  page-header #page-site-info {
     top: 7rem;
   }
 }
-#page-header.post-bg {
+page-header.post-bg {
   height: 20rem;
 }
 @media screen and (max-width: 768px) {
-  #page-header.post-bg {
+  page-header.post-bg {
     height: 18rem;
   }
 }
-#page-header.post-bg:before {
+page-header.post-bg:before {
   position: absolute;
   top: 0;
   left: 0;
@@ -3343,7 +3342,7 @@ blockquote footer cite:before {
   background-color: rgba(0,0,0,0.5);
   content: '';
 }
-#page-header #post-info {
+page-header #post-info {
   position: absolute;
   bottom: 5rem;
   padding: 0 8%;
@@ -3351,32 +3350,32 @@ blockquote footer cite:before {
   text-align: center;
 }
 @media screen and (max-width: 900px) {
-  #page-header #post-info {
+  page-header #post-info {
     bottom: 1.5rem;
     text-align: left;
   }
 }
 @media screen and (max-width: 768px) {
-  #page-header #post-info {
+  page-header #post-info {
     bottom: 1.1rem;
     padding: 0 1.1rem;
   }
 }
-#page-header.not-top-img {
+page-header.not-top-img {
   margin-bottom: 0.5rem;
   height: 60px;
   background: 0;
 }
-#page-header.not-top-img #nav {
+page-header.not-top-img #nav {
   background: rgba(255,255,255,0.8);
   -webkit-box-shadow: 0 5px 6px -5px rgba(133,133,133,0.6);
   box-shadow: 0 5px 6px -5px rgba(133,133,133,0.6);
 }
-#page-header.not-top-img #nav a {
+page-header.not-top-img #nav a {
   color: var(--font-color);
   text-shadow: none;
 }
-#page-header.nav-fixed #nav {
+page-header.nav-fixed #nav {
   position: fixed;
   top: -60px;
   z-index: 91;
@@ -3389,18 +3388,18 @@ blockquote footer cite:before {
   -ms-transition: -ms-transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
   transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
-#page-header.nav-fixed #nav a,
-#page-header.nav-fixed #nav #site-name,
-#page-header.nav-fixed #nav #toggle-menu {
+page-header.nav-fixed #nav a,
+page-header.nav-fixed #nav #site-name,
+page-header.nav-fixed #nav #toggle-menu {
   color: var(--font-color);
   text-shadow: none;
 }
-#page-header.nav-fixed #nav a:hover,
-#page-header.nav-fixed #nav #site-name:hover,
-#page-header.nav-fixed #nav #toggle-menu:hover {
+page-header.nav-fixed #nav a:hover,
+page-header.nav-fixed #nav #site-name:hover,
+page-header.nav-fixed #nav #toggle-menu:hover {
   color: #49b1f5;
 }
-#page-header.nav-visible #nav {
+page-header.nav-visible #nav {
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
   -o-transition: all 0.5s;
@@ -3412,7 +3411,7 @@ blockquote footer cite:before {
   -ms-transform: translate3d(0, 100%, 0);
   transform: translate3d(0, 100%, 0);
 }
-#page-header.nav-visible + .layout > .aside-content > .sticky_layout {
+page-header.nav-visible + .layout > .aside-content > .sticky_layout {
   top: 70px;
   -webkit-transition: top 0.5s;
   -moz-transition: top 0.5s;
