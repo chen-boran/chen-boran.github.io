@@ -9,7 +9,7 @@ keywords:
 description:
 top_img:
 comments:
-cover:
+cover:	https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833184.jpg
 toc:
 toc_number:
 copyright:

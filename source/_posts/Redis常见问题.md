@@ -9,7 +9,7 @@ keywords:
 description: some of my notes
 top_img: 
 comments: 
-cover: https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg
+cover: https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg
 toc:  
 toc_number:
 copyright:

@@ -7,7 +7,7 @@ categories:
 - Notes
 keywords:
 description:
-top_img:
+top_img:	https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833189.jpg
 comments:
 cover:
 toc:

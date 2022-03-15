@@ -1,0 +1,57 @@
+
+[Version]
+signature="$CHICAGO$"
+
+[DefaultInstall]
+CopyFiles = Scheme.Cur, Scheme.Txt
+AddReg    = Scheme.Reg
+
+[DestinationDirs]
+Scheme.Cur = 10,"%CUR_DIR%"
+Scheme.Txt = 10,"%CUR_DIR%"
+
+[Scheme.Reg]
+HKCU,"Control Panel\Cursors\Schemes","%SCHEME_NAME%",,"%10%\%CUR_DIR%\%pointer%,%10%\%CUR_DIR%\%help%,%10%\%CUR_DIR%\%work%,%10%\%CUR_DIR%\%busy%,%10%\%CUR_DIR%\%Cross%,%10%\%CUR_DIR%\%Text%,%10%\%CUR_DIR%\%Hand%,%10%\%CUR_DIR%\%Unavailable%,%10%\%CUR_DIR%\%Vert%,%10%\%CUR_DIR%\%Horz%,%10%\%CUR_DIR%\%Dgn1%,%10%\%CUR_DIR%\%Dgn2%,%10%\%CUR_DIR%\%move%,%10%\%CUR_DIR%\%alternate%,%10%\%CUR_DIR%\%link%,%10%\%CUR_DIR%\%pin%,%10%\%CUR_DIR%\%person%"
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Runonce\Setup\","",,"rundll32.exe shell32.dll,Control_RunDLL main.cpl,,1"
+
+; -- Common Information
+
+[Scheme.Cur]
+arrow.ani
+busy.ani
+dr1.cur
+dr2.cur
+help.cur
+horz.cur
+hw.cur
+link.cur
+text.cur
+una.cur
+vert.cur
+work.ani
+mv.cur
+cross.cur
+wz.cur
+wq.cur
+wq.cur
+
+[Strings]
+CUR_DIR       = "Cursors\teemo"
+SCHEME_NAME   = "teemo"
+pointer       = "arrow.ani"
+help          = "help.cur"
+work          = "work.ani"
+busy          = "busy.ani"
+cross         = "cross.cur"
+text          = "text.cur"
+hand          = "hw.cur"
+unavailable   = "una.cur"
+vert          = "vert.cur"
+horz          = "horz.cur"
+dgn1          = "dr1.cur"
+dgn2          = "dr2.cur"
+move          = "mv.cur"
+alternate     = "arrow.ani"
+link          = "link.cur"
+pin	      = "wz.cur"
+person	      = "wq.cur"
