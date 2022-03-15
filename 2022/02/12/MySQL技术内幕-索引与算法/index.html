@@ -1,0 +1,263 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MySQL技术内幕-索引与算法 | boranの小さな巣</title><meta name="keywords" content="MySQL"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="some of my thinks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL技术内幕-索引与算法">
+<meta property="og:url" content="http://example.com/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E7%B4%A2%E5%BC%95%E4%B8%8E%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="some of my thinks">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg">
+<meta property="article:published_time" content="2022-02-12T05:55:54.000Z">
+<meta property="article:modified_time" content="2022-03-15T07:42:06.852Z">
+<meta property="article:author" content="chen-boran">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E7%B4%A2%E5%BC%95%E4%B8%8E%E7%AE%97%E6%B3%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-15 15:42:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL技术内幕-索引与算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-02-12T05:55:54.000Z" title="Created 2022-02-12 13:55:54">2022-02-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-03-15T07:42:06.852Z" title="Updated 2022-03-15 15:42:06">2022-03-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL技术内幕-索引与算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="索引与算法"><a href="#索引与算法" class="headerlink" title="索引与算法"></a>索引与算法</h1><p>索引是应用程序开发的一个重要方面，索引太多，应用程序性能受影响。索引太少，查询性能受影响。如何找到合适的平衡点十分重要。</p>
+<h3 id="一、InnoDB索引概述"><a href="#一、InnoDB索引概述" class="headerlink" title="一、InnoDB索引概述"></a>一、InnoDB索引概述</h3><p>InnoDB支持以下几种常见的索引：</p>
+<p>:one:B+树索引</p>
+<p>:two:全文索引</p>
+<p>:three:哈希索引</p>
+<p>我们知道InnoDB的哈希索引式自适应的，会根据表的情况，自动为表生成哈希索引，不能认为进行干扰。</p>
+<p>​    B+树索引就是传统意义上的索引。（是目前最常用和最有效的索引）</p>
+<h3 id="二、数据结构和算法"><a href="#二、数据结构和算法" class="headerlink" title="二、数据结构和算法"></a>二、数据结构和算法</h3><p><strong>一、二叉查找树</strong></p>
+<p>B+树是通过二叉查找树、再由平衡二叉树、B树，演变而来。</p>
+<p>​    数据结构的知识在此不做过多介绍</p>
+<p>​    如图所示是一个简单的二叉查找树</p>
+<p>​         <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203091634513.png" alt="image-20220309163436454"></p>
+<p>可以看到：左子树的键值总是小于根的键值，右子树的键值总是大于根的键值。</p>
+<p>二叉查找树可以任意构造。（效率可能不是最好）</p>
+<p><strong>二、平衡二叉树</strong></p>
+<p>​    为了构造性能最好的二叉查找树，需要这个二叉树是平衡的。</p>
+<p>定义：首先符合二叉查找树定义；任何节点的两个子树的高度差不大于1。</p>
+<p>同时维护一棵平衡二叉树的开销是很大的（最优），不过平衡二叉树一般用于内存结构对象中，相对开销并不大。</p>
+<h3 id="三、B-树"><a href="#三、B-树" class="headerlink" title="三、B+树"></a>三、B+树</h3><p>随着不断的改进，现在很少使用B树，更多的使用B+树。B+树是由B树和索引顺序访问演变而来的。</p>
+<p>​    B+树是位磁盘和其他直接存取辅助设备设计的一种平衡查找树。</p>
+<p>一、B+树插入</p>
+<p>插入前后必须保证叶子结点的顺序是排序的。同时考虑三种不同情况：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203091642047.png" alt="image-20220309164248968"></p>
+<p>为了保持平衡会采用大量的拆分页操作（磁盘操作），为了减少这种磁盘操作，提供了旋转功能。</p>
+<p>注：旋转发生在叶子结点所在页已将满了，左右叶子结点没满的情况下。</p>
+<p><strong>二、B+删除操作</strong></p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203091647369.png" alt="image-20220309164700281"></p>
+<h3 id="四、B-树索引"><a href="#四、B-树索引" class="headerlink" title="四、B+树索引"></a>四、B+树索引</h3><p>B+树在数据库中的实现，具有高扇出性。</p>
+<p>​    因此，B+索引一般高度都在2~4层。</p>
+<p>B+索引一般可以分成（内部结构都是B+树，叶子结点存储着所有信息）</p>
+<ul>
+<li>聚集索引</li>
+<li>辅助索引</li>
+</ul>
+<p><strong>一、聚集索引</strong></p>
+<p><strong>二、辅助索引</strong></p>
+<p><strong>三、B+树索引管理</strong></p>
+<p>1、索引管理</p>
+<p><strong>创建和删除使用</strong>：ALTER TABLE;   CREATE/DROP INDEX</p>
+<p>用户可以为整个列设置索引也可以为列的开头部分设置索引。</p>
+<p><strong>查看索引信息</strong>：SHOW INDEX</p>
+<p>举个例子：</p>
+<p>​                    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203091705616.png" alt="image-20220309170508539" style="zoom:80%;" /></p>
+<p>​    具体查询的表项值含义参照下面:</p>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203091704548.png" alt="image-20220309170415446" style="zoom:80%;" />
+
+
+
+<p>值得注意的是其中 Cardinality十分重要。优化器根据这个值判断是否使用索引，但是它并不是实时更新的（考虑带来的负载问题）。如果要更新可以使用ANALYZE TABLE 命令。Cardinality的值不是十分准确，只是一个大概的值。</p>
+<p>2、FAST Index Creation</p>
+<p>​    原本MySQL对于索引的删除更改这类DDL操作的流程十分缓慢，效率并不高。</p>
+<p>​    从InnoDB1.0x开始支持FAST Index Creation的索引创建方式（FIC）。</p>
+<p>具体流程：</p>
+<p>​        对于辅助索引创建，对创建的表加S锁，不需要重建表，速度较之间提高了很多。</p>
+<p>​        对于删除辅助索引，InnoDB只需要更新内部视图，并将辅助索引空间标记为可用，删除MySQL内部视图对于该索引的定义。</p>
+<p>注：</p>
+<ul>
+<li><p>FIC 的过程中对表加了S锁，创建过程中只能对表进行读操作。</p>
+</li>
+<li><p>FIC 只适用于辅助索引，主键索引的创建和删除还按照原本的重建表的方式。</p>
+</li>
+</ul>
+<p>3、Online DDL </p>
+<p>​    虽然FIC 避免创建临时表，不过会阻塞该表的DML 操作。MySQL5.6开始支持Online DDL。</p>
+<p>​    允许辅助索引创建的同时还支持：INSERT 、UPDATE、DELETE等DML操作</p>
+<p>​    不仅辅助索引，以下几种DDL 也可以通过在线的方式进行操作:</p>
+<ul>
+<li>辅助索引的创建和删除</li>
+<li>改变自增长值</li>
+<li>添加删除外键约束</li>
+<li>列的重命名</li>
+</ul>
+<h3 id="五、Cardinality"><a href="#五、Cardinality" class="headerlink" title="五、Cardinality"></a>五、Cardinality</h3><p>​    B+树索引的适用情况是在搜索的字段取值范围很广，并且字段的值几乎没有重复。即：高选择性。这是使用B+树是最合适的。</p>
+<p>​    那么如何确定高选择性呢？</p>
+<p>​        就要通过字段Cardinality来观察。</p>
+<p>Cardinality是一个预估值，并不是准确值。实际应用中Cardinality/n_rows_in_table应该尽可能接近1。</p>
+<p><strong>一、Cardinality统计</strong></p>
+<p>​    Cardinality统计信息的更新会发生在两个操作中：UPDATE 、INSERT。（考虑性能影响，不可能在每一次发生的情况下更新）。</p>
+<p>因此更新策略：</p>
+<p>​    :100:表中1/16的数据发生了变化。</p>
+<p>​    :100:stat_modified_counter &gt; 2 000 000 000</p>
+<p> 注：stat_modified_counter 表示变化（不管数据是否发生了真实变化）发生的次数。</p>
+<p>​        Cardinality内部是对于8个叶子结点进行采样，得到每个页的不同记录数。根据采样信息计算Cardinality。因此Cardinality的值是随机的，每次可能都不同。</p>
+<h3 id="六、B-树索引的使用"><a href="#六、B-树索引的使用" class="headerlink" title="六、B+树索引的使用"></a>六、B+树索引的使用</h3><p><strong>一、联合索引</strong></p>
+<p>​    是指对表上多个列进行索引。创建法方法和单个索引相同。</p>
+<p>联合索引使用情景：</p>
+<p>​    :one:本质上来说，联合索引是B+树。不同的是联合索引的键值数量大于等于2。</p>
+<p>​    :two:需要注意的是，查询包含在联合索引中的单个列时，不是总能使用联合索引的。</p>
+<p>​                                <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203091840198.png" alt="image-20220309184011150" style="zoom:80%;" />        </p>
+<p>​    如图所示，叶子结点的顺序是优先按照第一列的键值顺序排列的，因此第二列的键值不是有序的。因此对于第二列进行查询时不能使用到这个联合索引。</p>
+<p><strong>二、覆盖索引</strong></p>
+<p>​    InnoDB支持覆盖索引（covering index）</p>
+<p>​    含义：仅从辅助索引中就可以查询的记录，就不用查询聚集索引的记录。避免了回表的磁盘操作。</p>
+<p>​    好处之一是辅助索引不包含整行记录的所有信息，其大小远小于聚集索引，减少IO操作。</p>
+<p>​    另一个好处是对于统计操作，可以用到覆盖索引的信息。减少IO操作。</p>
+<p><strong>三、优化器不使用索引的情况</strong></p>
+<p>​    有时候会发生并没有使用索引的情况，而是使用聚集索引，即全表扫描。这样的现象就是索引失效。</p>
+<p>这种情况多发生在范围查找，Join操作中。</p>
+<p>​    如果因为索引并不能直接查询到结果。导致需要重新进行书签访问整行信息。数据是离散存储的，因此变成了瓷盘上的随机读操作。当数据量很大的时候，优化器优先选择通过聚集索引查找数据。</p>
+<p>​    综上所述，对于不能进行索引覆盖的情况下，优化器选择辅助索引的情况是，通过辅助索引查找的数据是少量的。</p>
+<p><strong>四、索引提示</strong></p>
+<p>MySQL支持索引提示，显示得告诉优化器使用哪个索引。</p>
+<p>​    以下两种情况可能使用到索引提示：</p>
+<ul>
+<li>MySQL优化器错误选择了索引</li>
+<li>某个SQL 语句可选择的索引非常多，优化器选择计划执行时间的开销可能大于SQL本身。</li>
+</ul>
+<h3 id="七、哈希索引"><a href="#七、哈希索引" class="headerlink" title="七、哈希索引"></a>七、哈希索引</h3><p>​    哈希索引使用哈希算法进行底层实现。</p>
+<p>​    使用情景有自适应哈希索引。</p>
+<p>说明：</p>
+<ul>
+<li><p>DBA 并不能干预自适应哈希索引。</p>
+</li>
+<li><p>哈希索引只能用来搜索等值查询。</p>
+</li>
+<li><p>面对其他查找类型，如范围查找，不能使用哈希索引。</p>
+</li>
+<li><p>可以使用innodb_adaptice_hash_index来启用和禁用此特性，默认是开启。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E7%B4%A2%E5%BC%95%E4%B8%8E%E7%AE%97%E6%B3%95/">http://example.com/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E7%B4%A2%E5%BC%95%E4%B8%8E%E7%AE%97%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/02/12/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E9%94%81/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">MySQL技术内幕-锁</div></div></a></div><div class="next-post pull-right"><a href="/2022/02/11/Redis%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"><img class="next-cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Redis常见问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2022/03/09/MySQL常见问题总结/" title="MySQL常见问题总结"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-09</div><div class="title">MySQL常见问题总结</div></div></a></div><div><a href="/2022/02/12/MySQL技术内幕-InnDB存储引擎与文件/" title="MySQL技术内幕-InnDB存储引擎与文件"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-12</div><div class="title">MySQL技术内幕-InnDB存储引擎与文件</div></div></a></div><div><a href="/2022/02/12/MySQL技术内幕-事务/" title="MySQL技术内幕-事务"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-12</div><div class="title">MySQL技术内幕-事务</div></div></a></div><div><a href="/2022/02/12/MySQL技术内幕-表/" title="MySQL技术内幕-表"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-12</div><div class="title">MySQL技术内幕-表</div></div></a></div><div><a href="/2022/02/12/MySQL技术内幕-锁/" title="MySQL技术内幕-锁"><img class="cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-12</div><div class="title">MySQL技术内幕-锁</div></div></a></div><div><a href="/2021/04/28/Summery-of-SQL-Basic/" title="Summery of SQL Basic"><img class="cover" src="https://www.hualigs.cn/image/60892a8f64b7f.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-28</div><div class="title">Summery of SQL Basic</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="toc-text">索引与算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81InnoDB%E7%B4%A2%E5%BC%95%E6%A6%82%E8%BF%B0"><span class="toc-text">一、InnoDB索引概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95"><span class="toc-text">二、数据结构和算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81B-%E6%A0%91"><span class="toc-text">三、B+树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81B-%E6%A0%91%E7%B4%A2%E5%BC%95"><span class="toc-text">四、B+树索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81Cardinality"><span class="toc-text">五、Cardinality</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81B-%E6%A0%91%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">六、B+树索引的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95"><span class="toc-text">七、哈希索引</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="设计模式"/></a><div class="content"><a class="title" href="/2022/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">设计模式</a><time datetime="2022-03-15T07:19:11.000Z" title="Created 2022-03-15 15:19:11">2022-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="操作系统-内存管理"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-内存管理"/></a><div class="content"><a class="title" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="操作系统-内存管理">操作系统-内存管理</a><time datetime="2022-03-14T12:19:57.000Z" title="Created 2022-03-14 20:19:57">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" title="操作系统-文件管理"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-文件管理"/></a><div class="content"><a class="title" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" title="操作系统-文件管理">操作系统-文件管理</a><time datetime="2022-03-14T04:47:48.000Z" title="Created 2022-03-14 12:47:48">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" title="操作系统-常见问题总结"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-常见问题总结"/></a><div class="content"><a class="title" href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" title="操作系统-常见问题总结">操作系统-常见问题总结</a><time datetime="2022-03-13T12:29:59.000Z" title="Created 2022-03-13 20:29:59">2022-03-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="操作系统-进程管理"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-进程管理"/></a><div class="content"><a class="title" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="操作系统-进程管理">操作系统-进程管理</a><time datetime="2022-03-12T08:01:40.000Z" title="Created 2022-03-12 16:01:40">2022-03-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
