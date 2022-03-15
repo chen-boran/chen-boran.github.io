@@ -1,8 +1,10 @@
 ---
 title: Computer Network summery  网络层
 date: 2021-06-20 20:01:53
-tags: thinks
-categories: thinks
+tags: 
+- Network
+categories: 
+- Notes
 keywords:
 description: some of my thinks
 top_img: 
@@ -311,7 +313,7 @@ C类：255.255.255.0
 
 - 满足不同网络对IP地址的需求
 - 实现网络的层次性
-   
+  
 
 
 

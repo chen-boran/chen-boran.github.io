@@ -2,6 +2,26 @@
 title: picGo+github图床创建踩坑
 date: 2021-10-28 21:22:41
 tags:
+- thinks
+categories:
+- Essay
+keywords:
+description:
+top_img:
+comments:
+cover:
+toc:
+toc_number:
+copyright:
+copyright_author:
+copyright_author_href:
+copyright_url:
+copyright_info:
+mathjax:
+katex:
+aplayer:
+highlight_shrink:
+aside:
 ---
 
 ## 1.安装

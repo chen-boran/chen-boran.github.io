@@ -2,10 +2,9 @@
 title: redis数据结构
 date: 2021-11-14 17:47:22
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
 categories:
- 
+- Notes
 keywords:
 description:
 top_img:

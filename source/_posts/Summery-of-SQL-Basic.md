@@ -1,8 +1,10 @@
 ---
 title: Summery of SQL Basic
 date: 2021-04-28 17:05:48
-tags: thinks
-categories: thinks
+tags: 
+- MySQL
+categories:
+- Notes
 keywords:
 description: some of my thinks
 top_img: 

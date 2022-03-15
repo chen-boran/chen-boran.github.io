@@ -2,11 +2,11 @@
 title: mysql全文本搜索
 date: 2021-11-25 11:10:14
 tags:
-- [Mysql]
-- ["学习笔记"]
+- Mysql
+
 categories:
 
-- ["技术转载学习"]
+- ["技术转载"]
 
 ---
 

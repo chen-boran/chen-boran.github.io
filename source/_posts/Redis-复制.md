@@ -2,10 +2,9 @@
 title: Redis 复制
 date: 2021-11-15 22:12:00
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
 categories:
- 
+- Notes
 keywords:
 description:
 top_img:

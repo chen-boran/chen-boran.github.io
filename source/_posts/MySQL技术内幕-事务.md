@@ -1,8 +1,10 @@
 ---
 title: MySQL技术内幕-事务
 date: 2022-02-12 13:56:18
-tags: thinks
-categories: thinks
+tags: 
+- MySQL
+categories: 
+- Notes
 keywords:
 description: some of my notes
 top_img: 

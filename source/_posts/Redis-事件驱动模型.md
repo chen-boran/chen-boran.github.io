@@ -2,10 +2,9 @@
 title: Redis 事件驱动模型
 date: 2021-11-11 21:05:50
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
 categories:
-- ["技术转载学习"]
+- ["技术转载"]
 keywords:
 description:
 top_img:

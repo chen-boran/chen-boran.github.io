@@ -2,10 +2,10 @@
 title: Redis Sentinel
 date: 2021-11-17 21:19:49
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
+
 categories:
- 
+- Notes
 keywords:
 description:
 top_img:

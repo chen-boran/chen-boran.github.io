@@ -2,9 +2,10 @@
 title: Redis对象
 date: 2021-11-14 18:09:11
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
+
 categories:
+- Notes
  
 keywords:
 description:

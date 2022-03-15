@@ -2,10 +2,9 @@
 title: Redis 数据库
 date: 2021-11-14 20:12:56
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
 categories:
- 
+- Notes
 keywords:
 description:
 top_img:

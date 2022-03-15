@@ -1,8 +1,10 @@
 ---
 title: Computer network Summery 数据链路层
 date: 2021-6-02 10:31:55
-tags: thinks
-categories: network
+tags: 
+- Network
+categories:  
+- Notes
 keywords:
 description: some of my thinks
 top_img: 

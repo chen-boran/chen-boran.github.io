@@ -1,8 +1,10 @@
 ---
 title: MySQL常见问题总结
 date: 2022-03-09 16:08:12
-tags: thinks
-categories: thinks
+tags: 
+- MySQL
+categories: 
+- Notes
 keywords:
 description: some of my thinks
 top_img: 

@@ -1,8 +1,10 @@
 ---
 title: 初步理解JAVA 虚拟机（黑马）
 date: 2021-06-20 20:12:56
-tags: thinks
-categories: thinks
+tags: 
+- [JVM]
+categories: 
+- [Notes]
 keywords:
 description: some of my thinks
 top_img: 

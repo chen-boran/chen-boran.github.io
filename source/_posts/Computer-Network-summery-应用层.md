@@ -1,8 +1,10 @@
 ---
 title: Computer Network summery  应用层
 date: 2021-06-20 20:01:24
-tags: thinks
-categories: thinks
+tags: 
+- Network
+categories: 
+- Notes
 keywords:
 description: some of my thinks
 top_img: 

@@ -2,10 +2,9 @@
 title: Redis 持久化
 date: 2021-11-14 20:14:13
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
 categories:
- 
+- Notes
 keywords:
 description:
 top_img:

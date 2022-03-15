@@ -3,11 +3,10 @@ title: SpringMVC学习笔记
 date: 2021-11-09 17:14:53 
 updated:
 tags:
-- [SpringMVC]
-- ["学习笔记"]
+- SpringMVC
+- Java
 categories:
-- ["Java"]
-- ["技术转载学习"]
+- ["技术转载"]
 keywords:
 description:
 top_img:

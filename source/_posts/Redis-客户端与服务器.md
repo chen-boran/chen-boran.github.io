@@ -3,10 +3,9 @@ title: Redis 客户端与服务器
 date: 2021-11-14 20:14:31
  
 tags:
-- [Redis]
-- ["学习笔记"]
+- Redis
 categories:
- 
+- Notes
 keywords:
 description:
 top_img:
