@@ -1,0 +1,565 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>操作系统-文件管理 | boranの小さな巣</title><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文件管理一、概述文件——就是一组有意义的信息&#x2F;数据集合 文件管理： 重点关注和解决以下问题：  计算机中存放了各种各样的文件，一个文件有哪些属性？  文件内部的数据应该怎样组织起来？  文件之间又应该又应该怎么组织起来？  从下往上看，OS应提供哪些功能，才能方便用户、应用程序使用文件？  从上往下看，文件数据应该怎么存放在外存（磁盘）上？   文件属性： 常见的文件属性包括： ​    文件名，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统-文件管理">
+<meta property="og:url" content="http://example.com/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="文件管理一、概述文件——就是一组有意义的信息&#x2F;数据集合 文件管理： 重点关注和解决以下问题：  计算机中存放了各种各样的文件，一个文件有哪些属性？  文件内部的数据应该怎样组织起来？  文件之间又应该又应该怎么组织起来？  从下往上看，OS应提供哪些功能，才能方便用户、应用程序使用文件？  从上往下看，文件数据应该怎么存放在外存（磁盘）上？   文件属性： 常见的文件属性包括： ​    文件名，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg">
+<meta property="article:published_time" content="2022-03-14T04:47:48.000Z">
+<meta property="article:modified_time" content="2022-03-14T12:18:25.102Z">
+<meta property="article:author" content="chen-boran">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-14 20:18:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">操作系统-文件管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-03-14T04:47:48.000Z" title="Created 2022-03-14 12:47:48">2022-03-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-03-14T12:18:25.102Z" title="Updated 2022-03-14 20:18:25">2022-03-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="操作系统-文件管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h3><h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p>文件——就是一组有意义的信息/数据集合</p>
+<p>文件管理：</p>
+<p>重点关注和解决以下问题：</p>
+<ul>
+<li><p>计算机中存放了各种各样的文件，一个文件有哪些属性？</p>
+</li>
+<li><p>文件内部的数据应该怎样组织起来？</p>
+</li>
+<li><p>文件之间又应该又应该怎么组织起来？</p>
+</li>
+<li><p>从下往上看，OS应提供哪些功能，才能方便用户、应用程序使用文件？</p>
+</li>
+<li><p>从上往下看，文件数据应该怎么存放在外存（磁盘）上？</p>
+</li>
+</ul>
+<p>文件属性：</p>
+<p>常见的文件属性包括：</p>
+<p>​    文件名，主要是为了方便用户找到文件，同一目录下不允许有重名文件。</p>
+<p>​    标识符：一个系统内的各文件标识符唯一，对用户来说毫无可读性，因此标识符只是操作系统用于区分各个文件的一种内部名称。</p>
+<p>​    类型：指明文件的类型</p>
+<p>​    位置：文件存放的路径（让用户使用）、在外存中的地址（操作系统使用，对用户不可见）</p>
+<p>​    大小：指明文件大小</p>
+<p>​    创建时间、上次修改时间</p>
+<p>​    文件所有者信息</p>
+<p>​    保护信息：对文件进行保护的访问控制信息</p>
+<p>重点回顾：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141642420.png" alt="image-20220314164225069"></p>
+<h3 id="二、文件逻辑结构"><a href="#二、文件逻辑结构" class="headerlink" title="二、文件逻辑结构"></a>二、文件逻辑结构</h3><p>概念：指在用户看来，文件内部的数据应该是如何组织起来的。而“物理结构”指的是在操作系统看来，文件的数据是如何存放在外存中的。</p>
+<p><strong>文件操作的具体实现与文件的逻辑结构、物理结构都有关</strong></p>
+<p>分类：</p>
+<p>​    分类标准：是否有结构</p>
+<p>​    无结构文件、有结构文件文件</p>
+<p>一、无结构文件</p>
+<p>​    无结构文件：文件内部的数据就是一系列二进制流或字符流组成。又称“流式文件。</p>
+<p>​    因此也不用探讨无结构文件的“逻辑结构”问题。</p>
+<p>​    举例：比如 .txt 文件</p>
+<p>二、有结构文件</p>
+<p>由一组相似的记录组成，又称“记录式文件”。每条记录又若干个数据项组成。如：数据库表文件。</p>
+<p>1、定长记录、可变长记录</p>
+<p>有结构文件是由一条条记录组成的。通常记录可以分成：定长记录和可变长记录。</p>
+<p>​    定长记录：每条记录的长度相同。</p>
+<p>​    可变长记录：各条记录的长度不确定，不一定是相同的。</p>
+<p>2、<strong>有结构文件的逻辑结构</strong></p>
+<p>分类标准： 根据有结构文件中的各条记录在逻辑上如何组织</p>
+<p>:one:顺序文件：文件中的记录一个接一个地顺序排列（逻辑上），记录可以是定长的或可变长的。各个记录在物理上可以顺序存储或链式存储。</p>
+<p>​    顺序文件的分类如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141700629.png" alt="image-20220314170005560"></p>
+<p>​    一般来说，考试题目中所说的“顺序文件”指的是物理上顺序存储的顺序文件</p>
+<p>​    缺点：删除一个记录比较困难。</p>
+<p>:two:索引文件：索引文件本身是定长记录的顺序文件。(解决可变长记录文件，顺序查找的问题)</p>
+<p>​    索引文件有很快的检索速度，因此主要用于对信息处理的及时性要求比较高的场合</p>
+<p>如图：</p>
+<pre><code> &lt;img src=&quot;https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141704354.png&quot; alt=&quot;image-20220314170423294&quot; style=&quot;zoom:80%;&quot; /&gt;
+</code></pre>
+<p>优点：可以使用不同的数据项创建多个索引表。</p>
+<p>​            检索速度很快。</p>
+<p>:three:索引顺序文件</p>
+<p>​    索引顺序文件是索引文件和顺序文件思想的结合。</p>
+<p>​    索引顺序文件，会为文件建立一张索引表，但是：并不是每个记录对应一个索引表项，而是<strong>一组</strong>记录对应一个索引表项。</p>
+<p>如图：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141706960.png" alt="image-20220314170641899"></p>
+<p>也就是说把相同组的文件索引放到一个新的索引文件中，组成一个顺序文件，由原来的索引文件进行索引。</p>
+<p>:four:多级索引顺序文件</p>
+<p>为了进一步提高效率，可以为顺序文件建立多级索引表。在此不做过多赘述。</p>
+<h3 id="三、文件目录"><a href="#三、文件目录" class="headerlink" title="三、文件目录"></a>三、文件目录</h3><p>一层一层的文件目录对用户有什么好处？</p>
+<p>​    文件组织清晰，易于查找</p>
+<p>​    轻松的实现按名存取的目的。</p>
+<p>那么文件目录是如何实现的呢？</p>
+<p>随着计算机的发展文件目录的结构也在发生着变化。</p>
+<h4 id="一、文件控制块"><a href="#一、文件控制块" class="headerlink" title="一、文件控制块"></a>一、文件控制块</h4><p>1、首先了解相关概念：文件控制块</p>
+<p>​    文件控制块是为了实现目录的关键数据结构。</p>
+<p>目录本身就是一种有结构文件，由一条条记录组成。每条记录对应一个在该放在该目录下的文件</p>
+<p>目录文件中的一条记录就是一个<strong>文件控制块（FCB）</strong></p>
+<p>2、需要对目录 进行哪些<strong>操作</strong>？</p>
+<ul>
+<li><p>搜索：当用户要使用一个文件时，系统要根据文件名搜索目录，找到该文件对应的目录项</p>
+</li>
+<li><p>创建文件：创建一个新文件时，需要在其所属的目录中增加一个目录项</p>
+</li>
+<li><p>删除文件：当删除一个文件时，需要在目录中删除相应的目录项</p>
+</li>
+<li><p>显示目录：用户可以请求显示目录的内容，如显示该目录中的所有文件及相应属性</p>
+</li>
+<li><p>修改目录：某些文件属性保存在目录中，因此这些属性变化时需要修改相应的目录项（如：文</p>
+</li>
+</ul>
+<p>件重命名）</p>
+<h4 id="二、目录结构"><a href="#二、目录结构" class="headerlink" title="二、目录结构"></a><strong>二、目录结构</strong></h4><p>:one:<strong>单级目录结构</strong></p>
+<p>​    整个系统中值建立一张目录表</p>
+<p>​    不允许文件重名；应用于早期操作系统。</p>
+<p>:two:<strong>两级目录结构</strong></p>
+<p>​    到了早期多用户操作系统使用两级目录结构。</p>
+<p>​    分为主文件目录（MFD，Master File Directory）和用户文件目录（UFD，User FlieDirectory）。</p>
+<p>两级目录结构允许不同用户的文件重名，也可以在目录上实现实现访问限制（检查此时登录</p>
+<p>的用户名是否匹配）</p>
+<p>​    <strong>缺点</strong>：用户不能对文件进行分类，灵活性不足。</p>
+<p>:three:<strong>多级目录结构</strong></p>
+<p>了解几个概念：</p>
+<p>​    绝对路径：从根路径出发的路径</p>
+<p>​    当前目录：当前所在的那一级目录</p>
+<p>​    相对路径：指的是相对于当前目录的路径。</p>
+<p>树型目录结构</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141721733.png" alt="image-20220314172144652"></p>
+<p>​    如果查找文件时，每次都从根目录开始查找，是很低效的。因此可以设置一个“当前目录”。例如，此时已经打开了“照片”的目录文件，也就是说，这张目录表已调入内存，那么可以把它设置为“当前目录”。当用户想要访问某个文件时，可以使用从当前目录出发的“相对路径” 。 <strong>引入“当前目录”和“相对路径”后，磁盘I/O的次数减少了。这就提升了访问文件的效率。</strong></p>
+<p>缺点：不利于实现 文件的共享</p>
+<p>​    树形目录结构可以很方便地对文件进行分类，层次结构清晰，也能够更有效地进行文件的管理和保护。但是，树形结构不便于实现文件的共享。为此，提出了“无环图目录结构”。</p>
+<p>:four:无环图目录结构</p>
+<p>具体思路是：</p>
+<p>​    可以用不同的文件名指向同一个文件，甚至可以指向同一个目录（共享同一目录下的所有内容）。需要为每个共享结点设置一个<strong>共享计数器</strong>，用于记录此时有多少个地方在共享该结点。用户提出删除结点的请求时，只是删除该用户的FCB、并使共享计数器减1，并不会直接删除共享结点。只有共享计数器减为0时，才删除结点。</p>
+<p>​    因为文件是共享的，因此在共享文件中，一个用户修改了文件数据，那么所有用户都能看到文件变化。</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141722761.png" alt="image-20220314172221700"></p>
+<h4 id="三、索引节点"><a href="#三、索引节点" class="headerlink" title="三、索引节点"></a>三、索引节点</h4><p>FCB的改进：目录的使用只有文件名匹配之后才会读取其他信息。考虑让目录表“瘦身”来提升效率。</p>
+<p>​    因此把目录中除了文件名之外的文件描述信息都放到一个索引节点。</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141730554.png" alt="image-20220314173018481"></p>
+<p>当找到文件名对应的目录项时，索引节点才调入内存。</p>
+<p>注：存放在外存中的索引结点称为“磁盘索引结点”，当索引结点放入内存后称为“内存索引结点”。相比之下内存索引结点中需要增加一些信息，比如：文件是否被修改、此时有几个进程正在访问该文件等。</p>
+<h3 id="四、文件的物理结构"><a href="#四、文件的物理结构" class="headerlink" title="四、文件的物理结构 %*%"></a>四、文件的物理结构 %*%</h3><p>文件数据应该怎样存放在外存中？</p>
+<p>文件的物理结构分类</p>
+<p> 分类标准：文件分配方式</p>
+<ul>
+<li>连续分配</li>
+<li><h2 id="连接分配"><a href="#连接分配" class="headerlink" title="连接分配"></a>连接分配</h2></li>
+<li>索引分配</li>
+</ul>
+<p>一、文件块、磁盘块</p>
+<p>操作系统为文件分配存储空间是以快为基本单位的。</p>
+<p>类似于内存中的存储，也是分成一个个快/磁盘块</p>
+<p>二、连续分配</p>
+<p>​    连续分配方式要求每个文件在磁盘上占有一组连续的块。</p>
+<p>1、逻辑地址到物理地址的映射？</p>
+<p>（逻辑块号，块内地址）——&gt;（物理块号，块内地址）。只需转换块号就行，块内地址保持不变</p>
+<p>​    物理块号 = 起始块号 + 逻辑块号</p>
+<p>​    当然还要检查是否逻辑块号合法（逻辑块号 ≥ 长度 就不合法）</p>
+<p>2、图示：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141836258.png" alt="image-20220314183641193"></p>
+<p>​        分别存放块的起始地址和长度。不被包括的就是空的块</p>
+<p>3、优缺点？</p>
+<p>​    优点：<strong>支持随机读取和顺序读取</strong></p>
+<p>​                连续分配在顺序读/写的速度最快。</p>
+<p>​    缺点：连续分配物理上是连续的，因此想要拓展更改不方便。</p>
+<p>​                存储空间利用率低，产生外部碎片。</p>
+<p>三、链接分配</p>
+<p>​    链接分配采取离散分配的方式，可以为文件分配离散的磁盘块。分为隐式链接和显式链接两种。</p>
+<p>:one:显示链接</p>
+<p>图示：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141926941.png" alt="image-20220314192635871"></p>
+<p>把用于链接文件各物理块的指针显式地存放在一张表中。即 文件分配表（FAT，File Allocation Table）</p>
+<p>​    需要注意的是：一个磁盘仅设置一张FAT。 开机时，将FAT读入内存，并常驻内存。</p>
+<ul>
+<li>优点：很方便文件拓展，不会有碎片问题，外存利用率高，<strong>支持顺序存储</strong>，并且<strong>支持随机访问</strong>。相比于隐式链接来说，地址转换时不需要访问磁盘，因此文件的访问效率更高。</li>
+<li>缺点：文件分配表的需要占用一定的存储空间</li>
+</ul>
+<p>:two:隐式链接：除文件的最后一个盘块之外，每个盘块中都存有指向下一个盘块的指针。文件目录</p>
+<p>包括文件第一块的指针和最后一块的指针。</p>
+<p>图示：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141839578.png" alt="image-20220314183941511"></p>
+<ul>
+<li>优点：很方便文件拓展，不会有碎片问题，外存利用率高。</li>
+<li>缺点：<strong>只支持顺序访问，不支持随机访问</strong>，查找效率低，指向下一个盘块的指针也需要耗费少量的存储空间。</li>
+</ul>
+<p>四、索引分配</p>
+<p>文件离散地分配在各个磁盘块中，系统会为每个文件建立一张索引表，索引表中记录了文</p>
+<p>件的各个逻辑块对应的物理块（索引表的功能类似于内存管理中的页表——建立逻辑页面到物理页之间</p>
+<p>的映射关系）。索引表存放的磁盘块称为索引块。文件数据存放的磁盘块称为数据块。</p>
+<p>若文件太大，单个磁盘块存储不下整张索引表，如何解决？</p>
+<p>有三种方案：</p>
+<ul>
+<li><p>①<strong>链接方案</strong>：如果索引表太大，一个索引块装不下，那么可以将多个索引块链接起来存放。缺点：若文件很大，索引表很长，就需要将很多个索引块链接起来。想要找到 i 号索引块，必须先依次读入 0~i-1 号索引块，这就导致磁盘I/O次数过多，查找效率低下。 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141932482.png" alt="image-20220314193232419"></p>
+</li>
+<li><p>②<strong>多层索引</strong>：建立多层索引（原理类似于多级页表）。使第一层索引块指向第二层的索引块。还可根据文件大小的要求再建立第三层、第四层索引块。采用 K 层索引结构，且顶级索引表未调入内存，则访问一个数据块只需要 K + 1 次读磁盘操作。</p>
+<p>缺点：即使是小文件，访问一个数据块依然需要K+1次读磁盘。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141932185.png" alt="image-20220314193219131"></p>
+</li>
+<li><p>③<strong>混合索引</strong>：多种索引分配方式的结合。例如，一个文件的顶级索引表中，既包含直接地址索引（直接指向数据块），又包含一级间接索引（指向单层索引表）、还包含两级间接索引（指向两层索引表） 。</p>
+<p>优点：对于小文件来说，访问一个数据块所需的读磁盘次数更少。</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141932230.png" alt="image-20220314193200149"></p>
+</li>
+</ul>
+<h3 id="五、文件存储空间管理"><a href="#五、文件存储空间管理" class="headerlink" title="五、文件存储空间管理"></a>五、文件存储空间管理</h3><p>一、文件空间的划分和初始化</p>
+<p>文件卷</p>
+<p>文件区：存放文件数据。</p>
+<p>目录区：主要存放文件目录信息（FCB）、用于磁盘存储空间管理的信息</p>
+<p>存储空间的初始化：将各个文件卷划分为目录区、文件区</p>
+<p>二、文件存储空间管理方法</p>
+<p>学习时注意从三个方面进行理解：</p>
+<ul>
+<li><p>用什么方式记录、组织空闲块？</p>
+</li>
+<li><p>如何分配磁盘块？</p>
+</li>
+<li><p>如何回收磁盘块？</p>
+</li>
+</ul>
+<p>:one:空闲表法</p>
+<p>概述：（适用于连续表法分配方式）</p>
+<ul>
+<li><p>磁盘块分配：与内存管理中的动态分区分配很类似，为一个文件分配连续的存储空间。同样<strong>可采用首次适应、最佳适应、最坏适应等算法</strong>来决定要为文件分配哪个区间</p>
+</li>
+<li><p>磁盘块回收：与内存管理中的动态分区分配很类似，当回收某个</p>
+<p>存储区时需要有四种情况</p>
+<ul>
+<li>①回收区的前后都没有相邻空闲区；</li>
+<li>②回收区的前后都是空闲区；</li>
+<li>③回收区前面是空闲区；</li>
+<li>④回收区后面是空闲区。总之，<strong>回收时需要注意表项的合并问题。</strong></li>
+</ul>
+</li>
+</ul>
+<p>:two:空闲链表法</p>
+<p>具体如图：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141949582.png" alt="image-20220314194930505"></p>
+<ul>
+<li><p>分配：若某文件申请 K 个盘块，则从链头开始依次摘</p>
+<p>下 K 个盘块分配，并修改空闲链的链头指针。</p>
+</li>
+<li><p>回收：回收的盘块依次挂到链尾，并修改空闲链的链</p>
+<p>尾指针。</p>
+</li>
+</ul>
+<p>适用于离散分配的物理结构。为文件分配多个盘块时可能要重复多次操作</p>
+<p>:three:位示图法</p>
+<p>​    位示图：每个二进制位对应一个盘块。用0和1来表示盘快是否分配。</p>
+<p>​    注意<strong>盘块号与（字号</strong><strong>,</strong> <strong>位号）相互转换的公式：</strong></p>
+<p>​        (字号, 位号)=(i, j) 的二进制位对应的 盘块号 b = ni + j</p>
+<ul>
+<li><p>分配：若文件需要K个块，</p>
+<ul>
+<li>顺序扫描位示图，找到K个相邻或不相邻的“0”；</li>
+<li>根据字号、位号算出对应的盘块号，将相应盘块分配给文件；</li>
+<li>将相应位设置为“1”。</li>
+</ul>
+</li>
+<li><p>回收：</p>
+<ul>
+<li>根据回收的盘块号计算出对应的字号、位号；</li>
+<li>将相应二进制位设为“0”     </li>
+</ul>
+</li>
+</ul>
+<p>:four:成组链接法</p>
+<p>​        空闲表法、空闲链表法不适用于大型文件系统，因为空闲表或空闲链表可能过大。</p>
+<p>因此诞生了成组链表法：</p>
+<p>​    使用一个专用的磁盘作为<strong>超级块</strong>,指向下一级内存块，每一级内存块的大小都是有限制的。</p>
+<p>超级块中包含下一组空闲盘的快数。</p>
+<p>​    如图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141958464.png" alt="image-20220314195800380"></p>
+<h3 id="六、文件的基本操作"><a href="#六、文件的基本操作" class="headerlink" title="六、文件的基本操作"></a>六、文件的基本操作</h3><p>​    操作系统向上提供的基本功能：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141935390.png" alt="image-20220314193503323"></p>
+<p>一、创建文件</p>
+<p>​    调用Create，需要几个参数：</p>
+<ul>
+<li><p> 所需的外存空间大小（如：一个盘块，即1KB）</p>
+</li>
+<li><p>文件存放路径（“D:/Demo”）</p>
+</li>
+<li><p>文件名 </p>
+</li>
+</ul>
+<p>Create的流程：</p>
+<ul>
+<li><p>在外存中找到文件所需的空间（结合上小节学习的空闲链表法、位示图、成组链接法等管理策略，找到空闲空间）</p>
+</li>
+<li><p>根据文件存放路径的信息找到该目录对应的目录文件（此处就是 D:/Demo 目录），在目录中创建该文件对应的目录项。<strong>目录项中包含了文件名、文件在外存中的存放位置等信息。</strong></p>
+</li>
+</ul>
+<p>二、删除文件</p>
+<p>​    调用Delete，需要提供参数：</p>
+<ul>
+<li>文件存放路径</li>
+<li>文件名</li>
+</ul>
+<p>Delete的流程：</p>
+<ul>
+<li><p> 根据文件存放路径找到相应的目录文件，从目录中找到文件名对应的目录项。</p>
+</li>
+<li><p>根据该目录项记录的文件在外存的存放位置、文件大小等信息，回收文件占用的磁盘块。</p>
+<p>（回收磁盘块时，根据空闲表法、空闲链表法、位图法等管理策略的不同，需要做不同的处理）</p>
+</li>
+<li><p>从目录表中删除文件对应的目录项。</p>
+</li>
+</ul>
+<p>三、打开文件</p>
+<p>​    在对文件进行操作之前，要求用户先使用 open 系统调用“打开文件”，需要提供的几个主要参数：</p>
+<ul>
+<li><p>文件存放路径</p>
+</li>
+<li><p>文件名</p>
+</li>
+<li><p>要对文件的操作类型（如：r 只读；rw 读写等）</p>
+</li>
+</ul>
+<p>open 系统调用：</p>
+<ul>
+<li><p>根据文件存放路径找到相应的目录文件，从目录中找到文件名对应的的目录项，并检查该用户是否有指定的操作权限。</p>
+</li>
+<li><p>将目录项复制到内存中的<strong>“打开文件表</strong>”中。并将对应表目的编号返回给用户。之后用户使用打开文件表的编号来指明要操作的文件。</p>
+</li>
+</ul>
+<p>打开文件之后，创建了打开文件表，用户再操作该文件就不需要重新查目录了。加快文件访问速度。</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203141942606.png" alt="image-20220314194229529"></p>
+<p>四、关闭文件</p>
+<p>​    进程使用完文件后，要“关闭文件”</p>
+<p>  Close 系统调用 ：</p>
+<ul>
+<li><p>将进程的打开文件表相应表项删除</p>
+</li>
+<li><p>回收分配给该文件的内存空间等资源</p>
+</li>
+<li><p>系统打开文件表的打开计数器count 减1，若 <strong>count = 0，则删除对应表项</strong>。</p>
+</li>
+</ul>
+<p>五、读文件</p>
+<p>​    根据读指针、读入数据量、内存位置将文件数据从外存读入内存。</p>
+<p>六、写文件</p>
+<p>​    根据写指针、写出数据量、内存位置将文件从文件数据从内存写出外存。</p>
+<h3 id="七、文件共享"><a href="#七、文件共享" class="headerlink" title="七、文件共享"></a>七、文件共享</h3><p>文件共享意味着系统中只含有一份文件数据，由多个用户共享。注意和文件复制的区别。</p>
+<p>文件共享：为用户提供文件共享功能，可以让多个用户共享地使用同一个文件。</p>
+<p>下面是共享文件的两种方式：</p>
+<p>一、硬链接</p>
+<p>基于索引节点。索引结点中设置一个链接计数变量 count，用于表示链接到本索引结点上的用户目录项数。</p>
+<p>若 count = 2，说明此时有两个用户目录项链接到该索引结点上，或者说是有两个用户在共享此文件。若某个用户决定“删除”该文件，则只是要把用户目录中与该文件对应的目录项删除，且索引结点的count值减 1。 </p>
+<p>若 count&gt;0，说明还有别的用户要使用该文件，暂时不能把文件数据删除，否则会导致指针悬空。</p>
+<p>当 count = 0 时系统负责删除文件。</p>
+<p>​    图示：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142000927.png" alt="image-20220314200030859"></p>
+<p>二、软连接（符号链接）</p>
+<p>基于符号链接的共享文件，相当于windows的桌面快捷方式。通过路径引用，定位到文件 。</p>
+<p>图示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142001670.png" alt="image-20220314200143592"></p>
+<h3 id="八、文件保护"><a href="#八、文件保护" class="headerlink" title="八、文件保护"></a>八、文件保护</h3><p>文件保护，是为了保护文件数据的安全。有三种常见方式。</p>
+<p>一、口令保护</p>
+<p>​    为文件设置一个“口令”（如：abc112233），用户请求访问该文件时必须提供“口令”。</p>
+<ul>
+<li><p>优点：保存口令的空间开销不多，验证口令的时间开销也很小。</p>
+</li>
+<li><p>缺点：正确的“口令”存放在系统内部，不够安全。</p>
+</li>
+</ul>
+<p>二、加密保护</p>
+<p>​    使用某个“密码”对文件进行加密，在访问文件时需要提供正确的“密码”才能对文件进行正确的解密。</p>
+<ul>
+<li>优点：保密性强，不需要在系统中存储“密码”</li>
+<li>缺点：编码/译码，或者说加密/解密要花费一定时间。</li>
+</ul>
+<p>三、访问控制</p>
+<p>​    在每个文件的FCB（或索引结点）中增加一个访问控制列表（Access-Control List, ACL），该表中记录了各个用户可以对该文件执行哪些操作。</p>
+<p>例图：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142005887.png" alt="image-20220314200523812"></p>
+<p>​    精简的访问列表：（避免用户过多带来的负荷。）</p>
+<p>​    系统会按照一定的分类标准 分组。每个组中的成员的权限是相同的。</p>
+<h3 id="九、文进系统结构层次"><a href="#九、文进系统结构层次" class="headerlink" title="九、文进系统结构层次"></a>九、文进系统结构层次</h3><p>​        层次图：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142005582.png" alt="image-20220314200548502"></p>
+<h3 id="十、磁盘"><a href="#十、磁盘" class="headerlink" title="十、磁盘"></a>十、磁盘</h3><p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142006860.png" alt="image-20220314200640766"></p>
+<h3 id="十一、磁盘调度算法"><a href="#十一、磁盘调度算法" class="headerlink" title="十一、磁盘调度算法"></a>十一、磁盘调度算法</h3><p>1、寻找时间</p>
+<p>​    在读/写数据前，将磁头移动到指定磁道所花的时间。</p>
+<ul>
+<li><p>①启动磁头臂是需要时间的。假设耗时为 s； </p>
+</li>
+<li><p>②移动磁头也是需要时间的。假设磁头匀速移动，每跨越一个磁道耗时为 m，总共需要跨越 n 条磁道。则：寻道时间 TS = s + m*n</p>
+</li>
+</ul>
+<p>2、延迟时间</p>
+<p>​    通过旋转磁盘，使磁头定位到目标扇区所需要的时间。</p>
+<p>​    设磁盘转速为 r （单位：转/秒，或 转/分），则平均所需的延迟时间 </p>
+<p>​            TR = (1/2)*(1/r) = 1/(2r)</p>
+<p>3、传输时间</p>
+<p>​    从磁盘读出或向磁盘写入数据所经历的时间，</p>
+<p>​    假设磁盘转速为 r，此次读/写的字节数为 b，每个磁道上的字节数为 N。</p>
+<p>​        则：传输时间Tt = (1/r) * (b/N) = b/(rN)</p>
+<p>一、先来先服务算法（FCFS）</p>
+<p>​    根据进程请求访问磁盘的先后顺序进行调度。</p>
+<ul>
+<li>优点：公平；如果请求访问的磁道比较集中的话，算法性能还算过的去</li>
+<li>缺点：近似于随机寻道</li>
+</ul>
+<p>二、最短寻找时间算法（SSTF）</p>
+<p>​        会优先处理的磁道是与当前磁头最近的磁道。可以保证每次的寻道时间最短，但是并不能保证总的寻道时间最短。（贪心的思想）</p>
+<ul>
+<li><p>优点：性能较好，平均寻道时间短</p>
+</li>
+<li><p>缺点：可能产生“饥饿”现象</p>
+</li>
+</ul>
+<p>三、扫描算法（电梯算法）（SCAN）</p>
+<p>在SSTF的基础上，规定：只有磁头移动到最外侧磁道的时候才能往内移动，移动到最内侧磁道的时候才能往外移 动。这就是扫描算法（SCAN）的思想</p>
+<ul>
+<li><p>优点：性能较好，平均寻道时间较短，不会产生饥饿现象</p>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>只有到达最边上的磁道时才能改变磁头移动方向，事实上，处理了184号磁道的访问请求之后就不需要再往右移动磁头了。</li>
+<li>SCAN算法对于各个位置磁道的响应频率不平均</li>
+</ul>
+</li>
+</ul>
+<p>四、look算法</p>
+<p>​        在SCAN 算法基础上规定：如果在磁头移动方向上已经没有别的请求，就可以立即改变磁头移动方向。</p>
+<p>例：    </p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142014944.png" alt="image-20220314201413868"></p>
+<ul>
+<li>优点：比起 SCAN 算法来，不需要每次都移动到最外侧或最内侧才改变磁头方向，使寻道时间进一步缩短</li>
+</ul>
+<p>五、循环扫描算法（C-SCAN ）</p>
+<p>​        在SCAN 的基础上：规定只有磁头朝某个特定方向移动时才处理磁道访问请求，而返回时直接快速移动至起始端而不处理任何请求。</p>
+<ul>
+<li><p>优点：比起SCAN 来，对于各个位置磁道的响应频率很平均。</p>
+</li>
+<li><p>缺点：只有到达最边上的磁道时才能改变磁头移动方向；比起SCAN算法来，平均寻道时间更长</p>
+</li>
+</ul>
+<p>六、C-look算法</p>
+<p>​    C-SCAN 算法的主要缺点是只有到达最边上的磁道时才能改变磁头移动方向，并且磁头返回时不一定需要返回到最边缘的磁道上。C-LOOK 算法就是为了解决这个问题。如果磁头移动的方向上已经没有磁道访问请求了，就可以立即让磁头返回，并且磁头只需要返回到有磁道访问请求的位置即可。</p>
+<p>例：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142016716.png" alt="image-20220314201638648"></p>
+<ul>
+<li>优点：比起 C-SCAN 算法来，不需要每次都移动到最外侧或最内侧才改变磁头方向，使寻道时间</li>
+</ul>
+<p>进一步缩短</p>
+<h3 id="十二、磁盘管理"><a href="#十二、磁盘管理" class="headerlink" title="十二、磁盘管理"></a>十二、磁盘管理</h3><p>可以认为的减少磁盘寻道的时间（其余两个都和磁盘本身的转速有关）</p>
+<p>常见的方法：</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203142017014.png" alt="image-20220314201722940"></p>
+<p>​    </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/">http://example.com/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">操作系统-内存管理</div></div></a></div><div class="next-post pull-right"><a href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"><img class="next-cover" src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">操作系统-常见问题总结</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">39</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">文件管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">二、文件逻辑结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">4.</span> <span class="toc-text">三、文件目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%96%87%E4%BB%B6%E6%8E%A7%E5%88%B6%E5%9D%97"><span class="toc-number">4.1.</span> <span class="toc-text">一、文件控制块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">4.2.</span> <span class="toc-text">二、目录结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9"><span class="toc-number">4.3.</span> <span class="toc-text">三、索引节点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%96%87%E4%BB%B6%E7%9A%84%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84"><span class="toc-number">5.</span> <span class="toc-text">四、文件的物理结构 %*%</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E5%88%86%E9%85%8D"><span class="toc-number"></span> <span class="toc-text">连接分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">五、文件存储空间管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%96%87%E4%BB%B6%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">六、文件的基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="toc-number">3.</span> <span class="toc-text">七、文件共享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%96%87%E4%BB%B6%E4%BF%9D%E6%8A%A4"><span class="toc-number">4.</span> <span class="toc-text">八、文件保护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%96%87%E8%BF%9B%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84%E5%B1%82%E6%AC%A1"><span class="toc-number">5.</span> <span class="toc-text">九、文进系统结构层次</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E7%A3%81%E7%9B%98"><span class="toc-number">6.</span> <span class="toc-text">十、磁盘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">十一、磁盘调度算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86"><span class="toc-number">8.</span> <span class="toc-text">十二、磁盘管理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="操作系统-内存管理"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-内存管理"/></a><div class="content"><a class="title" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="操作系统-内存管理">操作系统-内存管理</a><time datetime="2022-03-14T12:19:57.000Z" title="Created 2022-03-14 20:19:57">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" title="操作系统-文件管理"><img src="https://ae01.alicdn.com/kf/U36fdd5af2ca24a5c8cf8bd7e3195e13bx.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-文件管理"/></a><div class="content"><a class="title" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" title="操作系统-文件管理">操作系统-文件管理</a><time datetime="2022-03-14T04:47:48.000Z" title="Created 2022-03-14 12:47:48">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" title="操作系统-常见问题总结"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-常见问题总结"/></a><div class="content"><a class="title" href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" title="操作系统-常见问题总结">操作系统-常见问题总结</a><time datetime="2022-03-13T12:29:59.000Z" title="Created 2022-03-13 20:29:59">2022-03-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="操作系统-进程管理"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-进程管理"/></a><div class="content"><a class="title" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="操作系统-进程管理">操作系统-进程管理</a><time datetime="2022-03-12T08:01:40.000Z" title="Created 2022-03-12 16:01:40">2022-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%A6%82%E8%BF%B0/" title="操作系统-概述"><img src="https://ae01.alicdn.com/kf/Ue5889eaf11594a4aabca090c5d5060798.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-概述"/></a><div class="content"><a class="title" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%A6%82%E8%BF%B0/" title="操作系统-概述">操作系统-概述</a><time datetime="2022-03-12T06:51:18.000Z" title="Created 2022-03-12 14:51:18">2022-03-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
