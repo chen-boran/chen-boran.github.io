@@ -1164,7 +1164,7 @@ CONSTRAINT fk_stuinfo_major FOREIGN KEY(majorid) REFERENCES major(id)#外键
 <p>CREATE OR REPLACE VIEW myv1<br>AS<br>SELECT last_name,email,salary<em>12</em>(1+IFNULL(commission_pct,0)) “annual salary”<br>FROM employees;</p>
 <p>CREATE OR REPLACE VIEW myv1<br>AS<br>SELECT last_name,email<br>FROM employees;</p>
 <p>SELECT * FROM myv1;<br>SELECT * FROM employees;<br>#1.插入</p>
-<p>INSERT INTO myv1 VALUES(‘张飞’,‘<a href="mailto:&#122;&#x66;&#x40;&#x71;&#113;&#46;&#99;&#111;&#109;">&#122;&#x66;&#x40;&#x71;&#113;&#46;&#99;&#111;&#109;</a>‘);</p>
+<p>INSERT INTO myv1 VALUES(‘张飞’,‘<a href="mailto:&#122;&#102;&#64;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;">&#122;&#102;&#64;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;</a>‘);</p>
 <p>#2.修改<br>UPDATE myv1 SET last_name = ‘张无忌’ WHERE last_name=’张飞’;</p>
 <p>#3.删除<br>DELETE FROM myv1 WHERE last_name = ‘张无忌’;</p>
 <p>#具备以下特点的视图不允许更新</p>
