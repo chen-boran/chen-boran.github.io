@@ -245,3 +245,627 @@ katex:
 - Cache Aside Pattern
 
 - - https://blog.csdn.net/z50l2o08e2u4aftor9a/article/details/81008933
+
+
+
+
+
+
+
+作者：走马观花AA
+链接：https://www.nowcoder.com/discuss/864641?type=all&order=recall&pos=&page=1&ncTraceId=&channel=-1&source_id=search_all_nctrack&gio_id=B72BE11AC5CE4285D6262E3B40B306F9-1647494144339
+来源：牛客网
+
+
+
+分布式缓存 
+
+ 缓存好处：高性能 + 高并 
+
+​    
+
+ 数据库查询耗费了800ms，其他用户对同一个数据再次查询 ，假设该数据在10分钟以内没有变化过，并且 10 分钟之内有 1000 个用户 都查询了同一数据，10 分钟之内，那 1000 每个用户，每个人查询这个数据都感觉很慢 800ms 
+
+ 比如 ：某个商品信息，在 一天之内都不会改变，但是这个商品每次查询一次都要耗费2s，一天之内被浏览 100W次 
+
+ mysql 单机也就 2000qps,缓存单机轻松几万几十万qps,单机 承载并发量是 mysql 单机的几十倍。 
+
+ 如果感觉小编写得不错，请素质三连：点赞+转发+关注。我会努力写出更好的作品分享给大家。更多[学习资料](https://docs.qq.com/doc/DVGJkS1lRRWdrV3hk)小编已打包好，可以找我领取哦！领取方式：私信回复暗号**【333】**即可免费领取更多完整版资料。 
+
+ 高并发 
+
+ 在中午高峰期，有 100W 个用户访问系统 A，每秒有 4000 个请求去查询数据库，数据库承载每秒 4000 个请求会宕机，加上缓存后，可以 3000 个请求走缓存 ，1000 个请求走数据库。 
+
+ 缓存是走内存的，内存天然可以支撑4w/s的请求，数据库（基于磁盘）一般建议并发请求不要超过 2000/s 
+
+ 缓存不良后果 
+
+ 缓存与数据库双写不一致 
+
+ 缓存雪崩 
+
+ 缓存穿透 
+
+ 缓存并发竞争 
+
+ Redis 线程模型 
+
+ [redis]() 单线程 ，memcached 多线程 
+
+ [redis]() 是单线程 nio 异步线程模型 
+
+ Redis 和 Memcached 区别 
+
+ Redis 支持服务器端的数据操作：Redis比Memcached来说，拥有更多的数据结构和并支持更丰富的数据操作，通常在Memcached里，你需要将数据拿到客户端来进行类似的修改再set回去。这大大增加了网络 IO 的次数和数据体积。在Redis中，这些复杂的操作通常和一般的GET/SET一样高效。所以，如果需要缓存能支持更复杂的结构和操作，那么Redis会是不错的选择 
+
+ 集群模式：memcached 没有原生的集群模式，需要依靠客户端来实现往集群中分片写入数据，但是 Redis 目前是原生支持 cluster模式的 
+
+ Redis 单线程模型 
+
+ 一个线程+一个队列 
+
+ [redis]() 基于 reactor 模式开发了网络事件处理器，这个处理器叫做文件事件处理器，file event handler，这个文件事件处理器是单线程的，所以[redis]() 是单线程的模型，采用 io多路复用机制同时监听多个 socket,根据socket上的事件来选择对应的事件处理器来处理这个事件。 
+
+ 文件事件处理器包含：多个 socket,io多路复用程序，文件事件分派器，事件处理器（命令请求处理器、命令恢复处理器、连接应答处理器） 
+
+ 文件事件处理器是单线程的，通过 io 多路复用机制监听多个 socket，实现高性能和线程模型简单性 
+
+ 被监听的 socket 准备好执行 accept,read,write,close等操作的时候，会产生对应的文件事件，调用之前关联好的时间处理器处理 
+
+ 多个 socket并发操作，产生不同的文件事件，i/o多路复用会监听多个socket，将这些 socket放入一个队列中排队。事件分派器从队列中取出socket给对应事件处理器。 
+
+ 一个socket时间处理完后，事件分派器才能从队列中拿到下一个socket，给对应事件处理器来处理。 
+
+ 文件事件： 
+
+ AE_READABLE 对应 socket变得可读（客户端对[redis]()执行 write操作） 
+
+ AE_WRITABLE 对应 socket 变得可写（客户端对 [redis]()执行 read操作） 
+
+ I/O 多路复用可以同时监听AE_REABLE和 AE_WRITABLE ，如果同时达到则优先处理 AE_REABLE 时间 
+
+ 文件事件处理器： 
+
+ 连接应答处理器 对应 客户端要连接 [redis]() 
+
+ 命令请求处理器 对应 客户端写数据到 [redis]() 
+
+ 命令恢复处理器 对应 客户端从 [redis]() 读数据 
+
+ 流程： 
+
+ [redis]() 初始化时，会将连接应答处理器跟 AE_READABLE事件关联 
+
+ 客户端对 [redis]() 发起连接，产生一个 AE_READABLE 事件 
+
+ 连接应答处理器处理客户端 AE_READABLE 事件，创建客户端对应的 socket，同时将这个 socket的 AE_READABLE 事件和命令请求处理器关联 
+
+ 客户端对 [redis]() 发起读请求，会在 socket上产生一个 AE_READABLE 事件 
+
+ 绑定 AE_READABLE 事件的命令请求处理器会从 socket 中读取请求相关数据，执行对应操作，当执行完毕后，将 socket的 AE_WRITABLE 事件跟命令回复处理器关联 
+
+ 当客户端这边准备好读取响应时，会在 socket上产生一个AE_WRITABLE事件 
+
+ 绑定 AE_WRITABLE 事件的命令回复处理器将准备好的响应数据写入 socket，供客户端来读取 
+
+ 命令回复处理器写完后，删掉 socket的 AE_WRITABLE 事件和命令回复处理器的绑定关系 
+
+ Redis 单线程模型效率高 
+
+ 一秒钟可以处理几万个请求 
+
+ 非阻塞 I/O 多路复用机制（不处理事件，只轮询请求压入队列） 
+
+ 纯内存操作（操作只有几微秒） 
+
+ 单线程反而 避免了多线程频繁上下文切换的问题 
+
+ Redis 数据类型 
+
+ string 
+
+ 普通的 set,get kv缓存 
+
+ hash 
+
+ 类型 map结构，比如一个对象（没有嵌套对象）缓存到 [redis]()里面，然后读写缓存的时候，可以直接操作hash的字段（比如把 age 改成 21，其他的不变） 
+
+ key=150 
+
+ value = { 
+
+```
+"id":150, "name":"zhangsan", "age":20
+```
+
+ 有序列表 ，元素可以重复 
+
+ 可以通过 list 存储一些列表型数据结构，类似粉丝列表，文章评论列表。 
+
+ 例如：微信大 V的粉丝，可以以 list 的格式放在 [redis]() 里去缓存 
+
+ key=某大 V value=[zhangsan,lisi,wangwu] 
+
+ 比如 lrange 可以从某个元素开始读取多少个元素，可以基于 list 实现分页查询功能，基于 [redis]()实现高性能分页，类似[微博]()下来不断分页东西。 
+
+ 可以搞个简单的消息队列，从 list头怼进去（lpush），list尾巴出来 (brpop) 
+
+ set 
+
+ 无序集合，自动去重 
+
+ 需要对一些数据快速全局去重，（当然也可以基于 HashSet，但是单机） 
+
+ 基于 set 玩差集、并集、交集的操作。比如：2 个人的粉丝列表整一个交集，看看 2 个人的共同好友是谁？ 
+
+ 把 2 个大 V 的粉丝都放在 2 个 set中，对 2 个 set做交集（sinter） 
+
+ sorted set 
+
+ [排序]()的 set，去重但是可以[排序]()，写进去的时候给一个分数，自动根据分数[排序]() 
+
+ 排行榜： 
+
+ 将每个用户以及其对应的分数写入进去 
+
+ zadd board score username 
+
+ zrevrange board 0 99 可以获取排名前 100 的用户 
+
+ zrank board username 可以看到用户在排行榜里的排名 
+
+ 例如： 
+
+ zadd board 85 zhangsan 
+
+ zadd board 72 wangwu 
+
+ zadd board 96 lis 
+
+ zadd board 62 zhaoliu 
+
+ 自动[排序]()为： 
+
+ 96 lisi 
+
+ 85 zhangsan 
+
+ 72 wangwu 
+
+ 62 zhaoliu 
+
+ 获取排名前 3 的用户 ： zrevrange board 0 3 
+
+ 96 lisi 
+
+ 85 zhangsan 
+
+ 72 wangwu 
+
+ 查看zhaoliu的排行 ：zrank board zhaoliu 返回 4 
+
+ Redis 过期策略 
+
+ 内存是宝贵的，磁盘是廉价的 
+
+ 给key设置过期时间后，[redis]()对这批key是定期删除+惰性删除 
+
+ 定期删除： 
+
+ [redis]() 默认每隔 100ms随机抽取一些设置了过期时间的 key，检查其是否过期了，如果过期就删除。 
+
+ 注意：[redis]()是每隔100ms随机抽取一些 key来检查和删除，而不是遍历所有的设置过期时间的key（否则CPU 负载会很高，消耗在检查过期 key 上） 
+
+ 惰性删除： 
+
+  获取某个key的时候， [redis]() 会检查一下，这个key如果设置了过期时间那么是否过期，如果过期了则删除。 
+
+ 如果定期删除漏掉了许多过期key，然后你也没及时去查，也没走惰性删除，如果大量过期的key堆积在内存里，导致 [redis]() 内存块耗尽，则走内存淘汰机制。 
+
+ 内存淘汰策略： 
+
+ noeviction:当内存不足以容纳新写入数据时，新写入操作直接报错（没人用） 
+
+ allkeys-LRU: 当内存不足以容纳新写入数据时，在键空间中，移除最近最少使用的key（最常用） 
+
+ allkeys-random: 当内存不足以容纳新写入数据时，在键空间中，随机移除某个 key，(没人用) 
+
+ volatile-lru:当内存不足以容纳新写入数据时，在设置了过期时间的键空间中，移除最近最少使用的key(不合适) 
+
+ volatile-ttl:当内存不足以容纳新写入数据时，在设置了过期时间的键空间中，有更早过期时间的 key 优先移除(不合适) 
+
+ LRU [算法]()： 
+
+```
+package com.mousycoder.mycode; import java.util.LinkedHashMap; import java.util.Map; /**
+* @version 1.0
+* @author: mousycoder
+* @date: 2019/10/31 17:55
+*/ public class lruCache<K,V> extends LinkedHashMap<K,V> { private final int CACHE_SIZE; public LRUCache( int cacheSize) { super((int)Math.ceil(cacheSize / 0.75) + 1 ,0.75f,true); this.CACHE_SIZE = cacheSize;
+} @Override protected boolean removeEldestEntry(Map.Entry<K, V> eldest) { return size() > CACHE_SIZE;
+} public static void main(String[] args) {
+LRUCache<integer,Integer> lruCache = new LRUCache<>(10); for (int i = 0; i < 15; i++) {
+lruCache.put(i,i);
+}
+Integer integer1 = lruCache.get(0); for (Integer integer : lruCache.keySet()) {
+System.out.println(integer);
+}
+}
+}
+```
+
+ Redis 高并发和高可用 
+
+ 缓存架构（多级缓存架构、热点缓存） 
+
+ [redis]() 高并发瓶颈在单机，读写分离，一般是支撑读高并发，写请求少，也就 一秒一两千，大量请求读，一秒钟二十万次。 
+
+ 主从架构 
+
+ 一主多从，主负责写，将数据同步复制到其他 slave节点，从节点负责读，所有读的请求全部走从节点。主要是解决读高并发。、 
+
+ 主从架构->读写分离->支撑10W+读QPS架构 
+
+ Redis Replication 
+
+ master->slave 复制，是异步的 
+
+ 核心机制： 
+
+ [redis]() 采用异步方式复制数据到 slave 节点 
+
+ 一个 master node是可以配置多个 slave node的 
+
+ slave node也可以连接其他的 slave node 
+
+ slave node 做复制的时候，是不会 block master node的正常工作 
+
+ slave node 在做复制的时候，也不会 block对自己的查询操作，它会用旧的数据集来提供服务。但是复制完成时，需要删除旧数据集，加载新的数据集，这个时候就会暂停对外服务了。 
+
+ slave node 主要用来进行横向扩容，做读写分离，扩容 slave node 可以提高读的吞吐量 
+
+ master持久化对主从架构的意义： 
+
+ 如果开启了主从架构，一定要开启 master node的持久化，不然 master宕机重启数据是空的，一经复制，slave的数据也丢了 
+
+ 主从复制原理： 
+
+ 第一次启动或者断开重连情况： 
+
+ 当启动一个 slave node的时候，它会发送一个 PSYNC 命令给 master node 
+
+ master 会触发一次 full resynchronization （如果不是第一次连接，master 只会复制给 slave 部分缺少的数据，从backlog里找） 
+
+ master会启动一个后台线程，开始生成一份 RDB 快照（ bgsave,也可以直接在内存中创建），同时将从客户端收到的所有写命令缓存在内存中。RDB 文件生成完毕之后，master会将这个RDB发送给slave，slave会先写入本地磁盘，然后再从本地磁盘加载到内存中。然后 master会将内存中缓存的写命令发送给 slave,slave也会同步这些数据（slave如果跟 master网络故障，断开连接，会自动重连，master如果发现有多个 slave 来重新连接，仅仅只会启动一个 RDB save 操作，用一份数据服务所有 slave node） 
+
+ 正常情况下： 
+
+ master 来一条数据，就异步给 slave 
+
+ Redis高可用性 
+
+ 全年 99.99%的时间，都是出于可用的状态，那么就可以称为高可用性 
+
+ [redis]() 高可用架构叫故障转移，failover，也可以叫做主备切换，切换的时间不可用，但是整体高可用。 
+
+ sentinal node(哨兵) 
+
+ Sentinal 
+
+ 作用： 
+
+ 集群监控，负责监控 [redis]() master 和 slave进程是否正常 
+
+ 消息通知，如果某个 [redis]() 实例有故障，那么哨兵负责发送消息作为报警通知给管理员 
+
+ 故障转移，如果 master 挂掉，会自动转移到 slave 
+
+ 配置中心，如果故障转移了，通知 client 客户端新的 master地址 
+
+ 两节点哨兵集群 
+
+ quorum = 1 （代表哨兵最低个数可以尝试故障转移，选举执行的哨兵） 
+
+ master 宕机，只有 S2 存活，因为 quorum =1 可以尝试故障转移，但是没达到 majority =2 （最低允许执行故障转移的哨兵存活数）的标准，无法执行故障转移 
+
+ 三节点哨兵集群（经典） 
+
+ 如果 M1 宕机了，S2,S3 认为 master宕机，选举一个执行故障转移，因为 3 个哨兵的 majority = 2，所以可以执行故障转移 
+
+ Redis 主从 + 哨兵 
+
+ 丢数据： 
+
+ master内存中数据异步同步到 slave master 就挂掉了,丢掉了 master 内存中的数据 
+
+ 脑裂，某个 master 所在机器突然脱离了正常的网络，其他 slave机器不能连接，但是实际上 master还在运行，哨兵认为 master 宕机，选举 slave为master，此时集群里有 2 个 master, client还没来得及切换到新的master，还继续写在旧的 master上，数据丢了，此时旧的 master再次恢复，被被作为一个 slave 挂到新的 master 上，自己的数据被清空 （脑裂，大脑一分为 2，同时指挥同一个人） 
+
+ 解决方案： 
+
+ min-slaves-max-lag 10 （至少一个 slave同步的延迟不能超过 10s） 减少异步复制的数据丢失，发现slave复制数据和 ack延时过长，拒绝写入，减少同步数据损失。让client做降级写到本地磁盘里和限流，或者先暂存到消息队列，然后重新发回 master 
+
+ min-slaves-to-write 1 减少脑裂带来的数据丢失，最多损失 10 s数据，假设master 不能继续给 slave发送数据，并且 slave 10s没给自己的 ack消息，直接拒绝客户端写请求，同时 client做降写到本地磁盘、限流，或者先暂存到消息队列，然后重新发回 master 
+
+ 哨兵 
+
+ sdown 主观宕机，哨兵觉得一个 master 宕机（ping 超过了 
+
+ 
+ is-master-down-after-milliseconds毫秒数） 
+
+ odown 客观宕机，quorum数量的哨兵都觉得 master宕机 
+
+ 哨兵互相感知通过 [redis]()的 pub/sub系统，每隔 2 秒往同一个 channel里发消息（自己的 host,ip,runid），其他哨兵可以消费这个消息 
+
+ 以及同步交换master的监控信息。 
+
+ 哨兵确保其他slave修改master信息为新选举的master 
+
+ 当一个 master被认为 odown && marjority哨兵都同意，那么某个哨兵会执行主备切换，选举一个slave成为master（考虑 1. 跟master断开连接的时长 2. slave 优先级 3.复制 offset 4. runid） 
+
+ 选举[算法]()： 
+
+ 如果slave跟master断开连接已经超过 down-after-milliseconds * 10 + master宕机时间，则放弃 
+
+ 按 slave 优先级[排序]() ，slave-priority 越小越靠前 
+
+ replica offset ，哪个slave复制越多的数据，越靠前 
+
+ runid 越小，越靠前 
+
+ quorum 数量哨兵认为odown->选举一个哨兵切换->获得 majority哨兵的授权（quorum < majority 需要 majority个哨兵授权，quorum >= majority 需要 quorum 哨兵授权） 
+
+ 第一个选举出来的哨兵切换失败了，其他哨兵等待 failover-time之后，重新拿confiuration epoch做为新的version 切换，保证拿到最新配置，用于 configuration传播（通过 pu/sub消息机制，其他哨兵对比 version 新旧更新 master配置） 
+
+ Redis 优化方案 
+
+ 高并发：主从架构 
+
+ 高容量：Redis集群，支持每秒几十万的读写并发 
+
+ 高可用：主从+哨兵 
+
+ Redis 持久化 
+
+ 持久化的意义在于故障恢复数据备份（到其他服务器）+故障恢复（遇到灾难，机房断电，电缆被切） 
+
+ RDB 对 Redis 中的数据执行周期性的持久化。 
+
+ AOF 机制，每条写命令作为日志，以 append-only模式写入一个日志文件总，在 [redis]()重启的时候，可以通过回放AOF日志中的写入指令来重新构建整个数据集 
+
+ AOF 只有一个，Redis 中的数据是有一定限量的，内存大小是一定的,AOF 是存放写命令的，当大到一定的时候，AOF 做 rewrite 操作，就会基于当时 [redis]() 内存中的数据，来重新构造一个更小的 AOF 文件，然后将旧的膨胀很大的文件给删掉，AOF 文件一直会被限制在和Redis内存中一样的数据。AOF同步间隔比 RDB 小，数据更完整 
+
+ RDB 
+
+ 优点： 
+
+ RDB 会生成多个数据文件，每个数据文件都代表了某一个时刻中 [redis]() 的数据，这种多个数据文件的方式，非常适合做冷备，可以将这种完整的数据文件发送到一些远程的安全存储上去，RDB 做冷备，生成多个文件，每个文件都代表某一个时刻的完整的数据快照，AOF 也可以做冷备，只有一个文件，每隔一定时间去 copy一份这个文件出来。 RDB 做冷备，由Redis控制固定时长去生成快照文件，比较方便。AOF，需要自己写脚本定时控制。 
+
+ RDB 对 [redis]()对外提供的读写服务，影响非常小，可以让 [redis]() 保持高性能，因为 [redis]() 主进程只需要 fork一个子进程，让子进程执行磁盘 IO 操作来进行 RDB 持久化 
+
+ 相对于 AOF 持久化机制来说，直接基于 RDB 数据文件来重启和恢复 [redis]() 进程，更加快速 
+
+ 缺点： 
+
+ 如果想要在 [redis]()故障时，尽可能少丢数据，那么 RDB 没有 AOF 好，一般 RDB 数据快照，都是间隔 5 分钟，或者更长的时候生成一次，这个时候就得接受一旦 [redis]() 进程宕机，那么会丢失最近 5 分钟数据 
+
+ RDB 每次在 fork子进程来执行 RDB 快早数据文件生成的时候，如果数据文件特别大，可能会导致对客户端提供的服务暂停数毫秒，甚至数秒（RDB 生成间隔不要太长） 
+
+ AOF 存放的指令日志，数据恢复的时候，需要回放执行所有指令日志，RDB 就是一份数据文件，直接加载到内存中。 
+
+ AOF 
+
+ 优点： 
+
+ 更好保护数据不丢失，后台线程 fsync 操作，最多丢失一秒钟数据，保证 os cache中的数据写入磁盘中 
+
+ AOF 用 append-only 模式，没有磁盘寻址开销，写入性能非常高，文件不容易损坏。 
+
+ AOF 日志过大的时候，后台 rewrite log时候，老的日志文件照常写入，新的merge后的日志文件 ready的时候，再交换新老日志文件 
+
+ 适合灾难性恢复，某人不小心 flushall清空所有数据，只要后台 rewrite还没发生，那么可以立刻拷贝 AOF 文件，将最后一条 flushall命令给删了，然后再将该 AOF 文件放回去，可以通过恢复机制，自动恢复所有数据 
+
+ 缺点： 
+
+ AOF 日志文件比 RDB 数据快照文件大 
+
+ 降低 Redis的写 QPS 
+
+ AOF 复杂，Bug多 
+
+ 数据恢复比较慢 
+
+ 最佳方案 
+
+ AOF 来保证数据不丢失，RDB 做不同时间的冷备 
+
+ Redis Cluster 
+
+ 支持 N 个 Redis master node,每个 master node挂载多个 slave node 
+
+ 多master + 读写分离 + 高可用 
+
+ 数据量很少，高并发 -> replication + sentinal 集群 
+
+ [海量数据]() + 高并发 + 高可用 -> [redis]() cluster 
+
+ 分布式[算法]() 
+
+ hash[算法]()->一致性 hash [算法]()-> [redis]() cluster->hash slot[算法]() 
+
+ [redis]() cluster :自动对数据进行分片，每个 master 上放一部分数据，提供内置的高可用支持，部分master不可用时，还是可以继续工作 
+
+ cluster bus 通过 16379进行通信，故障检测，配置更新，故障转移授权，另外一种二进制协议，主要用于节点间进行高效数据交换，占用更少的网络带宽和处理时间 
+
+ hash[算法]() 
+
+ key进行hash，然后对节点数量取模，最大问题只有任意一个 master 宕机，大量数据就要根据新的节点数取模，会导致大量缓存失效。 
+
+ 一致性 hash [算法]() 
+
+ key进行hash，对应圆环上一个点，顺时针寻找距离最近的一个点。保证任何一个 master 宕机，只受 master 宕机那台影响，其他节点不受影响，此时会瞬间去查数据库。 
+
+ 缓存热点问题： 
+
+ 可能集中在某个 hash区间内的值特别多，那么会导致大量的数据都涌入同一个 master 内，造成 master的热点问题，性能出现瓶颈。 
+
+ 解决方法： 
+
+ 给每个 master 都做了均匀分布的虚拟节点，这样每个区间内大量数据都会均匀的分布到不同节点内，而不是顺时针全部涌入到同一个节点中。 
+
+ Hash Slot[算法]() 
+
+ [redis]() cluster 有固定 16384 个 hash slot,对每个key计算 CRC16 值，然后对16384取模，可以获取 key对应的 hash slot 
+
+ [redis]() cluster 中每个 master 都会持有部分 slot ,当一台 master 宕机时候，会最快速度迁移 hash slot到可用的机器上（只会短暂的访问不到） 
+
+ 走同一个 hash slot 通过 hash tag实现 
+
+ Redis Cluster 核心 
+
+ 基础通信 
+
+ 通过 gossip 协议通信（小道留言，所有节点都持有一份元数据，不同的节点如果出现了元数据的变更，就不断将元数据发送给其他节点，让其他节点也进行元数据的变更） 
+
+ 集群元数据：包括 hashslot->node之间的映射表关系，master->slave之间的关系，故障的信息 
+
+ 集群元数据集中式存储（storm），底层基于zoo[keep]()er（分布式协调中间件）集群所有元数据的维护。好处：元数据的更新和读取，时效性好，一旦变更，其他节点立刻可以感知。缺点：所有元数据的更新压力全部集中在一个地方，可能会导致元数据的存储有压力。 
+
+ goosip: 好处：元数据的更新比较分散，有一定的延时，降低了压力。缺点：更新有延时，集群的一些操作会滞后。（reshared操作时configuration error） 
+
+ 10000 端口 
+
+ 自己提供服务的端口号+ 10000 ，每隔一段时间就会往另外几个节点发送ping消息，同时其他几点接收到ping之后返回pong 
+
+ 交换的信息 
+
+ 故障信息，节点的增加和移除， hash slot 信息 
+
+ gossip协议 
+
+ meet:某个节点发送 meet给新加入的节点，让新节点加入集群中，然后新节点就会开始于其他节点进行通信 
+
+ ping:每个节点都会频繁给其他节点发送ping，其中包含自己的状态还有自己维护的集群元数据，互相通过ping交换元数据 
+
+ ping:返回ping和meet，包含自己的状态和其他信息 
+
+ fail:某个节点判断另一个节点fail之后，就发送 fail 给其他节点，通知其他节点，指定的节点宕机了 
+
+ ping消息 
+
+ ping 很频繁，且携带元数据，会加重网络负担 
+
+ 每个节点每秒会执行 10 次 ping，每次选择 5 个最久没有通信的其他节点 
+
+ 当如果发现某个节点通信延迟达到了 cluster_node_timeout /2 ，那么立即发送 ping， 避免数据交换延迟过长，落后时间太长（2 个节点之间 10 分钟没有交换数据，整个集群处于严重的元数据不一致的情况）。 
+
+ 每次ping，一个是带上自己的节点信息，还有就是带上1/10其他节点的信息，发送出去，进行数据交换 
+
+ 至少包含 3 个其他节点信息，最多包含总节点-2 个其他节点的信息 
+
+ JRedis原理 
+
+ 请求重定向 
+
+ 客户端发送到任意一个[redis]()实例发送命令，每个[redis]()实例接受到命令后，都会计算key对应的hash slot，如果在本地就本地处理，否则返回moved给客户端，让客户端进行重定向 （[redis]()-cli -c） 
+
+ hash slot 
+
+ 通过tag指定key对应的slot,同一个 tag 下的 key，都会在一个 hash slot中，比如 set key1:{100} 和 set key2:{100} 
+
+ smart jedis 
+
+ 本地维护一份hashslot->node的映射表。 
+
+ JedisCluster 初始化的时候，随机选择一个 node，初始化 hashslot->node 映射表，同时为每个节点创建一个JedisPool连接池，每次基于JedisCluster执行操作，首先JedisCluster都会在本地计算key的hashslot，然后再本地映射表中找到对应的节点，如果发现对应的节点返回moved，那么利用该节点的元数据，更新 hashslot->node映射表（重试超过 5 次报错） 
+
+ hashslot迁移和ask重定向 
+
+ hash slot正在迁移，那么会返回ask 重定向给jedis,jedis 接受到ask重定向之后，，会重定向到目标节点去执行 
+
+ 高可用性和主备切换原理 
+
+ 判断节点宕机： 
+
+ 如果一个节点认为另外一个节点宕机了， 就是pfail,主观宕机 
+
+ 如果多个节点都认为另外一个节点宕机了，那么就是fail，客观宕机（跟哨兵原理一样） 
+
+ 在cluster-node-timeout内，某个节点一直没有返回 pong,那么就被认为是 pfail 
+
+ 如果一个节点认为某个节点pfail了，那么会在gossip消息中，ping给其他节点，如果超过半数的节点认为pfail了，那么就会变成fail。 
+
+ 从节点过滤： 
+
+ 对宕机的 mster node ，从其所有的 slave node中，选择一个切换成 master node 
+
+ 检查每个 slave node与master node断开连接的时间，如果超过了cluster-node-timeout * 
+
+ 
+ cluster-slave-validity-factor，那么就没资格切换成 master（和哨兵一致） 
+
+ 从节点选举： 
+
+ 每个从节点，根据自己对 master 复制数据的 offset，设置一个选举时间，offset越大（复制数据越多）的从节点，选举时间越靠前，所有的 master node 开始投票，给要进行选举的 slave进行投票，如果大部分 master node(N/2 +1) 都投票给某个从节点，那么选举通过，从节点执行主备切换，从节点切换成主节点 
+
+ 总结：和哨兵很像，直接集成了 replication 和 sentinal 
+
+ 缓存雪崩 
+
+ 方案： 
+
+ 事前：保证 [redis]() 集群高可用性 （主从+哨兵或 [redis]() cluster），避免全盘崩溃 
+
+ 事中：本地 ehcache 缓存 + hystrix 限流（保护数据库） & 降级，避免 MySQL被打死 
+
+ 事后： [redis]()持久化，快速恢复缓存数据，继续分流高并发请求 
+
+ 限制组件每秒就 2000 个请求通过限流组件进入数据库，剩余的 3000 个请求走降级，返回一些默认 的值，或者友情提示 
+
+ 好处 ： 
+
+ 数据库绝对不会死，确保了每秒只会过去 2000 个请求 
+
+ 只要数据库不死，对于用户来说 2/5的请求可以被处理 
+
+ 系统没死，用户多点几次可能就刷出来了 
+
+ 缓存穿透 
+
+ 4000 个请求黑客攻击请求数据库里没有的数据 
+
+ 解决方案：把黑客查数据库中不存在的数据的值，写到缓存中，比如： set -999 UNKNOWN 
+
+ 缓存与数据库双写一致性 
+
+ cache aside pattern 
+
+ 读的时候，先读缓存，缓存没有，就读数据库，然后取出数据后放入缓存，同时返回响应 
+
+ 更新的时候，删除缓存，更新数据库 
+
+ 为什么不更新缓存： 
+
+ 更新缓存代价太高（更新 20 次，只读 1 次），lazy思想，需要的时候再计算，不需要的时候不计算 
+
+ 修改数据库成功，删除缓存失败，导致数据库是新的数据，缓存中是旧的数据 
+
+ 方案：先删除缓存，再修改数据库 
+
+ 修改数据库还没修改完，同时又有查询请求，把旧的数据放到缓存中（高并发，每秒并发读几万，每秒只要有数据更新请求，就可能出现数据库+缓存不一致情况） 
+
+ 方案：写，读路由到相同的一个内存队列（唯一标识，hash，取模）里，更新和读操作进行串行化（后台线程异步执行队列串行化操作），（队列里只放一个更新查询操作即可，多余的过滤掉，内存队列里没有该数据更新操作，直接返回 ）有该数据更新操作则轮询取缓存值，超时取不到缓存值，直接取一次数据库的旧值 
+
+ TP 99 意思是99%的请求可以在200ms内返回 
+
+ 注意点：多个商品的更新操作都积压在一个队列里面（太多操作积压只能增加机器），导致读请求发生大量的超时，导致大量的读请求走数据库 
+
+ 一秒 500 写操作，每200ms，100 个写操作，20 个内存队列，每个队列积压 5 个写操作，一般在20ms完成 
+
+ Redis 并发竞争问题 
+
+ 方案：分布式锁 + 时间戳比较 
+
+ Redis 集群部署架构 
+
+ 10台机器，5 主 5 从，每个节点QPS 5W ，一共 25W QPS（Redis cluster 32G + 8 核 ，Redis 进程不超过 10G）总内存 50g，每条数据10kb，10W 条数据1g，200W 条数据 20G，占用总内存不到50%，目前高峰期 3500 QPS
