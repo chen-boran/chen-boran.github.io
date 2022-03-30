@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis-集群 | boranの小さな巣</title><meta name="keywords" content="Redis"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="集群Redis集群是Redis提供的分布式数据库方案， 通过分片（sharding）来进行数据共享，并提供复制和故障转移功能。 下面重点介绍：集群的节点、槽指派、命令执行、重新分片、转向、故障转移、消息等各个方面 一、节点一个Redis集群通常由多个节点（node）组成。 刚开始时节点相互独立，组建集群就要将节点连接起来。构成多节点的集群。 连接节点的命令： ​     通过向节点发送命令，令其与">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis-集群">
+<meta property="og:url" content="http://example.com/2022/03/17/Redis-%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="boranの小さな巣">
+<meta property="og:description" content="集群Redis集群是Redis提供的分布式数据库方案， 通过分片（sharding）来进行数据共享，并提供复制和故障转移功能。 下面重点介绍：集群的节点、槽指派、命令执行、重新分片、转向、故障转移、消息等各个方面 一、节点一个Redis集群通常由多个节点（node）组成。 刚开始时节点相互独立，组建集群就要将节点连接起来。构成多节点的集群。 连接节点的命令： ​     通过向节点发送命令，令其与">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203181133737.jpg">
+<meta property="article:published_time" content="2022-03-17T07:33:57.000Z">
+<meta property="article:modified_time" content="2022-03-18T06:18:22.154Z">
+<meta property="article:author" content="chen-boran">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203181133737.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://example.com/2022/03/17/Redis-%E9%9B%86%E7%BE%A4/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-18 14:18:22'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/clock/css/clock.css"/><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-clock/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203181133737.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis-集群</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-03-17T07:33:57.000Z" title="Created 2022-03-17 15:33:57">2022-03-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-03-18T06:18:22.154Z" title="Updated 2022-03-18 14:18:22">2022-03-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis-集群"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h1><p>Redis集群是Redis提供的分布式数据库方案， 通过分片（sharding）来进行数据共享，并提供复制和故障转移功能。</p>
+<p>下面重点介绍：集群的节点、槽指派、命令执行、重新分片、转向、故障转移、消息等各个方面</p>
+<h2 id="一、节点"><a href="#一、节点" class="headerlink" title="一、节点"></a>一、节点</h2><p>一个Redis集群通常由多个节点（node）组成。</p>
+<p>刚开始时节点相互独立，组建集群就要将节点连接起来。构成多节点的集群。</p>
+<p>连接节点的命令：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318114812146.png" alt="image-20220318114812146"></p>
+<p>通过向节点发送命令，令其与指定的ip和端口的节点握手。从而将ip和port指向的节点加入当前所在集群。</p>
+<p>下面详细介绍启动节点的方法、与集群有关的数据结构，以及CLUSTER MEET命令的实现原理</p>
+<h3 id="1、启动节点"><a href="#1、启动节点" class="headerlink" title="1、启动节点"></a>1、启动节点</h3><p>一个结点就是一个Redis服务器，启动时根据cluster-enabled配置选项确定是否开启集群功能。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318115229354.png" alt="image-20220318115229354"></p>
+<p>节点会继续使用单机模式使用的所有组件</p>
+<p>包括：</p>
+<ul>
+<li>使用文件事件处理器来处理命令请求和返回命令回复。</li>
+<li>使用时间事件处理器来执行serverCron函数</li>
+<li>继续使用数据库来保存键值对数据</li>
+<li>继续使用数据库来保存键值对数据</li>
+<li>继续使用发布与订阅模块来执行PUBLISH、SUBSCRIBE等命令</li>
+<li>继续使用复制模块来进行节点的复制工作</li>
+<li>继续使用Lua脚本环境来执行客户端输入的Lua脚本。</li>
+<li>继续使用redisServer结构来保存服务器的状态，使用redisClient结构来保存客户端的状态</li>
+</ul>
+<h3 id="2、集群数据结构"><a href="#2、集群数据结构" class="headerlink" title="2、集群数据结构"></a>2、集群数据结构</h3><p>上面介绍集群使用的常规单机组建，下面介绍集群模式下特有的数据结构。</p>
+<p>集群模式下才会用到的数据，节点将它们保存到了cluster.h/clusterNode结构、cluster.h/clusterLink结构，以及cluster.h/clusterState结构里面 </p>
+<p><strong>clusterNode结构</strong></p>
+<p>用来保存节点的状态（每个节点都有），</p>
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318115843866.png" alt="image-20220318115843866" style="zoom:67%;" />
+
+<p>其中的link属性是一个<strong>clusterLink结构</strong>，该结构保存了连接节点所需的有关信息，比如套接字描述符，输入缓冲区和输出缓冲区：</p>
+<p>注：redisClient结构和clusterLink结构的有什么异同呢？</p>
+<p>同：都有自己的套接字描述符和输入、输出缓冲区</p>
+<p>异：redisClient结构中的套接字和缓冲区是用于连接客户端的；</p>
+<p>​        clusterLink结构中的套接字和缓冲区则是用于连接节点的。</p>
+<p><strong>clusterState结构</strong></p>
+<p>每个节点都保存着一个，这个结构记录了在当前节点的视角下，集群目前所处的状态</p>
+<h3 id="3、CLUSTER-MEET命令的实现"><a href="#3、CLUSTER-MEET命令的实现" class="headerlink" title="3、CLUSTER MEET命令的实现"></a>3、CLUSTER MEET命令的实现</h3><p>假设向节点 A 发送命令，让节点 B加入集群。</p>
+<p>那么要经过以下流程：</p>
+<ul>
+<li> 节点A会为节点B创建一个clusterNode结构，将该结构添加到自己的clusterState.nodes字典里面。</li>
+<li>节点A将根据给定的IP地址和端口号，向节点B发送一条MEET消息（message）。</li>
+<li>如果一切顺利，节点B将接收到节点A发送的MEET消息，节点B会为节点A创建一个clusterNode结构，并将该结构添加到自己的clusterState.nodes字典里面。</li>
+<li>之后，节点B将向节点A返回一条PONG消息。</li>
+<li>节点A将接收到节点B返回的PONG消息，通过这条PONG消息节点A可以知道节点B已经成功地接收到了自己发送的MEET消息。</li>
+<li>节点A将向节点B返回一条PING消息。</li>
+<li>如果一切顺利，节点B将接收到节点A返回的PING消息，通过这条PING消息节点B可以知道节点A已经成功地接收到了自己返回的PONG消息，握手完成。</li>
+</ul>
+<p>类似三次握手协议，可以对比着进行记忆。</p>
+<p>如图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318120552027.png" alt="image-20220318120552027"></p>
+<h2 id="二、槽指派"><a href="#二、槽指派" class="headerlink" title="二、槽指派"></a>二、槽指派</h2><p>Redis集群通过分片的方式来保存数据库中的键值对</p>
+<p>具体形式：</p>
+<ul>
+<li>Redis集群通过分片的方式来保存数据库中的键值对：集群的整个数据库被分为16384个槽。</li>
+<li>每个键都属于这16384个槽的其中一个。</li>
+<li>每个节点可以处理0个或最多16384个槽</li>
+</ul>
+<p>集群中16384个槽只要有一个没有得到处理，那么集群就处于下线状态。（fail）。</p>
+<p><strong>命令</strong></p>
+<p>槽指派通过向节点发送CLUSTER ADDSLOTS命令，一个节点可以指多个槽。</p>
+<p>举例：<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318121224118.png" alt="image-20220318121224118" style="zoom:80%;" /></p>
+<p>全部的槽指派成功之后，集群进入上线状态。</p>
+<h3 id="1、记录节点的槽指派信息"><a href="#1、记录节点的槽指派信息" class="headerlink" title="1、记录节点的槽指派信息"></a>1、记录节点的槽指派信息</h3><p>clusterNode结构的<strong>slots属性</strong>和<strong>numslot属性</strong>记录了节点负责处理哪些槽。</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318121423532.png" alt="image-20220318121423532"></p>
+<p>slots属性</p>
+<p>Slot是一个数组</p>
+<p>Redis以0为起始索引，16383为终止索引，对slots数组中的16384个二进制位进行编号</p>
+<p>用数组元素的值是否为1确定是否被分配处理（1：表示处理）</p>
+<p>示例如下：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318121607634.png" alt="image-20220318121607634"></p>
+<p><strong>numslots属性</strong></p>
+<p>记录节点负责处理的槽的数量，也即是slots数组中值为1的二进制位的数量。</p>
+<h3 id="2、传播节点的槽指派信息"><a href="#2、传播节点的槽指派信息" class="headerlink" title="2、传播节点的槽指派信息"></a>2、传播节点的槽指派信息</h3><p>一个节点会将自己的slots数组通过消息发送给集群中的其他节点，以此来告知其他节点自己目前负责处理哪些槽。通过接受其他节点发送的节点slot数组，更新自身的clusterState.nodes字典中的clusterNode结构。</p>
+<p>每个接收到slots数组的节点都会将数组保存到相应节点的clusterNode结构里面。</p>
+<h4 id="3、记录集群所有槽的指派信息"><a href="#3、记录集群所有槽的指派信息" class="headerlink" title="3、记录集群所有槽的指派信息"></a>3、记录集群所有槽的指派信息</h4><p>clusterState结构中的slots数组记录了集群中所有16384个槽的指派信息：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318131756379.png" alt="image-20220318131756379"></p>
+<p>slots数组包含16384个项，每个数组项都是一个指向clusterNode结构的指针：</p>
+<ul>
+<li>如果slots[i]指针指向NULL，那么表示槽i尚未指派给任何节点。</li>
+<li>如果slots[i]指针指向一个clusterNode结构，那么表示槽i已经指派给了clusterNode结构所代表的节点。</li>
+</ul>
+<p>通过将所有槽的指派信息保存在clusterState.slots数组里面，程序要检查槽i是否已经被指派， 只需要访问clusterState.slots[i]的值即可，这个操作的复杂度仅为O（1）。</p>
+<p>需要说明的是：虽然clusterState.slots数组记录了集群中所有槽的指派信息，但使用clusterNode结构的slots数组来记录单个节点的槽指派信息仍然是有必要的。</p>
+<h4 id="4、CLUSTER-ADDSLOTS命令的实现"><a href="#4、CLUSTER-ADDSLOTS命令的实现" class="headerlink" title="4、CLUSTER ADDSLOTS命令的实现"></a>4、CLUSTER ADDSLOTS命令的实现</h4><p>CLUSTER ADDSLOTS命令有一个或多个槽作为参数，并将所有输入的槽指派给接收该命令的节点负责。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318132213728.png" alt="image-20220318132213728"></p>
+<p>用一段伪代码定义命令的实现：</p>
+<p>​                <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318132247998.png" alt="image-20220318132247998" style="zoom:67%;" /></p>
+<h2 id="三、在集群中执行命令"><a href="#三、在集群中执行命令" class="headerlink" title="三、在集群中执行命令"></a>三、在集群中执行命令</h2><p>集群处于上线状态，那么客户端就可以向集群中的节点发送数据命令了。</p>
+<p>执行流程图：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318133044005.png" alt="image-20220318133044005" style="zoom:67%;" /></p>
+<p>下面介绍计算所属槽的方法</p>
+<h3 id="1、计算键属于哪个槽"><a href="#1、计算键属于哪个槽" class="headerlink" title="1、计算键属于哪个槽"></a>1、计算键属于哪个槽</h3><p>计算算法：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318133200870.png" alt="image-20220318133200870"></p>
+<p>CRC16（key）语句用于计算键key的CRC-16校验和。</p>
+<p>使用CLUSTER KEYSLOT＜key＞命令可以查看一个给定键属于哪个槽</p>
+<h3 id="2、判断槽是否由当前节点负责处理"><a href="#2、判断槽是否由当前节点负责处理" class="headerlink" title="2、判断槽是否由当前节点负责处理"></a>2、判断槽是否由当前节点负责处理</h3><p>上面计算出键所属的槽之后，节点就会检查自己的clusterState.slots数组中的项i，进行判断。</p>
+<ul>
+<li>如果clusterState.slots[i]等于clusterState.myself，那么说明槽i由当前节点负责，节点可以执行客户端发送的命令。</li>
+<li>如果clusterState.slots[i]不等于clusterState.myself，那么说明槽i并非由当前节点负责，节点会根据clusterState.slots[i]指向的clusterNode结构所记录的节点IP和端口号，向客户端返回<strong>MOVED错误</strong>，指引客户端转向至正在处理槽i的节点。</li>
+</ul>
+<h3 id="3、MOVED错误"><a href="#3、MOVED错误" class="headerlink" title="3、MOVED错误"></a>3、MOVED错误</h3><p>当节点发现键所在的槽并非由自己负责处理时，向客户端发送的错误。</p>
+<p>格式：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318133644636.png" alt="image-20220318133644636" style="zoom:67%;" /></p>
+<p>客户端会根据MOVED错误中提供的IP地址和端口号，转向至负责处理槽slot的节点。</p>
+<p>并且向其重新发送之前想要执行的命令。</p>
+<h3 id="4、节点数据库的实现"><a href="#4、节点数据库的实现" class="headerlink" title="4、节点数据库的实现"></a>4、节点数据库的实现</h3><p>集群节点保存键值对以及键值对过期时间的方式和之前介绍的单机Redis的方式完全相同。</p>
+<p>节点和单机服务器在数据库方面的一个区别是，<strong>节点只能使用0号数据库</strong>，而单机Redis服务器则没有这一限制。</p>
+<p>另外，除了将键值对保存在数据库里面之外，节点还会用clusterState结构中的slots_to_keys跳跃表来保存槽和键之间的关系：</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318133958399.png" alt="image-20220318133958399"></p>
+<h2 id="四、重新分片"><a href="#四、重新分片" class="headerlink" title="四、重新分片"></a>四、重新分片</h2><p>将任意数量已经指派给某个节点（源节点）的槽改为指派给另一个节点（目标节点），并且相关槽所属的键值对也会从源节点被移动到目标节点。</p>
+<p>重新分片可以线上进行 ，集群不需要下线，可以继续处理命令请求。</p>
+<h3 id="1、实现原理"><a href="#1、实现原理" class="headerlink" title="1、实现原理"></a>1、实现原理</h3><p>重新分片由集群管理软件redis-trib负责执行，通过向<strong>源节点</strong>和<strong>目标节点</strong>发送命令来进行重新分片操作。</p>
+<p>首先是操作单个槽：</p>
+<p>步骤如下：</p>
+<ul>
+<li>目标节点发送CLUSTER SETSLOT＜slot＞IMPORTING＜source_id＞命令，令其准备好接收slot</li>
+</ul>
+<p>键值对。</p>
+<ul>
+<li><p>对源节点发送CLUSTER SETSLOT＜slot＞MIGRATING＜target_id＞命令，令其准备好slot槽的键值对迁移。</p>
+</li>
+<li><p>向源节点发送CLUSTER GETKEYSINSLOT＜slot＞＜count＞命令，获得最多count个属于槽slot的键值对的键名（key name）。</p>
+</li>
+<li><p>对于获取的每一个键名，redis-trib都向源节点发送一个MIGRATE＜target_ip＞＜target_port＞＜key_name＞0＜timeout＞命令， 原子地从源节点迁移至目标节点。</p>
+</li>
+<li><p>重复执行获取键名和迁移的过程</p>
+<p>如图所示：（迁移键的过程）</p>
+<p>​                <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318134854939.png" alt="image-20220318134854939"></p>
+</li>
+<li><p>redis-trib向集群中的任意一个节点发送CLUSTERSETSLOT＜slot＞NODE＜target_id＞命令，通知槽slot已经指派给目标节点。</p>
+</li>
+</ul>
+<p>对于多个槽的重新分配。需要对每个槽分别执行上述步骤。</p>
+<h2 id="五、ASK错误"><a href="#五、ASK错误" class="headerlink" title="五、ASK错误"></a>五、ASK错误</h2><h3 id="1、ASK错误"><a href="#1、ASK错误" class="headerlink" title="1、ASK错误"></a>1、ASK错误</h3><p>重新分片期间，可能会发生这样的错误：属于被迁移槽的一部分键值对保存在源节点里面，而另一部分键值对则保存在目标节点里面。</p>
+<p>有趣的情况发生了:客户端向源节点请求命令含有的数据库建恰好属于被迁移的槽的时候。</p>
+<ul>
+<li>源节点会先在自己的数据库里面查找指定的键，如果找到的话，就直接执行客户端发送的命令</li>
+<li> 如果源节点没能在自己的数据库里面找到指定的键，那么这个键有可能已经被迁移到了目标节点，则返回ASK错误，指引客户端转向正在导入槽的目标节点，并再次发送之前想要执行的命令。</li>
+</ul>
+<p><strong>被隐藏的ASK错误</strong></p>
+<p>和接到MOVED错误时的情况类似，集群模式的redis-cli在接到ASK错误时也不会打印错误，对用户来说是隐藏的。</p>
+<p>接到ASK错误的客户端会根据错误提供的IP地址和端口号，转向至正在导入槽的目标节点，然后首先向目标节点发送一个ASKING命令，之后再重新发送原本想要执行的命令</p>
+<h3 id="2、ASKING命令"><a href="#2、ASKING命令" class="headerlink" title="2、ASKING命令"></a>2、ASKING命令</h3><p>ASKING命令唯一要做的就是打开发送该命令的客户端的REDIS_ASKING标识</p>
+<p>如果节点的clusterState.importing_slots_from[i]显示节点正在导入槽i，并且发送命令的客户端带有REDIS_ASKING标识，那么节点将破例执行这个关于槽i的命令一次。</p>
+<p>如图所示：    </p>
+<p>​                <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318135750323.png" alt="image-20220318135750323" style="zoom:67%;" /></p>
+<h3 id="3、ASK错误和MOVED错误的区别"><a href="#3、ASK错误和MOVED错误的区别" class="headerlink" title="3、ASK错误和MOVED错误的区别"></a>3、ASK错误和MOVED错误的区别</h3><p>同：两者都会导致客户端转向。</p>
+<p>异：MOVED错误代表槽的负责权已经从一个节点转移到了另一个节点，<strong>客户端每次遇到关于槽i的命令请求时，都可以直接将命令请求发送至MOVED错误所指向的节点</strong>。</p>
+<p>​        与此相反，ASK错误只是两个节点在迁移槽的过程中使用的一种临时措施，<strong>这种转向不会对客户端今后发送关于槽i的命令请求产生任何影响</strong>。</p>
+<h2 id="六、复制与故障转移"><a href="#六、复制与故障转移" class="headerlink" title="六、复制与故障转移"></a>六、复制与故障转移</h2><p>Redis集群中的节点分为主节点（master）和从节点</p>
+<p>主节点：用于处理槽</p>
+<p>从节点：复制某个主节点，并在被复制的主节点下线时，代替下线主节点继续处理命令请求。</p>
+<p>下面将介绍节点的复制方法，检测节点是否下线的方法，以及对下线主节点进行故障转移的方法。</p>
+<h3 id="1、设置从节点"><a href="#1、设置从节点" class="headerlink" title="1、设置从节点"></a>1、设置从节点</h3><p>使用</p>
+<p>​        <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318140329801.png" alt="image-20220318140329801" style="zoom:67%;" /></p>
+<p>命令</p>
+<p>可以让接收命令的节点成为node_id所指定节点的从节点，并开始对主节点进行复制</p>
+<p>从节点复制主节点，</p>
+<p>:one:首先要查找自己的clusterState.nodes字典。找到node_id所对应节点的clusterNode结构，将自己的clusterState.myself.slaveof指针指向这个结构。</p>
+<p>:two:修改自己在clusterState.myself.flags中的属性，关闭原本的REDIS_NODE_MASTER标识，打开REDIS_NODE_SLAVE标识（自己已经变成了从节点）</p>
+<p>:three: 节点调用复制代码，根据指向的那个clusterNode结构（主节点），进行赋值</p>
+<p>从上面来看：从节点复制主节点相当于向从节点发送命令SLAVEOF。</p>
+<h3 id="2、故障检测"><a href="#2、故障检测" class="headerlink" title="2、故障检测"></a>2、故障检测</h3><p>集群中的每个节点都会定期地向集群中的其他节点发送PING消息，以此来检测对方是否在线。</p>
+<p>如果接收节点没能在规定时间内返回PONG消息，那么发送节点认定该节点<strong>疑似下线</strong>。</p>
+<p>需要注意的是：集群中的各个节点会通过互相发送消息的方式来交换集群中各个节点的状态信息</p>
+<p>（包括：某个节点是处于在线状态、疑似下线状态（PFAIL），还是已下线状态（FAIL））</p>
+<p>举个例子：</p>
+<p>​    当一个主节点A通过消息得知主节点B认为主节点C进入了疑似下线状态时，主节点A会在自己的</p>
+<p>clusterState.nodes字典中找到主节点C所对应的clusterNode结构，并将主节点B的下线报告</p>
+<p>（failure report）添加到clusterNode结构的fail_reports链表里面：</p>
+<p>​    <img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220318141033674.png" alt="image-20220318141033674"></p>
+<p>​        那么如果在一个集群里面，半数以上负责处理槽的主节点都将某个主节点x报告为疑似下线，那么这个主节点x将被标记为已下线（FAIL）。</p>
+<p>​    之后主节点通过广播的形式，通知集群中的所有节点，该节点下线的消息。</p>
+<h3 id="3、-故障转移"><a href="#3、-故障转移" class="headerlink" title="3、 故障转移"></a>3、 故障转移</h3><p>发生条件：一个<strong>从节点</strong>发现自己正在复制的<strong>主节点</strong>进入了已下线状态时，从节点将开始对下线主节点进行故障转移</p>
+<p>步骤如下：</p>
+<p>​    1）复制下线主节点的所有从节点里面，会有一个从节点被选中。</p>
+<p>​    2）被选中的从节点会执行SLAVEOF no one命令，成为新的主节点。</p>
+<p>​    3）新的主节点会撤销所有对已下线主节点的槽指派，并将这些槽全部指派给自己。</p>
+<p>​    4）新的主节点向集群广播一条PONG消息，这条PONG消息可以让集群中的其他节点立即知道这个节点已经由从节点变成了主节点，并且这个主节点已经接管了原本由已下线节点负责处理的槽。</p>
+<p>​    5）新的主节点开始接收和自己负责处理的槽有关的命令请求，故障转移完成。</p>
+<h3 id="4、新的主节点的选取"><a href="#4、新的主节点的选取" class="headerlink" title="4、新的主节点的选取"></a>4、新的主节点的选取</h3><p>选举方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1）集群的配置纪元是一个自增计数器，它的初始值为0。</span><br><span class="line">2）当集群里的某个节点开始一次故障转移操作时，集群配置纪元的值会被增一。</span><br><span class="line">3）对于每个配置纪元，集群里每个负责处理槽的主节点都有一次投票的机会，而第一个向主节点要求投票的从节点将获得主节点的投票。</span><br><span class="line">4）当从节点发现自己正在复制的主节点进入已下线状态时，从节点会向集群广播一条CLUSTERMSG_TYPE_FAILOVER_AUTH_REQUEST消息，要求所有收到这条消息、并且具有投票权的主节点向这个从节点投票。</span><br><span class="line">5）如果一个主节点具有投票权（它正在负责处理槽），并且这个主节点尚未投票给其他从节点，那么主节点将向要求投票的从节点返回一条CLUSTERMSG_TYPE_FAILOVER_AUTH_ACK消息，表示这个主节点支持从节点成为新的主节点。</span><br><span class="line">6）每个参与选举的从节点都会接收CLUSTERMSG_TYPE_FAILOVER_AUTH_ACK消息，并根据自己收到了多少条这种消息来统计自己获得了多少主节点的支持。</span><br><span class="line">7）如果集群里有N个具有投票权的主节点，那么当一个从节点收集到大于等于N/2+1张支持票时，这个从节点就会当选为新的主节点。</span><br><span class="line">8）因为在每一个配置纪元里面，每个具有投票权的主节点只能投一次票，所以如果有N个主节点进行投票，那么具有大于等于N/2+1张支持票的从节点只会有一个，这确保了新的主节点只会有一个。</span><br><span class="line">9）如果在一个配置纪元里面没有从节点能收集到足够多的支持票，那么集群进入一个新的配置纪元，并再次进行选举，直到选出新的主节点为止。</span><br></pre></td></tr></table></figure>
+
+<p>选举新主节点的方法和 选举领头Sentinel的方法非常相似， 都是基于Raft算法的领头选举（leader election）方法来实现的。</p>
+<h2 id="七、消息"><a href="#七、消息" class="headerlink" title="七、消息"></a>七、消息</h2><p>集群中的各个节点通过发送和接收消息（message）来进行通信。</p>
+<p>称发送消息的节点为发送者（sender），接收消息的节点为接收者（receiver）</p>
+<p>节点之间发送的消息种类：</p>
+<ul>
+<li>MEET消息：当发送者接到客户端发送的CLUSTERMEET命令时，发送者会向接收者发送MEET消息</li>
+<li>PING消息：检测被选中的节点是否在线</li>
+<li>PONG消息：回复PING</li>
+<li>FAIL消息：当一个主节点A判断另一个主节点B已经进入FAIL状态时，节点A会向集群广播一条关于节点B的FAIL消息，所有收到这条消息的节点都会立即将节点B标记为已下线。</li>
+<li>PUBLISH消息：当节点接收到一个PUBLISH命令时，节点会执行这个命令，并向集群广播一条PUBLISH消息，所有接收到这条PUBLISH消息的节点都会执行相同的PUBLISH命令。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/03/17/Redis-%E9%9B%86%E7%BE%A4/">http://example.com/2022/03/17/Redis-%E9%9B%86%E7%BE%A4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203181133737.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/21/vim/"><img class="prev-cover" src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/2022/03/17/Redis-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833187.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Redis-慢查询日志</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/11/11/Redis-事件驱动模型/" title="Redis 事件驱动模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-11</div><div class="title">Redis 事件驱动模型</div></div></a></div><div><a href="/2021/11/17/Redis-Sentinel/" title="Redis Sentinel"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-17</div><div class="title">Redis Sentinel</div></div></a></div><div><a href="/2022/03/17/Redis-慢查询日志/" title="Redis-慢查询日志"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833187.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-17</div><div class="title">Redis-慢查询日志</div></div></a></div><div><a href="/2021/11/15/Redis-复制/" title="Redis 复制"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-15</div><div class="title">Redis 复制</div></div></a></div><div><a href="/2021/11/14/Redis-客户端与服务器/" title="Redis 客户端与服务器"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 客户端与服务器</div></div></a></div><div><a href="/2021/11/14/Redis-数据库/" title="Redis 数据库"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 数据库</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4"><span class="toc-text">集群</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%8A%82%E7%82%B9"><span class="toc-text">一、节点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%90%AF%E5%8A%A8%E8%8A%82%E7%82%B9"><span class="toc-text">1、启动节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E9%9B%86%E7%BE%A4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">2、集群数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81CLUSTER-MEET%E5%91%BD%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">3、CLUSTER MEET命令的实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A7%BD%E6%8C%87%E6%B4%BE"><span class="toc-text">二、槽指派</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E8%AE%B0%E5%BD%95%E8%8A%82%E7%82%B9%E7%9A%84%E6%A7%BD%E6%8C%87%E6%B4%BE%E4%BF%A1%E6%81%AF"><span class="toc-text">1、记录节点的槽指派信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E4%BC%A0%E6%92%AD%E8%8A%82%E7%82%B9%E7%9A%84%E6%A7%BD%E6%8C%87%E6%B4%BE%E4%BF%A1%E6%81%AF"><span class="toc-text">2、传播节点的槽指派信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E8%AE%B0%E5%BD%95%E9%9B%86%E7%BE%A4%E6%89%80%E6%9C%89%E6%A7%BD%E7%9A%84%E6%8C%87%E6%B4%BE%E4%BF%A1%E6%81%AF"><span class="toc-text">3、记录集群所有槽的指派信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81CLUSTER-ADDSLOTS%E5%91%BD%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">4、CLUSTER ADDSLOTS命令的实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%9C%A8%E9%9B%86%E7%BE%A4%E4%B8%AD%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-text">三、在集群中执行命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E8%AE%A1%E7%AE%97%E9%94%AE%E5%B1%9E%E4%BA%8E%E5%93%AA%E4%B8%AA%E6%A7%BD"><span class="toc-text">1、计算键属于哪个槽</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%88%A4%E6%96%AD%E6%A7%BD%E6%98%AF%E5%90%A6%E7%94%B1%E5%BD%93%E5%89%8D%E8%8A%82%E7%82%B9%E8%B4%9F%E8%B4%A3%E5%A4%84%E7%90%86"><span class="toc-text">2、判断槽是否由当前节点负责处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81MOVED%E9%94%99%E8%AF%AF"><span class="toc-text">3、MOVED错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81%E8%8A%82%E7%82%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">4、节点数据库的实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%87%8D%E6%96%B0%E5%88%86%E7%89%87"><span class="toc-text">四、重新分片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-text">1、实现原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81ASK%E9%94%99%E8%AF%AF"><span class="toc-text">五、ASK错误</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81ASK%E9%94%99%E8%AF%AF"><span class="toc-text">1、ASK错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81ASKING%E5%91%BD%E4%BB%A4"><span class="toc-text">2、ASKING命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81ASK%E9%94%99%E8%AF%AF%E5%92%8CMOVED%E9%94%99%E8%AF%AF%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">3、ASK错误和MOVED错误的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%A4%8D%E5%88%B6%E4%B8%8E%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="toc-text">六、复制与故障转移</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E8%AE%BE%E7%BD%AE%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="toc-text">1、设置从节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B"><span class="toc-text">2、故障检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81-%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="toc-text">3、 故障转移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81%E6%96%B0%E7%9A%84%E4%B8%BB%E8%8A%82%E7%82%B9%E7%9A%84%E9%80%89%E5%8F%96"><span class="toc-text">4、新的主节点的选取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%B6%88%E6%81%AF"><span class="toc-text">七、消息</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/JVM-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%92%8C%E6%BA%A2%E5%87%BA/" title="JVM-内存泄漏和溢出"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-内存泄漏和溢出"/></a><div class="content"><a class="title" href="/2022/03/30/JVM-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%92%8C%E6%BA%A2%E5%87%BA/" title="JVM-内存泄漏和溢出">JVM-内存泄漏和溢出</a><time datetime="2022-03-30T10:15:23.000Z" title="Created 2022-03-30 18:15:23">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" title="JVM-字节码指令"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-字节码指令"/></a><div class="content"><a class="title" href="/2022/03/30/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" title="JVM-字节码指令">JVM-字节码指令</a><time datetime="2022-03-30T10:10:50.000Z" title="Created 2022-03-30 18:10:50">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/28/JVM-%E7%BC%96%E8%AF%91%E5%92%8C%E4%BC%98%E5%8C%96/" title="JVM-编译和优化"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-编译和优化"/></a><div class="content"><a class="title" href="/2022/03/28/JVM-%E7%BC%96%E8%AF%91%E5%92%8C%E4%BC%98%E5%8C%96/" title="JVM-编译和优化">JVM-编译和优化</a><time datetime="2022-03-28T04:19:30.000Z" title="Created 2022-03-28 12:19:30">2022-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/28/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="JVM-类加载机制"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-类加载机制"/></a><div class="content"><a class="title" href="/2022/03/28/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="JVM-类加载机制">JVM-类加载机制</a><time datetime="2022-03-28T04:19:06.000Z" title="Created 2022-03-28 12:19:06">2022-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/28/JVM-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="JVM-类文件结构"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-类文件结构"/></a><div class="content"><a class="title" href="/2022/03/28/JVM-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="JVM-类文件结构">JVM-类文件结构</a><time datetime="2022-03-28T04:18:36.000Z" title="Created 2022-03-28 12:18:36">2022-03-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="/js/randombg.js"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script><script src="/clock/js/clock.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="人的梦想,是不会终结的！,绝对不会再输！,人,最重要的是心啊~" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?chen-boran";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="chen-boran";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://npm.elemecdn.com/hexo-butterfly-clock/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://npm.elemecdn.com/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-wanko"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body></html>

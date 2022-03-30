@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis 客户端与服务器 | boranの小さな巣</title><meta name="keywords" content="Redis"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="I want to roll the sky desperately!">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redis 客户端与服务器 | boranの小さな巣</title><meta name="keywords" content="Redis"><meta name="author" content="chen-boran"><meta name="copyright" content="chen-boran"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、客户端概述Redis服务器是典型的一对多服务器程序：一个服务器可以与多个客户端建立网络连接客户端可以向服务器发送命令请求，而服务器则接收并处理客户端发送的命令请求，并向客户端返回命令回复。 Redis使用单线程处理命令请求。 服务器 为每个与它进行连接的客户端创建redis.h&#x2F;redisClient结构（客户端状态） 保存客户端状态，包括： ❑客户端的套接字描述符。 ❑客户端的名字。 ❑客户">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis 客户端与服务器">
 <meta property="og:url" content="http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="boranの小さな巣">
-<meta property="og:description" content="I want to roll the sky desperately!">
+<meta property="og:description" content="一、客户端概述Redis服务器是典型的一对多服务器程序：一个服务器可以与多个客户端建立网络连接客户端可以向服务器发送命令请求，而服务器则接收并处理客户端发送的命令请求，并向客户端返回命令回复。 Redis使用单线程处理命令请求。 服务器 为每个与它进行连接的客户端创建redis.h&#x2F;redisClient结构（客户端状态） 保存客户端状态，包括： ❑客户端的套接字描述符。 ❑客户端的名字。 ❑客户">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg">
 <meta property="article:published_time" content="2021-11-14T12:14:31.000Z">
-<meta property="article:modified_time" content="2022-03-15T10:41:56.569Z">
+<meta property="article:modified_time" content="2022-03-17T13:38:16.434Z">
 <meta property="article:author" content="chen-boran">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -56,8 +56,8 @@
   isPost: true,
   isHome: false,
   isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2022-03-15 18:41:56'
+  isToc: true,
+  postUpdate: '2022-03-17 21:38:16'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -140,13 +140,282 @@
         }
       }
     })(window)</script><link rel="stylesheet" href="/clock/css/clock.css"/><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-clock/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="boranの小さな巣" type="application/atom+xml">
-</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis 客户端与服务器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-11-14T12:14:31.000Z" title="Created 2021-11-14 20:14:31">2021-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-03-15T10:41:56.569Z" title="Updated 2022-03-15 18:41:56">2022-03-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis 客户端与服务器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/">http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/11/15/Redis-%E5%A4%8D%E5%88%B6/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Redis 复制</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Redis 持久化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/11/17/Redis-Sentinel/" title="Redis Sentinel"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-17</div><div class="title">Redis Sentinel</div></div></a></div><div><a href="/2021/11/15/Redis-复制/" title="Redis 复制"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-15</div><div class="title">Redis 复制</div></div></a></div><div><a href="/2021/11/14/Redis-持久化/" title="Redis 持久化"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 持久化</div></div></a></div><div><a href="/2021/11/14/Redis-数据库/" title="Redis 数据库"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 数据库</div></div></a></div><div><a href="/2021/11/11/Redis-事件驱动模型/" title="Redis 事件驱动模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-11</div><div class="title">Redis 事件驱动模型</div></div></a></div><div><a href="/2022/02/11/Redis常见问题/" title="Redis常见问题"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-11</div><div class="title">Redis常见问题</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="设计模式"/></a><div class="content"><a class="title" href="/2022/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">设计模式</a><time datetime="2022-03-15T07:19:11.000Z" title="Created 2022-03-15 15:19:11">2022-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="操作系统-内存管理"><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151822520.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-内存管理"/></a><div class="content"><a class="title" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="操作系统-内存管理">操作系统-内存管理</a><time datetime="2022-03-14T12:19:57.000Z" title="Created 2022-03-14 20:19:57">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" title="操作系统-文件管理"><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151822520.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-文件管理"/></a><div class="content"><a class="title" href="/2022/03/14/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/" title="操作系统-文件管理">操作系统-文件管理</a><time datetime="2022-03-14T04:47:48.000Z" title="Created 2022-03-14 12:47:48">2022-03-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" title="操作系统-常见问题总结"><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151822520.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-常见问题总结"/></a><div class="content"><a class="title" href="/2022/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" title="操作系统-常见问题总结">操作系统-常见问题总结</a><time datetime="2022-03-13T12:29:59.000Z" title="Created 2022-03-13 20:29:59">2022-03-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="操作系统-进程管理"><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151822520.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="操作系统-进程管理"/></a><div class="content"><a class="title" href="/2022/03/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" title="操作系统-进程管理">操作系统-进程管理</a><time datetime="2022-03-12T08:01:40.000Z" title="Created 2022-03-12 16:01:40">2022-03-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="/js/randombg.js"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script><script src="/clock/js/clock.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="人的梦想,是不会终结的！,绝对不会再输！,人,最重要的是心啊~" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
-  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/favicon.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">boranの小さな巣</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis 客户端与服务器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-11-14T12:14:31.000Z" title="Created 2021-11-14 20:14:31">2021-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-03-17T13:38:16.434Z" title="Updated 2022-03-17 21:38:16">2022-03-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis 客户端与服务器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、客户端"><a href="#一、客户端" class="headerlink" title="一、客户端"></a>一、客户端</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Redis服务器是典型的一对多服务器程序：一个服务器可以与多个客户端建立网络连接客户端可以向服务器发送命令请求，而服务器则接收并处理客户端发送的命令请求，并向客户端返回命令回复。</p>
+<p>Redis使用单线程处理命令请求。</p>
+<p>服务器 为每个与它进行连接的客户端创建redis.h/redisClient结构（客户端状态）</p>
+<p>保存客户端状态，包括：</p>
+<p>❑客户端的套接字描述符。</p>
+<p>❑客户端的名字。</p>
+<p>❑客户端的标志值（flag）。</p>
+<p>❑指向客户端正在使用的数据库的指针，以及该数据库的号码。</p>
+<p>❑客户端当前要执行的命令、命令的参数、命令参数的个数，以及指向命令实现函数的指针。</p>
+<p>❑客户端的输入缓冲区和输出缓冲区。</p>
+<p>❑客户端的复制状态信息，以及进行复制所需的数据结构。</p>
+<p>❑客户端执行BRPOP、BLPOP等列表阻塞命令时使用的数据结构。</p>
+<p>❑客户端的事务状态，以及执行WATCH命令时用到的数据结构。</p>
+<p>❑客户端执行发布与订阅功能时用到的数据结构。</p>
+<p>❑客户端的身份验证标志。</p>
+<p>❑客户端的创建时间，客户端和服务器最后一次通信的时间，以及客户端的输出缓冲区大小超出软性限制（soft limit）的时间。</p>
+<p>对于客户端的操作可以通过遍历Client链表完成。</p>
+<h3 id="一、属性"><a href="#一、属性" class="headerlink" title="一、属性"></a>一、属性</h3><p>大致分成两类：</p>
+<ul>
+<li>一类是比较通用的属性（所有客户端都会用到）</li>
+<li>与特定功能有关的属性</li>
+</ul>
+<p>下面主要介绍通用属性，其他属性会慢慢提到。</p>
+<h4 id="1-1套接字描述符"><a href="#1-1套接字描述符" class="headerlink" title="1.1套接字描述符"></a>1.1套接字描述符</h4><p>使用fd属性来记录客户端正在使用的套接字描述符。</p>
+<p>fd属性的值可以是-1或者是大于-1的整数：</p>
+<ul>
+<li>伪客户端（fake client）的fd属性的值为-1</li>
+<li>普通客户端的fd属性的值为大于-1的整数（使用套接字与服务器进行通信）</li>
+</ul>
+<p>说明：合法的套接字描述符不能是-1</p>
+<p>​            伪客户端处理的命令请求来源于AOF文件或者Lua脚本，而不是网络，不需要套接字连接。</p>
+<p><strong>名字</strong> </p>
+<p>默认情况下连接到服务器的客户端是没有名字的</p>
+<p>使用CLIENT setname命令可以为客户端设置一个名字，便与鉴别和管理。</p>
+<p>客户端的名字存放在客户端状态Clientname属性里面。</p>
+<p>注：如果客户端没有为自己设置名字，那么相应客户端状态的name属性指向NULL指针；相反地，如果客户端为自己设置了名字，那么name属性将指向一个字符串对象</p>
+<p><strong>标志</strong></p>
+<p>客户端的标志属性flags记录了客户端的角色（role），以及客户端目前所处的状态</p>
+<p>常见的标志：</p>
+<p>:one:表示客户端角色信息：</p>
+<ul>
+<li>REDIS_MASTER标志表示客户端代表的是一个主服务器，</li>
+<li>REDIS_SLAVE标志表示客户端代表的是一个从服务器。</li>
+</ul>
+<p>:two:表示状态信息</p>
+<ul>
+<li>REDIS_MONITOR标志表示客户端正在执行MONITOR命令</li>
+<li>REDIS_MULTI标志表示客户端正在执行事务</li>
+<li>REDIS_UNIX_SOCKET标志表示服务器使用UNIX套接字来连接客户端</li>
+</ul>
+<p>举了几个例子，需要注意的是上面的标志都定义在redis.h中</p>
+<p>值得一提的是：<strong>PUBSUB命令和SCRIPT LOAD命令</strong>具有特殊性，虽然没有对数据库进行了修改，但是也会强制写入AOF文件。</p>
+<p><strong>输入缓冲区</strong></p>
+<p>客户端状态的输入缓冲区<strong>用于保存客户端发送的命令请求</strong>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172009559.png" alt="image-20220317200957406"></p>
+<p>输入缓冲区的大小会根据输入内容动态地缩小或者扩大， 不能超过1GB，否则服务器将关闭这个客户端。</p>
+<p><strong>命令和命令参数</strong></p>
+<p> 服务器将客户端发送的命令请求保存到客户端状态的querybuf属性之后，服务器将对命令请求的内容进行分析， 将得出的命令参数以及命令参数的个数分别保存到客户端状态的<strong>argv属性和argc属性：</strong></p>
+<ul>
+<li>argv ：一个数组，每一项都是一个字符串对象，argv[0]是要执行的命令，而之后的其他项则是传给命令的参数。</li>
+<li>argc ：记录argv数组的长度。</li>
+</ul>
+<p><strong>命令的实现函数</strong></p>
+<p>当服务器从协议内容中分析并得出argv属性和argc属性的值之后，服务器将根据项argv[0]的值，在命令表中查找命令所对应的命令实现函数</p>
+<p>流程：</p>
+<ul>
+<li>程序在命令表中成功找到argv[0]所对应的redisCommand结构</li>
+<li>客户端状态的cmd指针指向这个结构</li>
+<li>服务器就可以使用cmd属性所指向的redisCommand结构，以及argv、argc属性中保存的命令参数信息，调用命令实现函数，执行客户端指定的命令。</li>
+</ul>
+<p><strong>输出缓冲区</strong></p>
+<p>执行命令所得的命令回复会被保存在客户端状态的输出缓冲区</p>
+<p>每个客户端都有两个输出缓冲区可用 ：</p>
+<ul>
+<li><strong>固定大小的缓冲区</strong>用于保存那些长度比较小的回复，比如OK、简短的字符串值、整数值、错误回复等等。</li>
+<li><strong>可变大小的缓冲区</strong>用于保存那些长度比较大的回复，比如一个非常长的字符串值，一个由很多项组成的列表，一个包含了很多元素的集合等等。</li>
+</ul>
+<p><strong>身份验证</strong></p>
+<p>定义在客户端状态Client中;</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172020516.png" alt="image-20220317202032396"></p>
+<p>客户端状态的authenticated属性用于记录客户端是否通过了身份验证：</p>
+<ul>
+<li>authenticated的值为0， 表示客户端未通过身份验证 </li>
+<li>authenticated的值为1， 表示客户端已经通过了身份验证。</li>
+</ul>
+<p><strong>时间</strong></p>
+<p>客户端还有几个和时间有关的属性：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172022459.png" alt="image-20220317202216334"></p>
+<ul>
+<li>time属性记录了创建客户端的时间（与服务器连接的时间）</li>
+<li>lastinteraction属性记录了客户端与服务器最后一次进行互动（interaction）的时间</li>
+<li>lastinteraction属性可以用来计算客户端的空转（idle）时间</li>
+<li>obuf_soft_limit_reached_time属性记录了输出缓冲区第一次到达软性限制（soft limit）的时间</li>
+</ul>
+<h3 id="二、客户端的创建和关闭"><a href="#二、客户端的创建和关闭" class="headerlink" title="二、客户端的创建和关闭"></a>二、客户端的创建和关闭</h3><h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a><strong>创建</strong></h4><p>创建可以分成普通客户端和其他的客户端</p>
+<p>首先是普通客户端的创建</p>
+<p><strong>普通客户端</strong>:客户端是通过网络连接与服务器进行连接的</p>
+<p>那么客户端使用connect函数来津街道服务器，服务器就会调用连接事件处理器，为客户端创建客户端状态，并且添加到服务器状态结构Client链表末尾。</p>
+<h4 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h4><p>关闭的原因：</p>
+<p>一般来说关闭有好多种情形：</p>
+<ul>
+<li>客户端进程退出或者被杀死</li>
+<li>客户端进程退出或者被杀死，客户端被服务器关闭</li>
+<li>客户端成为了CLIENT KILL命令的目标，那么它也会被关闭</li>
+<li>用户为服务器设置了timeout配置选项，那么当客户端的空转时间超过timeout选项设置的值时，客户端将被关</li>
+<li>客户端发送的命令请求的大小超过了输入缓冲区的限制大小（默认为1 GB）</li>
+<li>要发送给客户端的命令回复的大小超过了输出缓冲区的限制大小</li>
+</ul>
+<p>前面提到输出缓冲区中的可变大小缓冲区由一个链表和任意多个字符串对象组成，理论上可以保存任意长的命令回复。但是为了避免客户端回复过大，服务器还是会监控并且限制其大小。</p>
+<p><strong>服务器使用两种模式来限制客户端输出缓冲区的大小</strong></p>
+<ul>
+<li>硬性限制（hard limit）：如果输出缓冲区的大小超过了硬性限制所设置的大小，那么服务器立即关闭客户端。</li>
+<li>软性限制（soft limit）：如果输出缓冲区的大小超过了软性限制所设置的大小，但还没超过硬性限制，那么服务器将使用客户端状态结构的obuf_soft_limit_reached_time属性记录下客户端到达软性限制的起始时间；之后服务器会继续监视客户端，如果输出缓冲区的大小一直超出软性限制，并且持续时间超过服务器设定的时长，那么服务器将关闭客户端；相反地，如果输出缓冲区的大小在指定时间之内，不再超出软性限制，那么客户端就不会被关闭，并obuf_soft_limit_reached_time属性的值也会被清零。</li>
+</ul>
+<p>使用client-output-buffer-limit选项设置相关限制。</p>
+<h4 id="Lua脚本的伪客户端"><a href="#Lua脚本的伪客户端" class="headerlink" title="Lua脚本的伪客户端"></a>Lua脚本的伪客户端</h4><p>服务器会在初始化时创建负责执行Lua脚本中包含的Redis命令的伪客户端， 将这个伪客户端关联在服务器状态结构的lua_client属性中 。</p>
+<h4 id="AOF文件的伪客户端"><a href="#AOF文件的伪客户端" class="headerlink" title="AOF文件的伪客户端"></a>AOF文件的伪客户端</h4><p>服务器在载入AOF文件时，会创建用于执行AOF文件包含的Redis命令的伪客户端，并在载入完成之后，关闭这个伪客户端。</p>
+<h2 id="二、服务器"><a href="#二、服务器" class="headerlink" title="二、服务器"></a>二、服务器</h2><h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p>Redis服务器负责与多个客户端建立网络连接，处理客户端发送的命令请求，在数据库中保存客户端执行命令所产生的数据，并通过资源管理来维持服务器自身的运转。</p>
+<h3 id="二、命令请求执行过程"><a href="#二、命令请求执行过程" class="headerlink" title="二、命令请求执行过程"></a>二、命令请求执行过程</h3><p>一个命令从发送到回复，客户端和服务器需要完成一系列操作</p>
+<p>下面举一个例子，便于更好理解。</p>
+<p>客户端执行： SET KEY VALUE</p>
+<p>客户端和服务器共需要执行以下操作：</p>
+<p>1）客户端向服务器发送命令请求SET KEY VALUE。</p>
+<p>2）服务器接收并处理客户端发来的命令请求SET KEYVALUE，在数据库中进行设置操作，并产生命令回复OK。</p>
+<p>3）服务器将命令回复OK发送给客户端。</p>
+<p>4）客户端接收服务器返回的命令回复OK，并将这个回复打印给用户观看。</p>
+<p>这只是简要的执行流程，下面进行细化。</p>
+<h4 id="发送命令请求"><a href="#发送命令请求" class="headerlink" title="发送命令请求"></a>发送命令请求</h4><p>命令请求来自客户端，客户端感受到用户输入的命令，首先要转换成协议格式，然后通过连接到服务器的套接字发送。</p>
+<p>流程如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172051343.png" alt="image-20220317205136214"></p>
+<h4 id="读取命令请求"><a href="#读取命令请求" class="headerlink" title="读取命令请求"></a>读取命令请求</h4><p>客户端与服务器之间的连接套接字因为客户端的写入而变得可读时，服务器将调用命令请求处理器来执行以下操作：</p>
+<p>1）读取套接字中协议格式的命令请求，并将其保存到客户端状态的输入缓冲区里面。</p>
+<p>2）对输入缓冲区中的命令请求进行分析，提取出<strong>命令请求中包含的命令参数</strong>，以及命令参数的个数，然后分别将参数和参数个数保存到客户端状态的argv属性和argc属性里面。</p>
+<p>3）调用命令执行器，执行客户端指定的命令。</p>
+<p>不同的命令，命令执行器所做的工作也不同，下面详细介绍。</p>
+<h4 id="命令执行器（1）：查找命令实现"><a href="#命令执行器（1）：查找命令实现" class="headerlink" title="命令执行器（1）：查找命令实现"></a>命令执行器（1）：查找命令实现</h4><p>根据客户端状态的argv[0]参数，在命令表（command table）中查找参数所指定的命令，并将找到的命令保存到客户端状态的<strong>cmd属性</strong>里面。</p>
+<p><strong>命令表</strong>：是一个字典,<strong>键</strong>时命令的名字，<strong>值</strong>是redisCommand结构，每个redisCommand结构记录了一个Redis命令的实现信息</p>
+<p>举个例子便于理解：</p>
+<p>还是之前的SET 命令</p>
+<p>步骤如下：</p>
+<ul>
+<li><p>程序以 argv[0]作为输入，在命令表中进行查找。</p>
+</li>
+<li><p>命令表将返回”set”键所对应的redisCommand结构</p>
+</li>
+<li><p>客户端状态的cmd指针会指向这个redisCommand结构</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172059662.png" alt="image-20220317205904523"></p>
+<p>注：命令的查找<strong>无关大小写</strong></p>
+<h4 id="命令执行器（2）：执行预备操作"><a href="#命令执行器（2）：执行预备操作" class="headerlink" title="命令执行器（2）：执行预备操作"></a>命令执行器（2）：执行预备操作</h4><p>除了需要之前提到的执行命令所需的命令实现函数、参数、参数个数，真正执行命令之前，程序还需要进行一些预备操作。</p>
+<p>常见的操作包括：</p>
+<ul>
+<li>检查客户端状态的cmd指针是否指向NULL（没找到相关的命令实现，向客户端返回一个错误）</li>
+<li>根据客户端cmd属性指向的redisCommand结构的arity属性，检查命令请求所给定的参数个数是否正确（不正确直接向客户端返回错误）</li>
+<li>检查客户端是否已经通过了身份验证（未通过身份验证的客户端只能执行AUTH命令）</li>
+<li>如果服务器打开了maxmemory功能，那么在执行命令之前，先检查服务器的内存占用情况，并在有需要时进行内存回收</li>
+<li>如果服务器上一次执行BGSAVE命令时出错，并且服务器打开了stop-writes-on-bgsave-error功能，而且服务器即将要执行的命令是一个写命令，那么服务器将拒绝执行这个命令，并向客户端返回一个错误</li>
+<li>如果客户端当前正在用SUBSCRIBE命令订阅频道，或者正在用PSUBSCRIBE命令订阅模式，那么服务器只会执行客户端发来的SUBSCRIBE、PSUBSCRIBE、UNSUBSCRIBE、PUNSUBSCRIBE四个命令</li>
+<li>如果服务器正在进行数据载入，那么客户端发送的命令必须带有l标识（比如INFO、SHUTDOWN、PUBLISH等等）才会被服务器执行</li>
+<li>如果服务器因为执行Lua脚本而超时并进入阻塞状态，那么服务器只会执行客户端发来的SHUTDOWNnosave命令和SCRIPT KILL命令</li>
+<li>客户端正在执行事务，那么服务器只会执行客户端发来的EXEC、DISCARD、MULTI、WATCH四个命令，其他命令都会被放进事务队列中</li>
+<li>服务器打开了监视器功能，那么服务器会将要执行的命令和参数等信息发送给监视器</li>
+</ul>
+<p>全部执行之后，就开始真正执行命令了。</p>
+<h4 id="命令执行器（3）：调用命令的实现函数"><a href="#命令执行器（3）：调用命令的实现函数" class="headerlink" title="命令执行器（3）：调用命令的实现函数"></a>命令执行器（3）：调用命令的实现函数</h4><p>因为命令实现保存在cmd属性，命令的参数和参数个数分别保存到了客户端状态的argv属性和argv属性</p>
+<p>因此当服务器决定要执行命令时，执行</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172107868.png" alt="image-20220317210710763"></p>
+<p>命令的实现函数只需要一个指向客户端状态的指针作为参数即可。</p>
+<h4 id="命令执行器（4）：执行后续工作"><a href="#命令执行器（4）：执行后续工作" class="headerlink" title="命令执行器（4）：执行后续工作"></a>命令执行器（4）：执行后续工作</h4><p>执行完实现函数之后，服务器还需要执行一些后续工作：</p>
+<ul>
+<li><p>如果服务器开启了慢查询日志功能，那么慢查询日志模块会检查是否需要为刚刚执行完的命令请求添加一条新的慢查询日志。</p>
+</li>
+<li><p>根据刚刚执行命令所耗费的时长，更新被执行命令的redisCommand结构的milliseconds属性，并将命令的redisCommand结构的calls计数器的值增一。</p>
+</li>
+<li><p>如果服务器开启了AOF持久化功能，那么AOF持久化模块会将刚刚执行的命令请求写入到AOF缓冲区里面。</p>
+</li>
+<li><p>如果有其他从服务器正在复制当前这个服务器，那么服务器会将刚刚执行的命令传播给所有从服务器</p>
+</li>
+</ul>
+<p>命令执行就基本告一段落了</p>
+<h4 id="命令回复发送给客户端"><a href="#命令回复发送给客户端" class="headerlink" title="命令回复发送给客户端"></a>命令回复发送给客户端</h4><p>:one:命令实现函数会将命令回复保存到客户端的输出缓冲区里面</p>
+<p>:two:为客户端的套接字关联<strong>命令回复处理器。</strong></p>
+<p>:three:客户端套接字变为可写状态时，服务器就会执行命令回复处理器，</p>
+<p>:four:命令回复发送完毕之后，回复处理器会清空客户端状态的输出缓冲区</p>
+<h4 id="客户端接收并打印命令回复"><a href="#客户端接收并打印命令回复" class="headerlink" title="客户端接收并打印命令回复"></a>客户端接收并打印命令回复</h4><p>客户端接收到协议格式的命令回复之后，它会将这些回复转换成人类可读的格式，并打印给用户观看</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172111993.png" alt="image-20220317211105869"></p>
+<p>OK</p>
+<h3 id="二、serverCron函数"><a href="#二、serverCron函数" class="headerlink" title="二、serverCron函数"></a>二、serverCron函数</h3><p>Redis服务器中的serverCron函数默认每隔<strong>100毫秒</strong>执行一次， 负责管理服务器的资源。</p>
+<p>首先介绍serverCron函数的执行操作</p>
+<h4 id="1、更新服务器时间缓存"><a href="#1、更新服务器时间缓存" class="headerlink" title="1、更新服务器时间缓存"></a>1、更新服务器时间缓存</h4><p>不少功能需要用到系统当前时间。为了减少系统调用的执行次数，服务器状态中的unixtime属性和mstime属性被用作当前时间的缓存。</p>
+<p>ServerCron函数默认会以每100毫秒一次的频率更新unixtime属性和mstime属性。</p>
+<p>因此这两个属性的精确度并不高。对于时间精确度不高的服务适用。</p>
+<h4 id="2、更新LRU时钟"><a href="#2、更新LRU时钟" class="headerlink" title="2、更新LRU时钟"></a>2、更新LRU时钟</h4><p>服务器状态中的lruclock属性保存了服务器的LRU时钟，也服务器时间缓存的一种。</p>
+<p>此外，每个Redis对象都会有一个lru属性， 保存对象最后一次被命令访问的时间：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203172116544.png" alt="image-20220317211638409"></p>
+<p> serverCron函数默认会以每10秒一次的频率更新lruclock属性的值</p>
+<p>因此LRU时间实际上只是一个模糊的估算值。</p>
+<h4 id="3、更新服务器每秒执行命令次数"><a href="#3、更新服务器每秒执行命令次数" class="headerlink" title="3、更新服务器每秒执行命令次数"></a>3、更新服务器每秒执行命令次数</h4><h4 id="4、更新服务器内存峰值记录"><a href="#4、更新服务器内存峰值记录" class="headerlink" title="4、更新服务器内存峰值记录"></a>4、更新服务器内存峰值记录</h4><h4 id="5、处理SIGTERM信号"><a href="#5、处理SIGTERM信号" class="headerlink" title="5、处理SIGTERM信号"></a>5、处理SIGTERM信号</h4><h4 id="6、管理客户端资源"><a href="#6、管理客户端资源" class="headerlink" title="6、管理客户端资源"></a>6、管理客户端资源</h4><p>serverCron函数每次执行都会调用clientsCron函数对一定数量的客户端进行以下检查。</p>
+<ul>
+<li>连接时间检查：超时就释放这个客户端</li>
+<li>如果客户端执行命令导致输入缓冲区的大小超过了一定的长度， 程序就会释放客户端当前的输入缓冲区</li>
+</ul>
+<h4 id="7、管理数据库资源"><a href="#7、管理数据库资源" class="headerlink" title="7、管理数据库资源"></a>7、管理数据库资源</h4><p>serverCron函数每次执行都会调用databasesCron函数，这个函数会对服务器中的一部分数据库进行检查，删除其中的过期键，并在有需要时，对字典进行收缩操作</p>
+<h4 id="8、执行被延迟的BGREWRITEAOF"><a href="#8、执行被延迟的BGREWRITEAOF" class="headerlink" title="8、执行被延迟的BGREWRITEAOF"></a>8、执行被延迟的BGREWRITEAOF</h4><h4 id="9、检查持久化操作的运行状态"><a href="#9、检查持久化操作的运行状态" class="headerlink" title="9、检查持久化操作的运行状态"></a>9、检查持久化操作的运行状态</h4><h4 id="10、将AOF缓冲区中的内容写入AOF文件"><a href="#10、将AOF缓冲区中的内容写入AOF文件" class="headerlink" title="10、将AOF缓冲区中的内容写入AOF文件"></a>10、将AOF缓冲区中的内容写入AOF文件</h4><p>如果开启了AOF持久化，那么就会将缓冲区内的数据写入AOF文件。</p>
+<h4 id="11、关闭异步客户端"><a href="#11、关闭异步客户端" class="headerlink" title="11、关闭异步客户端"></a>11、关闭异步客户端</h4><h4 id="12、增加cronloops计数器的值"><a href="#12、增加cronloops计数器的值" class="headerlink" title="12、增加cronloops计数器的值"></a>12、增加cronloops计数器的值</h4><h3 id="三、初始化服务器"><a href="#三、初始化服务器" class="headerlink" title="三、初始化服务器"></a>三、初始化服务器</h3><p>Redis服务器 启动到运行，需要经过一系列的初始化和设置过程</p>
+<p>下面详细介绍：</p>
+<h4 id="1、初始化服务器状态结构"><a href="#1、初始化服务器状态结构" class="headerlink" title="1、初始化服务器状态结构"></a>1、初始化服务器状态结构</h4><p>首先创建一个struct redisServer类型的实例变量server 作为服务器的状态（根据默认值）</p>
+<p>初始化server变量的工作由redis.c/initServerConfig函数完成</p>
+<p>主要工作：</p>
+<ul>
+<li>设置服务器的运行ID。</li>
+<li>设置服务器的默认运行频率。</li>
+<li>设置服务器的默认配置文件路径。</li>
+<li>设置服务器的运行架构。</li>
+<li>设置服务器的默认端口号。</li>
+<li>设置服务器的默认RDB持久化条件和AOF持久化条件。</li>
+<li>初始化服务器的LRU时钟。</li>
+<li>创建命令表</li>
+</ul>
+<h4 id="2、-载入配置选项"><a href="#2、-载入配置选项" class="headerlink" title="2、 载入配置选项"></a>2、 载入配置选项</h4><p>启动服务器，用户可以更改默认配置。</p>
+<p>服务器在用initServerConfig函数初始化完server变量之后，就会开始载入用户给定的配置参数和配置文件，并作出相应更改。</p>
+<h4 id="3、初始化服务器数据结构"><a href="#3、初始化服务器数据结构" class="headerlink" title="3、初始化服务器数据结构"></a>3、初始化服务器数据结构</h4><p>执行initServerConfig函数初始化server状态时，程序只创建了命令表一个数据结构</p>
+<p>当然还有其他数据结构。</p>
+<p>例如：</p>
+<ul>
+<li><p>server.clients链表：记录了所有与服务器相连的客户端的状态结构</p>
+</li>
+<li><p>server.db数组：包含了服务器的所有数据库。</p>
+</li>
+<li><p>包含了服务器的所有数据库。</p>
+</li>
+<li><p>用于保存慢查询日志的server.slowlog属性</p>
+</li>
+<li><p>用于保存频道订阅信息的server.pubsub_channels字典</p>
+</li>
+<li><p>用于保存模式订阅信息的server.pubsub_patterns链表</p>
+</li>
+</ul>
+<p>注：服务器将调用<strong>initServer函数</strong>，为以上提到的数据结构分配内存</p>
+<p><strong>服务器运行到现在才进行初始化创建的原因在于：</strong></p>
+<p>​    服务器必须先载入用户指定的配置选项，然后才能正确地对数据结构进行初始化</p>
+<p>服务器选择了将server状态的初始化分为两步进行：</p>
+<ul>
+<li><p>initServerConfig函数主要负责初始化一般属性</p>
+</li>
+<li><p>initServer函数主要负责初始化数据结构。</p>
+</li>
+</ul>
+<h4 id="4、还原数据库状态"><a href="#4、还原数据库状态" class="headerlink" title="4、还原数据库状态"></a>4、还原数据库状态</h4><p>数据库初始化完成之后，要载入RDB文件或者AOF文件，完成数据库的还原。（优先使用 AOF文件还原）</p>
+<h4 id="5、执行事件循环"><a href="#5、执行事件循环" class="headerlink" title="5、执行事件循环"></a>5、执行事件循环</h4><p>初始化的最后一步：打印出日志，并开始执行服务器的事件循环（loop）</p>
+<h3 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h3><ul>
+<li>一个命令请求从发送到完成主要包括以下步骤：</li>
+</ul>
+<p>1）客户端将命令请求发送给服务器；</p>
+<p>2）服务器读取命令请求，并分析出命令参数；</p>
+<p>3）命令执行器根据参数查找命令的实现函数，然后执行实现函数并得出命令回复；</p>
+<p>4）服务器将命令回复返回给客户端。</p>
+<ul>
+<li>serverCron函数默认每隔100毫秒执行一次，它的工作主要包括更新服务器状态信息，处理服务器接收的SIGTERM信号，管理客户端资源和数据库状态，检查并执行持久化操作等等。</li>
+</ul>
+<ul>
+<li>服务器从启动到能够处理客户端的命令请求需要执行以下步骤：</li>
+</ul>
+<p>1）初始化服务器状态；</p>
+<p>2）载入服务器配置；</p>
+<p>3）初始化服务器数据结构；</p>
+<p>4）还原数据库状态；</p>
+<p>5）执行事件循环。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">chen-boran</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/">http://example.com/2021/11/14/Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Redis/">Redis</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/11/15/Redis-%E5%A4%8D%E5%88%B6/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Redis 复制</div></div></a></div><div class="next-post pull-right"><a href="/2021/11/14/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Redis 持久化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/11/11/Redis-事件驱动模型/" title="Redis 事件驱动模型"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-11</div><div class="title">Redis 事件驱动模型</div></div></a></div><div><a href="/2021/11/17/Redis-Sentinel/" title="Redis Sentinel"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-17</div><div class="title">Redis Sentinel</div></div></a></div><div><a href="/2022/03/17/Redis-慢查询日志/" title="Redis-慢查询日志"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833187.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-17</div><div class="title">Redis-慢查询日志</div></div></a></div><div><a href="/2021/11/15/Redis-复制/" title="Redis 复制"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-15</div><div class="title">Redis 复制</div></div></a></div><div><a href="/2021/11/14/Redis-数据库/" title="Redis 数据库"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 数据库</div></div></a></div><div><a href="/2021/11/14/Redis-持久化/" title="Redis 持久化"><img class="cover" src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833185.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Redis 持久化</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">chen-boran</div><div class="author-info__description">I want to roll the sky desperately!</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chen_boran"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">一、客户端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B1%9E%E6%80%A7"><span class="toc-text">一、属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1%E5%A5%97%E6%8E%A5%E5%AD%97%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-text">1.1套接字描述符</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E5%85%B3%E9%97%AD"><span class="toc-text">二、客户端的创建和关闭</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA"><span class="toc-text">创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%97%AD"><span class="toc-text">关闭</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Lua%E8%84%9A%E6%9C%AC%E7%9A%84%E4%BC%AA%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">Lua脚本的伪客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF%E6%96%87%E4%BB%B6%E7%9A%84%E4%BC%AA%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">AOF文件的伪客户端</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">二、服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%91%BD%E4%BB%A4%E8%AF%B7%E6%B1%82%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-text">二、命令请求执行过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E5%91%BD%E4%BB%A4%E8%AF%B7%E6%B1%82"><span class="toc-text">发送命令请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E5%91%BD%E4%BB%A4%E8%AF%B7%E6%B1%82"><span class="toc-text">读取命令请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%99%A8%EF%BC%881%EF%BC%89%EF%BC%9A%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4%E5%AE%9E%E7%8E%B0"><span class="toc-text">命令执行器（1）：查找命令实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%99%A8%EF%BC%882%EF%BC%89%EF%BC%9A%E6%89%A7%E8%A1%8C%E9%A2%84%E5%A4%87%E6%93%8D%E4%BD%9C"><span class="toc-text">命令执行器（2）：执行预备操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%99%A8%EF%BC%883%EF%BC%89%EF%BC%9A%E8%B0%83%E7%94%A8%E5%91%BD%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0"><span class="toc-text">命令执行器（3）：调用命令的实现函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%99%A8%EF%BC%884%EF%BC%89%EF%BC%9A%E6%89%A7%E8%A1%8C%E5%90%8E%E7%BB%AD%E5%B7%A5%E4%BD%9C"><span class="toc-text">命令执行器（4）：执行后续工作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%9B%9E%E5%A4%8D%E5%8F%91%E9%80%81%E7%BB%99%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">命令回复发送给客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A5%E6%94%B6%E5%B9%B6%E6%89%93%E5%8D%B0%E5%91%BD%E4%BB%A4%E5%9B%9E%E5%A4%8D"><span class="toc-text">客户端接收并打印命令回复</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81serverCron%E5%87%BD%E6%95%B0"><span class="toc-text">二、serverCron函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%97%B6%E9%97%B4%E7%BC%93%E5%AD%98"><span class="toc-text">1、更新服务器时间缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E6%9B%B4%E6%96%B0LRU%E6%97%B6%E9%92%9F"><span class="toc-text">2、更新LRU时钟</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%AF%8F%E7%A7%92%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%AC%A1%E6%95%B0"><span class="toc-text">3、更新服务器每秒执行命令次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%86%85%E5%AD%98%E5%B3%B0%E5%80%BC%E8%AE%B0%E5%BD%95"><span class="toc-text">4、更新服务器内存峰值记录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81%E5%A4%84%E7%90%86SIGTERM%E4%BF%A1%E5%8F%B7"><span class="toc-text">5、处理SIGTERM信号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6%E3%80%81%E7%AE%A1%E7%90%86%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B5%84%E6%BA%90"><span class="toc-text">6、管理客户端资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7%E3%80%81%E7%AE%A1%E7%90%86%E6%95%B0%E6%8D%AE%E5%BA%93%E8%B5%84%E6%BA%90"><span class="toc-text">7、管理数据库资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8%E3%80%81%E6%89%A7%E8%A1%8C%E8%A2%AB%E5%BB%B6%E8%BF%9F%E7%9A%84BGREWRITEAOF"><span class="toc-text">8、执行被延迟的BGREWRITEAOF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9%E3%80%81%E6%A3%80%E6%9F%A5%E6%8C%81%E4%B9%85%E5%8C%96%E6%93%8D%E4%BD%9C%E7%9A%84%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="toc-text">9、检查持久化操作的运行状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10%E3%80%81%E5%B0%86AOF%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%AD%E7%9A%84%E5%86%85%E5%AE%B9%E5%86%99%E5%85%A5AOF%E6%96%87%E4%BB%B6"><span class="toc-text">10、将AOF缓冲区中的内容写入AOF文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11%E3%80%81%E5%85%B3%E9%97%AD%E5%BC%82%E6%AD%A5%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">11、关闭异步客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12%E3%80%81%E5%A2%9E%E5%8A%A0cronloops%E8%AE%A1%E6%95%B0%E5%99%A8%E7%9A%84%E5%80%BC"><span class="toc-text">12、增加cronloops计数器的值</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">三、初始化服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%8A%B6%E6%80%81%E7%BB%93%E6%9E%84"><span class="toc-text">1、初始化服务器状态结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81-%E8%BD%BD%E5%85%A5%E9%85%8D%E7%BD%AE%E9%80%89%E9%A1%B9"><span class="toc-text">2、 载入配置选项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">3、初始化服务器数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E8%BF%98%E5%8E%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%8A%B6%E6%80%81"><span class="toc-text">4、还原数据库状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81%E6%89%A7%E8%A1%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF"><span class="toc-text">5、执行事件循环</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">三、总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/JVM-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%92%8C%E6%BA%A2%E5%87%BA/" title="JVM-内存泄漏和溢出"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-内存泄漏和溢出"/></a><div class="content"><a class="title" href="/2022/03/30/JVM-%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%92%8C%E6%BA%A2%E5%87%BA/" title="JVM-内存泄漏和溢出">JVM-内存泄漏和溢出</a><time datetime="2022-03-30T10:15:23.000Z" title="Created 2022-03-30 18:15:23">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" title="JVM-字节码指令"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-字节码指令"/></a><div class="content"><a class="title" href="/2022/03/30/JVM-%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" title="JVM-字节码指令">JVM-字节码指令</a><time datetime="2022-03-30T10:10:50.000Z" title="Created 2022-03-30 18:10:50">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/28/JVM-%E7%BC%96%E8%AF%91%E5%92%8C%E4%BC%98%E5%8C%96/" title="JVM-编译和优化"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-编译和优化"/></a><div class="content"><a class="title" href="/2022/03/28/JVM-%E7%BC%96%E8%AF%91%E5%92%8C%E4%BC%98%E5%8C%96/" title="JVM-编译和优化">JVM-编译和优化</a><time datetime="2022-03-28T04:19:30.000Z" title="Created 2022-03-28 12:19:30">2022-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/28/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="JVM-类加载机制"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-类加载机制"/></a><div class="content"><a class="title" href="/2022/03/28/JVM-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="JVM-类加载机制">JVM-类加载机制</a><time datetime="2022-03-28T04:19:06.000Z" title="Created 2022-03-28 12:19:06">2022-03-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/28/JVM-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="JVM-类文件结构"><img src="https://ae01.alicdn.com/kf/H0bd119c4d36e49a8984678f0b7b6f942R.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM-类文件结构"/></a><div class="content"><a class="title" href="/2022/03/28/JVM-%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" title="JVM-类文件结构">JVM-类文件结构</a><time datetime="2022-03-28T04:18:36.000Z" title="Created 2022-03-28 12:18:36">2022-03-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By chen-boran</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="/js/randombg.js"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script><script src="/clock/js/clock.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="人的梦想,是不会终结的！,绝对不会再输！,人,最重要的是心啊~" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
   <script data-pjax>
         function GithubCalendarConfig(){
-            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?zfour";
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?chen-boran";
             var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
-            var git_user ="zfour";
+            var git_user ="chen-boran";
             var parent_div_git = document.getElementById('recent-posts');
             var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
             if(parent_div_git && location.pathname =='/'){
