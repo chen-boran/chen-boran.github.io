@@ -2,6 +2,26 @@
 title: JVM-内存结构
 date: 2022-03-25 12:03:30
 tags:
+- JVM
+categories:
+- Notes
+keywords:
+description:
+top_img:
+comments:
+cover:https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/4f1a22d238714f1a810cc556128f5134.png
+toc:
+toc_number:
+copyright:
+copyright_author:
+copyright_author_href:
+copyright_url:
+copyright_info:
+mathjax:
+katex:
+aplayer:
+highlight_shrink:
+aside: 
 ---
 
 ## 内存结构

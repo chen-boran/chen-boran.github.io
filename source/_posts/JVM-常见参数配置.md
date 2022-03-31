@@ -2,6 +2,26 @@
 title: JVM-常见参数配置
 date: 2022-03-31 19:05:35
 tags:
+- JVM
+categories:
+- Notes
+keywords:
+description:
+top_img:
+comments:
+cover:https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/d08f2fb2bc3b4bfd8cf3d1795f422e6d.jpg
+toc:
+toc_number:
+copyright:
+copyright_author:
+copyright_author_href:
+copyright_url:
+copyright_info:
+mathjax:
+katex:
+aplayer:
+highlight_shrink:
+aside: 
 ---
 
 **测试环境：\**JVM配置为\**2核1G，JAVA8，固定设置堆大小 1G**
