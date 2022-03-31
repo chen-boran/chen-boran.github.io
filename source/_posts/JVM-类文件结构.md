@@ -71,26 +71,11 @@ ClassFile {
 
 这是基本上每个Java开发人员的第一个Java程序：
 
-```
-public class HelloWorld {
-    public static void main(String[] args) {
-
-        System.out.println("Hello World");
-    }
-}
-```
-
-我使用的是Idea工具，运行，target目录下会生成对应的class文件，为了查看文件的十六进制信息，我们可以安装一个插件`HexView`。
-
-
-
-
-
-class文件十六进制
+ 
 
 第一行中有一串特殊的字符 `cafebabe`，它就是一个魔数，是 JVM 识别 class 文件的标志，JVM 会在验证阶段检查 class 文件是否以该魔数开头，如果不是则会抛出 `ClassFormatError`。
 
-这段字节很有意思——咖啡宝贝，Java原来不止是咖啡，还是宝贝😂
+ 
 
 ### 1.2 版本号
 

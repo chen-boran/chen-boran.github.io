@@ -4,7 +4,9 @@ date: 2022-03-30 18:15:23
 tags:
 ---
 
-本文转载于：[【JVM进阶之路】四：直面内存溢出和内存泄漏](https://mp.weixin.qq.com/s?__biz=MzkwODE5ODM0Ng==&mid=2247485412&idx=1&sn=bcb6805623c744a37a42157d8eaa64a1&chksm=c0ccef41f7bb6657f8719b9d55759b2766d8fed1223699d9ec0c8655cd5d388600a5299615b3&cur_album_id=1785069014436593665&scene=190#rd)
+ 
+
+
 
 
 
@@ -13,7 +15,7 @@ tags:
 - **内存溢出（\**Out Of Memory\**）** ：就是申请内存时，JVM没有足够的内存空间。通俗说法就是去蹲坑发现坑位满了。
 - **内存泄露 （Memory Leak）**：就是申请了内存，但是没有释放，导致内存空间浪费。通俗说法就是有人占着茅坑不拉屎。
 
-# 1、内存溢出
+# OutOfMemoryError异常
 
 在JVM的几个内存区域中，除了程序计数器外，其他几个运行时区域都有发生内存溢出（OOM）异常的可能。
 
@@ -23,7 +25,7 @@ tags:
 
 Java堆用于储存对象实例，我们只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么随着对象数量的增加，总容量触及最大堆的容量限制后就会产生内存溢出异常。
 
-我们来看一个代码的例子：
+java堆内存溢出异常测试例子：
 
 ```
 /**
@@ -44,25 +46,19 @@ public class HeapOOM {
 
 接下来，我们来设置一下程序启动时的JVM参数。限制内存大小为20M，不允许扩展，并通过参数-XX：+HeapDumpOnOutOf-MemoryError 让虚拟机Dump出内存堆转储快照。
 
-在Idea中设置JVM启动参数如下图：
+Idea设置JVM参数
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53icnMxcGDmibT4CzTTGfsKCN7cwYT39kGoo11mKibFeO93oucKWSftSDr5g/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)Idea设置JVM参数
 
-运行一下：
 
-![图片](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)堆内存溢出异常
 
-Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况。出现Java堆内存溢出时，异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“Java heap space”。Java堆文件快照文件dump到了java_pid18728.hprof文件。
+
+Java堆内存的OutOfMemoryError异常是实际应用中最常见的内存溢出异常情况。出现Java堆内存溢出时，异常堆栈信息“java.lang.OutOfMemoryError”会跟随进一步提示“Java heap space”。
+
+Java堆文件快照文件dump到了java_pid18728.hprof文件。
 
 要解决这个内存区域的异常，常规的处理方法是首先通过内存映像分析工具（如JProfiler、Eclipse Memory Analyzer等）对Dump出来的堆转储快照进行分析。
 
-看到内存占用信息如下：
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53icgYD1GOOgsNfaFKmmfdTYgNpJXicHnjAbLibrO1xJyia4npmOBibo1Uc9bg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)Jprofiler 打开的堆转储快照文件
-
-然后可以查看代码问题如下：
-
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53icziaMLn90icj6IgOUClvzTCHPGf1guEWicVPTrojwPvIWCbrXUKc1UTjOA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)Jprofiler查看代码问题
 
 > 常见堆JVM相关参数：
 >
@@ -108,19 +104,15 @@ public class JavaVMStackSOF {
 }
 ```
 
-运行结果：
-
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53icuHtsd4Zc9HIyNy413OSdPvQCWbWOUGEyMAsvzQjKPYico2vzv0dKZyA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)栈内存溢出
+结果会抛出Stackoverflow异常，异常出现时输出的栈帧深度相应缩小。
 
 - **栈帧太大**
 
-  如下，通过一长串变量，来占用局部变量表空间。
+    定义大量本地变量，增大此方法中本地变量表的长度。
 
-  ![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53icFPsv1htDVlHnuyTleqfGOVbeibnnrRGBic6icS0Iqp4moibMpx0Co8b0rw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)carbon
+  
 
-运行结果：
 
-![图片](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)image-20210324211958180
 
 无论是由于栈帧太大还是虚拟机栈容量太小，当新的栈帧内存无法分配的时候， HotSpot虚拟机抛出的都是StackOverflowError异常。
 
@@ -160,9 +152,7 @@ public class JavaVMStackOOM {
 }
 ```
 
-以上是一段比较有风险的代码，可能会导致系统假死，运行结果如下：
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53icWk4ibmGibtgr5XUvWnQAMQo4fEabiaSTsKJcJGq4lrViawDQ7d1wiaGHBdQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)image-20210324213320530
 
 ## 1.3、方法区和运行时常量池溢出
 
@@ -208,9 +198,7 @@ public class DirectMemoryOOM {
 
 内存回收，简单说就是应该被垃圾回收的对象没有被垃圾回收。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWeaHDVASQXNBtGp0PMuZ53ic2AQ25VfYhW3f0oWWCf1SOUHKShVE6zOicMaYdVDiaIhDtyEwRPVejsHg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)内存泄漏
-
-在上图中：对象 X 引用对象 Y，X 的生命周期比 Y 的生命周期长，Y生命周期结束的时候，垃圾回收器不会回收对象Y。
+ 
 
 我们来看几个内存泄漏的例子：
 

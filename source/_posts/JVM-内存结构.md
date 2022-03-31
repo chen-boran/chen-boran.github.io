@@ -20,6 +20,10 @@ java的内存结构可以分成
 
 \5. 方法区
 
+**jvm启动流程**
+
+![image-20220331184657876](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220331184657876.png)
+
 下面逐一进行介绍：
 
 ### 一、程序计数器
@@ -68,6 +72,9 @@ java的内存结构可以分成
 - 方法内的局部变量，如果是多个线程共享的，那么就可能是线程不安全的，如果是被某个线程私有就是线程安全的，不受其他线程影响。
 
   方法内的局部变量如果逃离了方法的作用范围，就会是线程不安全的。
+
+**栈上分配**
+普通情况下，对象创建之后会分配在堆上，有时候虚拟机为了减轻堆的GC 压力，会有一些特殊情况：小对象（一般几十个bytes），在没有逃逸的情况下，可以直接分配在栈上直接分配在栈上，可以自动回收，减轻GC压力。大对象或者逃逸对象无法栈上分配
 
 #### 2.2 栈内存溢出
 
@@ -276,9 +283,78 @@ jdk1.6之前，运行时常量池中有个重要的组成部分：StringTable（
 
 
 
+下面是一个小案例：堆、方法区、Java栈三者的关系.
+
+![image-20220331164042446](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220331164042446.png)
+
+代码如下：
+
+```
+public   class  AppMain     
+ //运行时, jvm 把appmain的信息都放入方法区 
+ { 
+ public   static   void  main(String[] args)  
+//main 方法本身放入方法区。 
+{ 
+Sample test1 = new  Sample( " 测试1 " );  
+ //test1是引用，所以放到栈区里， Sample是自定义对象应该放到堆里面 
+ Sample test2 = new  Sample( " 测试2 " ); 
+ test1.printName(); 
+ test2.printName(); 
+ } 
+
+
+public   class  Sample       
+ //运行时, jvm 把appmain的信息都放入方法区 
+ { 
+ private  name;     
+ //new Sample实例后， name 引用放入栈区里，  name 对象放入堆里 
+ public  Sample(String name) 
+ 
+ { 
+ this .name = name; 
+ } 
+ //print方法本身放入 方法区里。
+ public   void  printName()    
+ { 
+ System.out.println(name); } }
+```
+
+
+
 ### 六、直接内存
 
 直接内存不是虚拟机运行时数据区的一部分，但是这部分频繁的使用。也可能导致OutOfMemoryError出现。
+
+我们都知道
+
+- 每一个线程有一个工作内存和主存独立
+- 工作内存存放主存中变量的值的拷贝
+
+流程图：
+
+​	![image-20220331164547839](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220331164547839.png)
+
+当数据从主内存复制到工作存储时，必须出现两个动作：
+
+​	第一，由主内存执行的读（read）操作；
+
+​	第二，由工作内存执行的相应的load操作；
+
+当数据从工作内存拷贝到主内存时，也出现两个操作：
+
+​	第一个，由工作内存执行的存储（store）操作；
+
+​	第二，由主内存执行的相应的写（write）操作
+
+每一个操作都是原子的，即执行期间不会被中断。对于普通变量，一个线程中更新的值，不能马上反应在其他变量中。
+如果需要在其他线程中立即可见，需要使用 volatile 关键字
+
+<img src="https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220331164918953.png" alt="image-20220331164918953" style="zoom:67%;" />
+
+
+
+为了提高性能:
 
 Java中的NIO（New Input/Output）类，引入了基于通道和缓冲区的读写方式。
 

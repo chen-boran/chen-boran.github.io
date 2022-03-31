@@ -118,7 +118,9 @@ tags:
 
 ​		1.进行内存分配的时候，仅仅包括类变量，不包括实例变量。实例变量会随着对象一起分配在Java堆中
 
-基本数据类型的零值：
+基本数据类型在准备阶段会被赋予初始值。
+
+但是对于static final类型，在准备阶段就会被赋上正确的值。例如：public static final  int v=1;
 
 
 
@@ -139,9 +141,17 @@ tags:
 
 更直接的表示：初始化阶段就是执行类构造器<clinit>()方法的过程。
 
+- static变量 赋值语句
+
+- static{}语句
+
 注：<clinit>()：是javac的自动生成物。
 
-准备阶段，变量被赋的是系统要求的零值，在初始化阶段，赋的是代码里编写的值。
+​		准备阶段，变量被赋的是系统要求的零值，在初始化阶段，赋的是代码里编写的值。
+
+​		子类的<clinit>调用前保证父类的<clinit>被调用
+
+​		<clinit>是线程安全的
 
 ![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWfTeSZ3GWTEI2Aq4yTahy8cibTSXPVDMwDnSuSRkNdUYicpkhEWqIsvOCG0aZjVibyTYXp3vBGeKmVCA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1) 
 
@@ -161,9 +171,11 @@ tags:
 
 但对于任意一个类，都必须由加载它的类加载器和这个类本身一起共同确立其在Java虚拟机中的唯一性，每 一个类加载器，都拥有一个独立的类名称空间。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWc1j2WuicLaUrTTt27JD1QKMjsqjVJe3XQmHibFatUwBmhPbAOQsYGHIEGYJic2MXsmwzQVCkqvQiazXg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)类加载器和类确定类是否相等
+
 
 这句话可以表达得更通俗一些：比较两个类是否“相等”，只有在这两个类是由同一个类加载器加载的前提下才有意义，否则,即使这两个类来源于同一个Class文件，被同一个Java虚拟机加载，只要加载它们的类加载器不同，那这两个类就必定不相等。
+
+
 
 如下演示了不同的类加载器对instanceof关键字运算的结果的影响。
 
@@ -202,11 +214,9 @@ public class ClassLoaderTest {
 }
 ```
 
-运行结果：
 
- ![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWc1j2WuicLaUrTTt27JD1QKMxicP6OZrIsbTuSe0nN3cCu0hpK4QpPKTgxDCyibBia4dyBzs8gs3ICsRQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
-在代码里定义了一个简单的类加载器，使用这个类加载器去加载`cn.fighter3.loader.ClassLoaderTest`类并创建实例，去做类型检查的时候，发现结果是false。
+ 
 
 
 
@@ -216,11 +226,15 @@ public class ClassLoaderTest {
 
 ## 三、双亲委派模型
 
-从Java虚拟机的角度来看，只存在两种不同的类加载器：一种是启动类加载器（Bootstrap ClassLoader），这个类加载器使用C++语言实现，是虚拟机自身的一部分；另外一种就是其他所有的类加载器，这些类加载器都由Java语言实现，独立存在于虚拟机外部，并且全都继承自抽象类 java.lang.ClassLoader。
+从Java虚拟机的角度来看，只存在两种不同的类加载器：
+
+- 一种是启动类加载器（Bootstrap ClassLoader），这个类加载器使用C++语言实现，是虚拟机自身的一部分；
+
+- 另外一种就是其他所有的类加载器，这些类加载器都由Java语言实现，独立存在于虚拟机外部，并且全都继承自抽象类 java.lang.ClassLoader。
 
 站在Java开发人员的角度来看，类加载器就应当划分得更细致一些。自JDK 1.2以来，Java一直保持着三层类加载器、双亲委派的类加载架构。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWc1j2WuicLaUrTTt27JD1QKMLicib4voEciceY3xGFsibe7aWbZRA4Aa6t4q6xvnSXKLtnP9bcnev9SPuw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)双亲委派模型
+![image-20220331095734552](https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/image-20220331095734552.png)
 
 双亲委派模型如上图：
 
@@ -230,13 +244,15 @@ public class ClassLoaderTest {
 
 用户还可以加入自定义的类加载器器来进行扩展。
 
+注：如图展示的各种类之间的层次关系被称为类加载器的双亲委派模型。
+
+​		这里的类加载器之间的父子关系不是通过继承来实现的呃，是通过组合关系复用父加载器的代码。
+
 **双亲委派模型的工作过程**：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到最顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求时，子加载器才会尝试自己去完成加载。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWc1j2WuicLaUrTTt27JD1QKM6nibtLgvOy803PFUE7JKVjh15BjFMCcsc9u6SDTF1EMHGDDABJmibhOA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+**使用双亲委派模型原因？**
 
-> 为什么要用双亲委派机制呢？
-
-答案是为了保证应用程序的稳定有序。
+使用双亲委派模型来阻止类加载器之间的的关系，显而易见的好处就是java中的类随着类加载器一起具备了一种带有优先级的层次关系。
 
 例如类java.lang.Object，它存放在rt.jar之中，通过双亲委派机制，保证最终都是委派给处于模型最顶端的启动类加载器进行加载，保证Object的一致。反之，都由各个类加载器自行去加载的话，如果用户自己也编写了一个名为java.lang.Object的类，并放在程序的 ClassPath中，那系统中就会出现多个不同的Object类。
 
@@ -292,7 +308,7 @@ public class ClassLoaderTest {
 
 由于双亲委派模型在JDK 1.2之后才被引入，但是类加载器的概念和抽象类 java.lang.ClassLoader则在Java的第一个版本中就已经存在，为了向下兼容旧代码，所以无法以技术手段避免loadClass()被子类覆盖的可能性，只能在JDK 1.2之后的java.lang.ClassLoader中添加一个新的 protected方法findClass()，并引导用户编写的类加载逻辑时尽可能去重写这个方法，而不是在 loadClass()中编写代码。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWc1j2WuicLaUrTTt27JD1QKMYUYkKxYLhJweRYuJfK23O4dJKtUxvzMrn6eVv3g4h8qNuym1yUoWYw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)重写loadClass破坏双亲委派
+ 
 
 > **第二次破坏**
 
@@ -308,7 +324,7 @@ public class ClassLoaderTest {
 
 JNDI服务使用这个线程上下文类加载器去加载所需的SPI服务代码，这是一种父类加载器去请求子类加载器完成类加载的行为。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/PMZOEonJxWc1j2WuicLaUrTTt27JD1QKMy2IW5HtULHnLWIiaaqU34NQBic5efB9sE51InlQ9WXjkRZCDhEiaRkbzA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)加载第三方spi第二次破坏
+
 
 > **第三次破坏**
 
@@ -318,10 +334,41 @@ OSGi实现模块化热部署的关键是它自定义的类加载器机制的实�
 
 
 
-> "简单的事情重复做，重复的事情认真做，认真的事情有创造性地做！"——
->
-> 我是三分恶，可以叫我老三/三分/三哥/三子，一个能文能武的全栈开发，咱们下期见！
+**热替换**
+
+含义：当一个class被替换后，系统无需重启，替换的类立即生效
+
+例子：
+
+```
+geym.jvm.ch6.hot.CVersionA
+
+public class CVersionA {
+	public void sayHello() {
+		System.out.println("hello world! (version A)");
+	}
+}
+```
+
+DoopRun 不停调用CVersionA . sayHello()方法，因此有输出：
+		hello world! (version A)
+在DoopRun 的运行过程中，替换CVersionA 为：
+
+```
+public class CVersionA {
+	public void sayHello() {
+		System.out.println("hello world! (version B)");
+	}
+}
+
+```
+
+替换后， DoopRun 的输出变为
+		hello world! (version B)
 
 
 
 ------
+
+破坏双亲委派模型 ：见[破坏双亲委派模型](https://www.cnblogs.com/ronnieyuan/p/11975584.html)
+
