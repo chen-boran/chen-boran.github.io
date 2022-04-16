@@ -1,5 +1,5 @@
 ---
- title: Linux概念和常见命令
+title: Linux概念和常见命令
 date: 2022-03-20 17:47:07
 tags:
 ---

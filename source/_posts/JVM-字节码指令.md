@@ -9,19 +9,7 @@ keywords:
 description:
 top_img:
 comments:
-cover:https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833189.jpg
-toc:
-toc_number:
-copyright:
-copyright_author:
-copyright_author_href:
-copyright_url:
-copyright_info:
-mathjax:
-katex:
-aplayer:
-highlight_shrink:
-aside: 
+cover:https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/202203151833189.jpg 
 ---
 
  # JVM 字节码指令

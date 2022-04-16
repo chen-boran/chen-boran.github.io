@@ -10,18 +10,6 @@ description:
 top_img:
 comments:
 cover:https://cdn.jsdelivr.net/gh/chen-boran/Picture_bed/img/d08f2fb2bc3b4bfd8cf3d1795f422e6d.jpg
-toc:
-toc_number:
-copyright:
-copyright_author:
-copyright_author_href:
-copyright_url:
-copyright_info:
-mathjax:
-katex:
-aplayer:
-highlight_shrink:
-aside: 
 ---
 
 # Class文件结构
